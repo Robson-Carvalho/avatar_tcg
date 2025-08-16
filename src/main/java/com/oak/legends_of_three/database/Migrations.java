@@ -59,7 +59,7 @@ public class Migrations {
     }
 
     private static List<String> getAvailableMigrations() {
-        return new ArrayList<>(MIGRATION_FILES); // Retorna a lista fixa
+        return new ArrayList<>(MIGRATION_FILES);
     }
 
     private static void executeMigration(Connection conn, String migrationFile) throws SQLException, IOException {

@@ -14,4 +14,8 @@ public record HttpRequest(String method, String path, Map<String, String> header
     public String getHeader(String name) {
         return headers.get(name.toLowerCase());
     }
+
+    public String body() {
+        return body;
+    }
 }
