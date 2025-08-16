@@ -5,25 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/oak/http/HttpHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/oak/http/HttpRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/oak/http/HttpResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/oak/http/HttpRouter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/oak/http/HttpServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/oak/http/WebSocket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/oak/http/WebSocketHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/database/Database.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/database/Migrations.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/migrations/V1__Create_users_table.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/oak/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/oak/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Dockerfile" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -32,18 +42,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/http-server",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/legends-of-three",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/database&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/robso/OneDrive/Área de Trabalho/github/legends-of-three&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\robso\OneDrive\Área de Trabalho\github\legends-of-three\src\main\java\oak\http" />
@@ -52,7 +66,9 @@
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
-        <env name="DB_URL" value="teste" />
+        <env name="DB_PASSWORD" value="postgres" />
+        <env name="DB_URL" value="jdbc:postgresql://localhost:5432/legends_three" />
+        <env name="DB_USER" value="postgres" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="com.oak.legends_of_three.Main" />
       <module name="legends-of-three" />
@@ -90,6 +106,8 @@
       <workItem from="1755357776525" duration="207000" />
       <workItem from="1755357986230" duration="22000" />
       <workItem from="1755358009921" duration="207000" />
+      <workItem from="1755360853814" duration="1315000" />
+      <workItem from="1755362182397" duration="2267000" />
     </task>
     <servers />
   </component>
