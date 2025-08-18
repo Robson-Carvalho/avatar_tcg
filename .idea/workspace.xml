@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feet: adiciona classe Deck">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/migrations/V2__Create_cards_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/migrations/V3__Create_decks_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/database/Migrations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/database/Migrations.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/model/Match.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +44,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "feature/card",
+    "git-widget-placeholder": "feature/match",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/legends-of-three",
     "node.js.detected.package.eslint": "true",
