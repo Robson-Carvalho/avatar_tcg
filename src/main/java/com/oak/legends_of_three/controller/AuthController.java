@@ -4,6 +4,7 @@ import com.oak.http.HttpRequest;
 import com.oak.http.HttpResponse;
 import com.oak.legends_of_three.model.User;
 import com.oak.legends_of_three.service.AuthService;
+import com.oak.legends_of_three.service.UserService;
 import com.oak.legends_of_three.util.JsonParser;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -11,9 +12,11 @@ import java.util.Map;
 
 public class AuthController {
     private final AuthService authService;
+    private final UserService userService;
 
     public AuthController() {
         this.authService = new AuthService();
+        this.userService = new UserService();
     }
 
     public void login(HttpRequest request, HttpResponse response) throws IOException {
@@ -45,6 +48,7 @@ public class AuthController {
     public void register(HttpRequest request, HttpResponse response) throws IOException {
         try {
             Map<String, String> body = JsonParser.parseSimpleJson(request.body());
+
             String name = body.get("name");
             String nickname = body.get("nickname");
             String email = body.get("email");
@@ -62,7 +66,7 @@ public class AuthController {
             user.setEmail(email);
             user.setPassword(password);
 
-            User registeredUser = authService.getUserService().register(user);
+            User registeredUser = userService.register(user);
             String token = authService.generateToken(registeredUser);
 
             response.setHeader("Content-Type", "application/json");
