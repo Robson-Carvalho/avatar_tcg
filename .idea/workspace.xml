@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feet: adiciona classe Deck">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/migrations/V2__Create_cards_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/migrations/V3__Create_decks_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/database/Migrations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/database/Migrations.java" afterDir="false" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feet: cria classe de partida">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +23,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feature/card" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -45,7 +49,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "feature/card",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/legends-of-three",
     "node.js.detected.package.eslint": "true",
@@ -64,9 +68,7 @@
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
-        <env name="DB_PASSWORD" value="postgres" />
-        <env name="DB_URL" value="jdbc:postgresql://localhost:5432/legends_three" />
-        <env name="DB_USER" value="postgres" />
+        <env name="DB_URL" value="teste" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="com.oak.legends_of_three.Main" />
       <module name="legends-of-three" />
@@ -82,6 +84,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -109,6 +112,7 @@
       <workItem from="1755367602208" duration="1861000" />
       <workItem from="1755444064081" duration="533000" />
       <workItem from="1755535248790" duration="6155000" />
+      <workItem from="1755544780864" duration="330000" />
     </task>
     <task id="LOCAL-00001" summary="feet: ajustes de código">
       <option name="closed" value="true" />
@@ -134,7 +138,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755542008860</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feet: cria classe de partida">
+      <option name="closed" value="true" />
+      <created>1755543458593</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1755543458593</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -147,6 +159,7 @@
     <MESSAGE value="feet: ajustes de código" />
     <MESSAGE value="feet: adiciona classe Card" />
     <MESSAGE value="feet: adiciona classe Deck" />
-    <option name="LAST_COMMIT_MESSAGE" value="feet: adiciona classe Deck" />
+    <MESSAGE value="feet: cria classe de partida" />
+    <option name="LAST_COMMIT_MESSAGE" value="feet: cria classe de partida" />
   </component>
 </project>

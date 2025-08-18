@@ -1,17 +1,18 @@
-<h1 align="center">✨ Legends of Three ✨</h1>
+<h1 align="center">✨ Legends of the Four Elements ✨</h1>
 
 ### 📜 Sobre o Jogo
 
-**Legends of Three** é um jogo de cartas **1v1 multiplayer em tempo real** inspirado no clássico "Pedra, Papel e Tesoura", mas com uma reviravolta estratégica.
+**Legends of the Four Elements** é um jogo de cartas 1v1 multiplayer em tempo real inspirado no universo de Avatar: A Lenda de Aang, onde mestres dobradores duelam usando estratégia, poder elemental e habilidades únicas.
 
-Os jogadores colecionam cartas de três categorias — **Pedra**, **Papel** e **Tesoura** —, cada uma com atributos únicos de **ataque**, **vida** e **habilidades especiais** que podem mudar completamente o resultado de uma batalha.
+### 🃏 Coleção e Progressão
 
-As partidas são rápidas e intensas:
+- Adquira pacotes de cartas para expandir seu arsenal
+- Cartas variam em raridade (Comum, Rara, Épica, Lendária)
+- Subdobras únicas (como Dobra de Metal, Relâmpago ou Sangue) aparecem em cartas especiais
+- Construa decks temáticos (ex.: Tribo da Água, Nação do Fogo)
 
-- O tipo de carta ainda influencia (Pedra > Tesoura, Tesoura > Papel, Papel > Pedra),  
-  mas os atributos e habilidades podem inverter o resultado esperado.
-- A vitória depende de escolher a carta certa na hora certa, aproveitando as vantagens do seu deck e explorando as fraquezas do oponente.
+### 🏆 Torne-se o Avatar
 
-Além das batalhas, o jogo conta com um **sistema de aquisição de cartas**, onde pacotes podem ser abertos para encontrar cartas **Comuns**, **Raras** e **Lendárias**, incentivando a construção de decks cada vez mais fortes e personalizados.
+Domine os quatro elementos, desenvolva estratégias imprevisíveis e prove que você é o maior dobrador do mundo!
 
-Prepare-se para dominar **o ciclo eterno das três forças** e escrever seu nome na história como o verdadeiro mestre das três lendas!
+"Elementos, eu te saúdo. Agora, vamos duelar!" 🌊⛰️🔥🌪️
