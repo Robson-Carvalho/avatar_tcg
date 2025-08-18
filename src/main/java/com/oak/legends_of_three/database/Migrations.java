@@ -14,7 +14,10 @@ public class Migrations {
     private static final String MIGRATION_PATH = "migrations/";
 
     private static final List<String> MIGRATION_FILES = List.of(
-            "V1__Create_users_table.sql"
+            "V1__Create_users_table.sql",
+            "V2__Create_cards_table.sql",
+            "V3__Create_decks_table.sql",
+            "V8__Seed_system_cards.sql"
     );
 
 
@@ -75,10 +78,14 @@ public class Migrations {
     }
 
     private static String readMigrationFile(String filename) throws IOException {
-        try (InputStream in = Migrations.class.getClassLoader()
+        InputStream in = Migrations.class.getClassLoader()
                 .getResourceAsStream(MIGRATION_PATH + filename);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
 
+        if (in == null) {
+            throw new IOException("Migration file not found: " + MIGRATION_PATH + filename);
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             return reader.lines().collect(Collectors.joining("\n"));
         }
     }
