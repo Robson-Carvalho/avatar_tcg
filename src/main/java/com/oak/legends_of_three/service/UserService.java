@@ -15,9 +15,13 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new IllegalArgumentException("Email already in use");
         }
+
         if (userRepository.findByNickname(user.getNickname()) != null) {
             throw new IllegalArgumentException("Nickname already in use");
         }
+
+        // obter 10 cartas comum e com user_id null aleatórias para adicionar na conta do
+
         return userRepository.save(user);
     }
 

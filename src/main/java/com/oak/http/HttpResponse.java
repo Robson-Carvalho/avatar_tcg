@@ -42,12 +42,12 @@ public class HttpResponse {
     }
 
     private String getStatusMessage(int statusCode) {
-        switch (statusCode) {
-            case 200: return "OK";
-            case 201: return "Created";
-            case 404: return "Not Found";
-            case 500: return "Internal Server Error";
-            default: return "Unknown";
-        }
+        return switch (statusCode) {
+            case 200 -> "OK";
+            case 201 -> "Created";
+            case 404 -> "Not Found";
+            case 500 -> "Internal Server Error";
+            default -> "Unknown";
+        };
     }
 }

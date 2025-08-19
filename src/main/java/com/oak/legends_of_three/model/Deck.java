@@ -1,6 +1,5 @@
 package com.oak.legends_of_three.model;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,7 +27,6 @@ public class Deck {
         this.card4Id = card4Id;
         this.card5Id = card5Id;
     }
-
 
     public String getId() {
         return id;
