@@ -3,24 +3,48 @@ package com.oak.http;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
+/**
+ * Servidor HTTP + WebSocket minimalista.
+ * Correções:
+ * 1) NÃO fechar o socket após upgrade para WebSocket (o loop do WS passa a
+ *    ser dono do socket).
+ * 2) Suporte a parâmetros NOMEADOS no path do WebSocket (ex.: /ws/{roomId}),
+ *    além de manter aliases "param1", "param2", ... por compatibilidade.
+ */
 public class HttpServer {
     private final int port;
     private final HttpRouter router;
-    private final Map<String, WebSocketHandler> webSocketHandlers;
+
+    // ===== Rotas de WebSocket com parâmetros nomeados =====
+    private static class WsRoute {
+        final Pattern pattern;
+        final WebSocketHandler handler;
+        final String[] paramNames;
+
+        WsRoute(Pattern pattern, WebSocketHandler handler, String[] paramNames) {
+            this.pattern = pattern;
+            this.handler = handler;
+            this.paramNames = paramNames;
+        }
+    }
+
+    private final List<WsRoute> webSocketRoutes;
 
     public HttpServer(int port) {
         this.port = port;
         this.router = new HttpRouter();
-        this.webSocketHandlers = new HashMap<>();
+        this.webSocketRoutes = new ArrayList<>();
     }
 
     public void start() throws IOException {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Oak Server running on http://localhost:" + port);
 
+            // Aceita conexões continuamente
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 handleConnection(clientSocket);
@@ -31,39 +55,123 @@ public class HttpServer {
     private void handleConnection(Socket clientSocket) {
         new Thread(() -> {
             try {
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(clientSocket.getInputStream()));
-                BufferedWriter out = new BufferedWriter(
-                        new OutputStreamWriter(clientSocket.getOutputStream()));
-
+                // NÃO usar try-with-resources aqui para não fechar o socket automaticamente.
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 HttpRequest request = parseRequest(in);
-                HttpResponse response = new HttpResponse(out);
+                HttpResponse response = new HttpResponse(clientSocket.getOutputStream());
 
                 if (isWebSocketUpgrade(request)) {
+                    // Importante: não fechar o socket aqui; o WebSocket passa a gerenciar a conexão.
                     handleWebSocket(request, response, clientSocket);
-                    return;
+                } else {
+                    // Requisição HTTP normal
+                    router.handle(request, response);
+                    // Fecha após responder HTTP
+                    try { clientSocket.shutdownOutput(); } catch (IOException ignored) {}
+                    try { clientSocket.close(); } catch (IOException ignored) {}
                 }
-
-                router.handle(request, response);
-                clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                try { clientSocket.close(); } catch (IOException ignored) {}
             }
-        }).start();
+        }, "oak-conn-handler").start();
     }
 
     private boolean isWebSocketUpgrade(HttpRequest request) {
-        return "websocket".equalsIgnoreCase(request.getHeader("upgrade")) &&
-                webSocketHandlers.containsKey(request.path());
+        String upgrade = request.getHeader("upgrade");
+        if (upgrade == null || !"websocket".equalsIgnoreCase(upgrade)) {
+            return false;
+        }
+
+        // Verifica se o path corresponde a alguma rota de WebSocket registrada
+        String path = request.getPath();
+        for (WsRoute route : webSocketRoutes) {
+            if (route.pattern.matcher(path).matches()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void handleWebSocket(HttpRequest request, HttpResponse response, Socket socket) throws IOException {
-        WebSocketHandler handler = webSocketHandlers.get(request.path());
-        if (handler != null) {
-            handler.handleHandshake(request, response);
-            WebSocket ws = new WebSocket(socket);
-            handler.onOpen(ws);
-            handler.listen(ws);
+        String path = request.getPath();
+
+        for (WsRoute route : webSocketRoutes) {
+            Matcher matcher = route.pattern.matcher(path);
+            if (matcher.matches()) {
+                // Preenche parâmetros capturados
+                for (int i = 1; i <= matcher.groupCount(); i++) {
+                    String value = matcher.group(i);
+
+                    // Alias posicional (compatibilidade): param1, param2...
+                    request.addParam("param" + i, value);
+
+                    // Param nomeado (se existir)
+                    if (route.paramNames != null && (i - 1) < route.paramNames.length) {
+                        String name = route.paramNames[i - 1];
+                        if (name != null && !name.isEmpty()) {
+                            request.addParam(name, value);
+                        }
+                    }
+                }
+
+                WebSocketHandler handler = route.handler;
+
+                // Handshake (padrão é aceitar)
+                handler.handleHandshake(request, response);
+
+                // Se o handshake definiu 101 (Switching Protocols), inicia o WS
+                if (response.getStatus() == 101) {
+                    WebSocket ws = new WebSocket(socket, request);
+
+                    // Notifica abertura
+                    try {
+                        handler.onOpen(ws);
+                    } catch (IOException openEx) {
+                        // Se der erro em onOpen, garante fechamento
+                        try { ws.close(); } catch (IOException ignored) {}
+                        throw openEx;
+                    }
+
+                    // Loop de escuta do WebSocket (mensagens)
+                    new Thread(() -> listenWebSocket(ws, handler), "oak-ws-listener").start();
+                } else {
+                    // Handshake rejeitado; envia status adequado
+                    if (response.getStatus() == 0) {
+                        response.setStatus(400);
+                    }
+                    response.send("WebSocket handshake failed");
+                    try { socket.close(); } catch (IOException ignored) {}
+                }
+                return;
+            }
+        }
+
+        // Nenhuma rota WS bateu
+        response.setStatus(404);
+        response.send("WebSocket endpoint not found");
+        try { socket.close(); } catch (IOException ignored) {}
+    }
+
+    private void listenWebSocket(WebSocket ws, WebSocketHandler handler) {
+        try {
+            while (ws.isOpen()) {
+                String message = ws.receive();
+                if (message == null) {
+                    break; // conexão fechada pelo cliente
+                }
+                handler.onMessage(ws, message);
+            }
+        } catch (IOException e) {
+            // Erros de IO durante o loop (cliente desconectou, etc.)
+            // e.printStackTrace(); // opcional log
+        } finally {
+            try {
+                handler.onClose(ws);
+            } catch (Exception ignored) {}
+            try {
+                ws.close();
+            } catch (IOException ignored) {}
         }
     }
 
@@ -74,9 +182,13 @@ public class HttpServer {
         }
 
         String[] requestLine = line.split(" ");
+        if (requestLine.length < 2) {
+            throw new IOException("Invalid request line: " + line);
+        }
         String method = requestLine[0];
         String path = requestLine[1];
 
+        // Headers
         Map<String, String> headers = new HashMap<>();
         while ((line = in.readLine()) != null && !line.isEmpty()) {
             String[] header = line.split(": ", 2);
@@ -85,14 +197,32 @@ public class HttpServer {
             }
         }
 
-        StringBuilder body = new StringBuilder();
-        while (in.ready()) {
-            body.append((char) in.read());
+        // Body
+        int contentLength = 0;
+        if (headers.containsKey("content-length")) {
+            try {
+                contentLength = Integer.parseInt(headers.get("content-length"));
+            } catch (NumberFormatException ignored) {}
         }
 
-        return new HttpRequest(method, path, headers, body.toString());
+        char[] bodyChars = new char[contentLength];
+        if (contentLength > 0) {
+            int read = 0;
+            while (read < contentLength) {
+                int r = in.read(bodyChars, read, contentLength - read);
+                if (r == -1) break;
+                read += r;
+            }
+            if (read < contentLength) {
+                throw new IOException("Incomplete request body");
+            }
+        }
+
+        String body = new String(bodyChars);
+        return new HttpRequest(method, path, body, headers);
     }
 
+    // === Roteamento HTTP ===
     public void get(String path, HttpHandler handler) {
         router.addRoute("GET", path, handler);
     }
@@ -109,7 +239,22 @@ public class HttpServer {
         router.addRoute("DELETE", path, handler);
     }
 
+    // === WebSockets ===
     public void websocket(String path, WebSocketHandler handler) {
-        webSocketHandlers.put(path, handler);
+        // Extrai nomes dos parâmetros e monta regex
+        String[] paramNames = extractParamNames(path);
+        String regex = path.replaceAll("\\{(.*?)\\}", "([^/]+)");
+        Pattern pattern = Pattern.compile("^" + regex + "$");
+
+        webSocketRoutes.add(new WsRoute(pattern, handler, paramNames));
+    }
+
+    private String[] extractParamNames(String path) {
+        List<String> names = new ArrayList<>();
+        Matcher m = Pattern.compile("\\{(.*?)\\}").matcher(path);
+        while (m.find()) {
+            names.add(m.group(1));
+        }
+        return names.toArray(new String[0]);
     }
 }

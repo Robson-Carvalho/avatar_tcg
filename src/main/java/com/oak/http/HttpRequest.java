@@ -1,21 +1,63 @@
 package com.oak.http;
 
-import java.util.Map;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
-public record HttpRequest(String method, String path, Map<String, String> headers, String body) {
-    public HttpRequest(String method, String path, Map<String, String> headers, String body) {
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class HttpRequest {
+    private final String method;
+    private final String path;
+    private final String body;
+    private final Map<String, String> headers;
+    private final Map<String, String> params = new HashMap<>();
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    public HttpRequest(String method, String path, String body, Map<String, String> headers) {
         this.method = method;
         this.path = path;
-        this.headers = headers != null ? headers : new HashMap<>();
         this.body = body;
+        this.headers = headers != null ? headers : new HashMap<>();
     }
+
+    public void addParam(String name, String value) {params.put(name, value);}
+    public String getParam(String name) {return params.get(name);}
+    public String getMethod() { return method; }
+    public String getPath() { return path; }
+    public String getBody() { return body; }
 
     public String getHeader(String name) {
-        return headers.get(name.toLowerCase());
+        return headers.getOrDefault(name, null);
     }
 
-    public String body() {
-        return body;
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public String getBearerToken() {
+        String auth = getHeader("Authorization");
+        if (auth != null && auth.startsWith("Bearer ")) {
+            return auth.substring(7);
+        }
+        return null;
+    }
+
+    public Map<String, Object> getJsonBodyAsMap() {
+        try {
+            if (body == null || body.isEmpty()) return Collections.emptyMap();
+            return mapper.readValue(body, Map.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid JSON body", e);
+        }
+    }
+
+    public <T> T getJsonBodyAs(Class<T> clazz) {
+        try {
+            return mapper.readValue(body, clazz);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid JSON body for type " + clazz.getSimpleName(), e);
+        }
     }
 }

@@ -10,18 +10,14 @@ import java.util.Date;
 public class AuthService {
     private final UserService userService;
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final long EXPIRATION_TIME = 86400000; // 24 hours
 
     public AuthService() {
         this.userService = new UserService();
     }
 
-    // Add this getter method
-    public UserService getUserService() {
-        return userService;
-    }
-
     public String generateToken(User user) {
+        // 24 hours
+        long EXPIRATION_TIME = 86400000;
         return Jwts.builder()
                 .setSubject(user.getId())
                 .setIssuedAt(new Date())
@@ -48,6 +44,7 @@ public class AuthService {
         if (user == null || !user.getPassword().equals(password)) {
             throw new Exception("Invalid credentials");
         }
+
         return user;
     }
 }
