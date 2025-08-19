@@ -1,6 +1,5 @@
 CREATE TABLE decks (
    id VARCHAR(36) PRIMARY KEY,
-   name VARCHAR(100) NOT NULL,
    user_id VARCHAR(36) NOT NULL,
    card1_id VARCHAR(36) NOT NULL,
    card2_id VARCHAR(36) NOT NULL,
