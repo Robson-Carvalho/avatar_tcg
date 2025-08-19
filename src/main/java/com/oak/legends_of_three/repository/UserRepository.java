@@ -3,33 +3,27 @@ package com.oak.legends_of_three.repository;
 import com.oak.legends_of_three.database.Database;
 import com.oak.legends_of_three.model.User;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class UserRepository {
-    public User findByEmail(String email) throws SQLException {
-        String sql = "SELECT * FROM users WHERE email = ?";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return mapResultSetToUser(rs);
-            }
-            return null;
-        }
-    }
+    public List<User> findAll() throws SQLException {
+        String sql = "SELECT * FROM users";
 
-    public User findByNickname(String nickname) throws SQLException {
-        String sql = "SELECT * FROM users WHERE nickname = ?";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, nickname);
+        try (Connection conn = Database.getConnection()){
+            PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return mapResultSetToUser(rs);
+
+            List<User> users = new ArrayList<>();
+
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
             }
-            return null;
+
+            return users;
         }
+
     }
 
     public User save(User user) throws SQLException {
