@@ -16,6 +16,10 @@ public class Deck {
         this.id = UUID.randomUUID().toString();
     }
 
+    public Deck(String userId) {
+        this.id = userId;
+    }
+
     public Deck(String userId, String card1Id, String card2Id, String card3Id, String card4Id, String card5Id) {
         this.id = UUID.randomUUID().toString();
         this.userId = userId;

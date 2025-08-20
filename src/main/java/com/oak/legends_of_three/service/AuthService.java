@@ -41,6 +41,7 @@ public class AuthService {
 
     public User authenticate(String email, String password) throws Exception {
         User user = userService.findByEmail(email);
+
         if (user == null || !user.getPassword().equals(password)) {
             throw new Exception("Invalid credentials");
         }

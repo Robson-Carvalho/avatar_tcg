@@ -20,6 +20,27 @@ public class CardController {
         this.authService = new AuthService();
     }
 
+    public void getCards(HttpRequest request, HttpResponse response) throws IOException {
+        try {
+            String token = request.getBearerToken();
+
+            String user_id = authService.validateToken(token);
+
+            List<Card> cards = cardService.findByUserId(user_id);
+
+            response.json(Map.of(
+                    "cards", cards
+            ));
+
+        } catch (IllegalArgumentException e) {
+            response.setStatus(400);
+            response.json(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            response.setStatus(403);
+            response.json(Map.of("error", e.getMessage()));
+        }
+    }
+
     public void openPackage(HttpRequest request, HttpResponse response) throws IOException {
         try {
             String token = request.getBearerToken();
