@@ -36,7 +36,7 @@ public class Main {
         server.get("/deck", deckController::getDeck);
 
         // WebSocket
-        server.websocket("/ws", webSocketController.websocket());
+        server.websocket("/game/{matchId}/{userId}", webSocketController.websocket());
 
         server.start();
     }

@@ -6,7 +6,10 @@ import java.util.Map;
 public class MatchManager {
     private static final Map<String, Match> activeMatches = new HashMap<>();
 
+    // MatchRepository
+
     public static void addMatch(Match match) {
+        // pega do banco
         activeMatches.put(match.getId(), match);
     }
 
@@ -15,6 +18,7 @@ public class MatchManager {
     }
 
     public static void removeMatch(String matchId) {
+        // salva no banco antes
         activeMatches.remove(matchId);
     }
 

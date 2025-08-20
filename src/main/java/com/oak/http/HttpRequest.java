@@ -32,6 +32,10 @@ public class HttpRequest {
         return headers.getOrDefault(name, null);
     }
 
+    public Map<String, String> getParams() {
+        return Collections.unmodifiableMap(params);
+    }
+
     public Map<String, String> getHeaders() {
         return headers;
     }
