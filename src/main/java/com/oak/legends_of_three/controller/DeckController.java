@@ -9,6 +9,7 @@ import com.oak.legends_of_three.service.DeckService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 public class DeckController {
     private final AuthService authService;
@@ -52,26 +53,33 @@ public class DeckController {
         try {
             String token = request.getBearerToken();
 
-            authService.validateToken(token);
+            String user_id = authService.validateToken(token);
 
             Map<String, Object> body = request.getJsonBodyAsMap();
 
             String id = (String) body.get("id");
-            String userId = (String) body.get("useId");
-            String card1Id = (String) body.get("card1Id");
-            String card2Id = (String) body.get("email");
-            String card3Id = (String) body.get("email");
-            String card4Id = (String) body.get("email");
-            String card5Id = (String) body.get("email");
 
-            Deck deck = new Deck(userId);
-            deck.setId(id);
-            deck.setUserId(userId);
-            deck.setCard1Id(card1Id);
-            deck.setCard2Id(card2Id);
-            deck.setCard3Id(card3Id);
-            deck.setCard4Id(card4Id);
-            deck.setCard5Id(card5Id);
+            if(id == null){
+                response.setStatus(400);
+                response.json(Map.of("error", "Deck Id é requerido!"));
+                return;
+            }
+
+            String card1Id = (String) body.get("card1Id");
+            String card2Id = (String) body.get("card2Id");
+            String card3Id = (String) body.get("card3Id");
+            String card4Id = (String) body.get("card4Id");
+            String card5Id = (String) body.get("card5Id");
+
+            Deck deck = new Deck(id);
+
+            deck.setUserId(user_id);
+            if (!Objects.equals(card1Id, "")) deck.setCard1Id(card1Id);
+            if (!Objects.equals(card2Id, "")) deck.setCard2Id(card2Id);
+            if (!Objects.equals(card3Id, "")) deck.setCard3Id(card3Id);
+            if (!Objects.equals(card4Id, "")) deck.setCard4Id(card4Id);
+            if (!Objects.equals(card5Id, "")) deck.setCard5Id(card5Id);
+
 
             Deck updatedDeck = deckService.updateDeck(deck);
 
@@ -79,11 +87,8 @@ public class DeckController {
                     "deck", updatedDeck
             ));
 
-        } catch (IllegalArgumentException e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            response.setStatus(403);
+            response.setStatus(400);
             response.json(Map.of("error", e.getMessage()));
         }
     }

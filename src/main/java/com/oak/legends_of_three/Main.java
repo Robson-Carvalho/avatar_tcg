@@ -21,17 +21,17 @@ public class Main {
 
         // Welcome
         server.get("/", welcomeController::welcome);
-
         server.get("/{name}", welcomeController::welcomeDynamic);
 
         // Auth
         server.post("/auth/login", authController::login);
         server.post("/auth/register", authController::register);
 
-        // Card and Deck
+        // Card
         server.get("/card", cardController::getCards);
         server.get("/card/open", cardController::openPackage);
 
+        // Deck
         server.put("/deck", deckController::updateDeck);
         server.get("/deck", deckController::getDeck);
 
