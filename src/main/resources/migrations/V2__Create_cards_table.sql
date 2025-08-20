@@ -1,5 +1,3 @@
-
-
 CREATE TABLE cards (
    id VARCHAR(36) PRIMARY KEY,
    user_id VARCHAR(36),

@@ -8,22 +8,35 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserRepository {
-    public List<User> findAll() throws SQLException {
+    public List<User> findAll()  {
         String sql = "SELECT * FROM users";
+
+        List<User> users = new ArrayList<>();
 
         try (Connection conn = Database.getConnection()){
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-
-            List<User> users = new ArrayList<>();
 
             while (rs.next()) {
                 users.add(mapResultSetToUser(rs));
             }
 
             return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
+        return users;
+    }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getString("id"));
+        user.setName(rs.getString("name"));
+        user.setNickname(rs.getString("nickname"));
+        user.setEmail(rs.getString("email"));
+        user.setPassword(rs.getString("password"));
+        return user;
     }
 
     public User save(User user) throws SQLException {
@@ -39,15 +52,5 @@ public class UserRepository {
             stmt.executeUpdate();
             return user;
         }
-    }
-
-    private User mapResultSetToUser(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getString("id"));
-        user.setName(rs.getString("name"));
-        user.setNickname(rs.getString("nickname"));
-        user.setEmail(rs.getString("email"));
-        user.setPassword(rs.getString("password"));
-        return user;
     }
 }

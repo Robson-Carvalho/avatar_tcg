@@ -4,8 +4,9 @@ import com.oak.http.WebSocket;
 import com.oak.http.WebSocketHandler;
 
 public class WebSocketController {
-
     public WebSocketHandler websocket() {
+        // ter uma lista para manter as partidas ativas e management
+
         return new WebSocketHandler(){
             @Override
             public void onOpen(WebSocket webSocket) {

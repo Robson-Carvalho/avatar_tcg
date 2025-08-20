@@ -1,0 +1,393 @@
+Index: src/main/java/com/oak/legends_of_three/controller/AuthController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.oak.legends_of_three.controller;\r\n\r\nimport com.oak.http.HttpRequest;\r\nimport com.oak.http.HttpResponse;\r\nimport com.oak.legends_of_three.model.User;\r\nimport com.oak.legends_of_three.service.AuthService;\r\nimport com.oak.legends_of_three.service.UserService;\r\nimport com.oak.legends_of_three.util.JsonParser;\r\nimport java.io.IOException;\r\nimport java.sql.SQLException;\r\nimport java.util.Map;\r\n\r\npublic class AuthController {\r\n    private final AuthService authService;\r\n    private final UserService userService;\r\n\r\n    public AuthController() {\r\n        this.authService = new AuthService();\r\n        this.userService = new UserService();\r\n    }\r\n\r\n    public void login(HttpRequest request, HttpResponse response) throws IOException {\r\n        try {\r\n            Map<String, String> body = JsonParser.parseSimpleJson(request.body());\r\n            String email = body.get(\"email\");\r\n            String password = body.get(\"password\");\r\n\r\n            if (email == null || password == null) {\r\n                response.setStatus(400);\r\n                response.send(\"{\\\"error\\\":\\\"Email and password are required\\\"}\");\r\n                return;\r\n            }\r\n\r\n            User user = authService.authenticate(email, password);\r\n            String token = authService.generateToken(user);\r\n\r\n            response.setHeader(\"Content-Type\", \"application/json\");\r\n            response.send(String.format(\r\n                    \"{\\\"token\\\":\\\"%s\\\",\\\"user\\\":%s}\",\r\n                    token, user.toJson()\r\n            ));\r\n        } catch (Exception e) {\r\n            response.setStatus(401);\r\n            response.send(String.format(\"{\\\"error\\\":\\\"%s\\\"}\", e.getMessage()));\r\n        }\r\n    }\r\n\r\n    public void register(HttpRequest request, HttpResponse response) throws IOException {\r\n        try {\r\n            Map<String, String> body = JsonParser.parseSimpleJson(request.body());\r\n\r\n            String name = body.get(\"name\");\r\n            String nickname = body.get(\"nickname\");\r\n            String email = body.get(\"email\");\r\n            String password = body.get(\"password\");\r\n\r\n            if (name == null || nickname == null || email == null || password == null) {\r\n                response.setStatus(400);\r\n                response.send(\"{\\\"error\\\":\\\"All fields are required\\\"}\");\r\n                return;\r\n            }\r\n\r\n            User user = new User();\r\n            user.setName(name);\r\n            user.setNickname(nickname);\r\n            user.setEmail(email);\r\n            user.setPassword(password);\r\n\r\n            User registeredUser = userService.register(user);\r\n            String token = authService.generateToken(registeredUser);\r\n\r\n            response.setHeader(\"Content-Type\", \"application/json\");\r\n            response.send(String.format(\r\n                    \"{\\\"token\\\":\\\"%s\\\",\\\"user\\\":%s}\",\r\n                    token, registeredUser.toJson()\r\n            ));\r\n        } catch (SQLException e) {\r\n            response.setStatus(500);\r\n            response.send(\"{\\\"error\\\":\\\"Database error\\\"}\");\r\n            e.printStackTrace();\r\n        } catch (IllegalArgumentException e) {\r\n            response.setStatus(400);\r\n            response.send(String.format(\"{\\\"error\\\":\\\"%s\\\"}\", e.getMessage()));\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/oak/legends_of_three/controller/AuthController.java b/src/main/java/com/oak/legends_of_three/controller/AuthController.java
+--- a/src/main/java/com/oak/legends_of_three/controller/AuthController.java	(revision 2957053c7b39a97b1c8fe8eaa0b0ba4352e7138e)
++++ b/src/main/java/com/oak/legends_of_three/controller/AuthController.java	(date 1755642805793)
+@@ -21,7 +21,8 @@
+ 
+     public void login(HttpRequest request, HttpResponse response) throws IOException {
+         try {
+-            Map<String, String> body = JsonParser.parseSimpleJson(request.body());
++            Map<String, String> body = JsonParser.parseSimpleJson(request.getJsonBodyAsMap());
++
+             String email = body.get("email");
+             String password = body.get("password");
+ 
+@@ -60,11 +61,7 @@
+                 return;
+             }
+ 
+-            User user = new User();
+-            user.setName(name);
+-            user.setNickname(nickname);
+-            user.setEmail(email);
+-            user.setPassword(password);
++            User user = new User(name, nickname, email, password);
+ 
+             User registeredUser = userService.register(user);
+             String token = authService.generateToken(registeredUser);
+Index: src/main/java/com/oak/legends_of_three/service/AuthService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.oak.legends_of_three.service;\r\n\r\nimport com.oak.legends_of_three.model.User;\r\nimport io.jsonwebtoken.Jwts;\r\nimport io.jsonwebtoken.SignatureAlgorithm;\r\nimport io.jsonwebtoken.security.Keys;\r\nimport java.security.Key;\r\nimport java.util.Date;\r\n\r\npublic class AuthService {\r\n    private final UserService userService;\r\n    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);\r\n\r\n    public AuthService() {\r\n        this.userService = new UserService();\r\n    }\r\n\r\n    public String generateToken(User user) {\r\n        // 24 hours\r\n        long EXPIRATION_TIME = 86400000;\r\n\r\n        return Jwts.builder()\r\n                .setSubject(user.getId())\r\n                .setIssuedAt(new Date())\r\n                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))\r\n                .signWith(key)\r\n                .compact();\r\n    }\r\n\r\n    public String validateToken(String token) {\r\n        try {\r\n            return Jwts.parserBuilder()\r\n                    .setSigningKey(key)\r\n                    .build()\r\n                    .parseClaimsJws(token)\r\n                    .getBody()\r\n                    .getSubject();\r\n        } catch (Exception e) {\r\n            return null;\r\n        }\r\n    }\r\n\r\n    public User authenticate(String email, String password) throws Exception {\r\n        User user = userService.findByEmail(email);\r\n        if (user == null || !user.getPassword().equals(password)) {\r\n            throw new Exception(\"Invalid credentials\");\r\n        }\r\n        return user;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/oak/legends_of_three/service/AuthService.java b/src/main/java/com/oak/legends_of_three/service/AuthService.java
+--- a/src/main/java/com/oak/legends_of_three/service/AuthService.java	(revision 2957053c7b39a97b1c8fe8eaa0b0ba4352e7138e)
++++ b/src/main/java/com/oak/legends_of_three/service/AuthService.java	(date 1755639956482)
+@@ -16,8 +16,7 @@
+     }
+ 
+     public String generateToken(User user) {
+-        // 24 hours
+-        long EXPIRATION_TIME = 86400000;
++        long EXPIRATION_TIME = 86400000; // 24h
+ 
+         return Jwts.builder()
+                 .setSubject(user.getId())
+Index: src/main/java/com/oak/legends_of_three/model/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.oak.legends_of_three.model;\r\n\r\nimport java.util.UUID;\r\n\r\npublic class User {\r\n    private String id;\r\n    private String name;\r\n    private String nickname;\r\n    private String email;\r\n    private String password;\r\n\r\n    public User() {\r\n        this.id = UUID.randomUUID().toString();\r\n    }\r\n\r\n    public User(String name, String nickname, String email, String password) {\r\n        this.id = UUID.randomUUID().toString();\r\n        this.name = name;\r\n        this.nickname = nickname;\r\n        this.email = email;\r\n        this.password = password;\r\n    }\r\n\r\n    public  String getId() {\r\n        return id;\r\n    }\r\n    public void setId(String id) {\r\n        this.id = id;\r\n    }\r\n\r\n    public String getName() {\r\n        return name;\r\n    }\r\n    public void setName(String name) {\r\n        this.name = name;\r\n    }\r\n\r\n    public String getNickname() {\r\n        return nickname;\r\n    }\r\n    public void setNickname(String nickname) {\r\n        this.nickname = nickname;\r\n    }\r\n\r\n    public String getEmail() {\r\n        return email;\r\n    }\r\n    public void setEmail(String email) {\r\n        this.email = email;\r\n    }\r\n\r\n    public String getPassword() {\r\n        return password;\r\n    }\r\n    public void setPassword(String password) {\r\n        this.password = password;\r\n    }\r\n\r\n    public String toJson() {\r\n        return String.format(\r\n                \"{\\\"id\\\":\\\"%s\\\",\\\"name\\\":\\\"%s\\\",\\\"nickname\\\":\\\"%s\\\",\\\"email\\\":\\\"%s\\\"}\",\r\n                id, name, nickname, email\r\n        );\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/oak/legends_of_three/model/User.java b/src/main/java/com/oak/legends_of_three/model/User.java
+--- a/src/main/java/com/oak/legends_of_three/model/User.java	(revision 2957053c7b39a97b1c8fe8eaa0b0ba4352e7138e)
++++ b/src/main/java/com/oak/legends_of_three/model/User.java	(date 1755639836472)
+@@ -9,9 +9,7 @@
+     private String email;
+     private String password;
+ 
+-    public User() {
+-        this.id = UUID.randomUUID().toString();
+-    }
++    public User() {}
+ 
+     public User(String name, String nickname, String email, String password) {
+         this.id = UUID.randomUUID().toString();
+Index: src/main/java/com/oak/legends_of_three/repository/UserRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.oak.legends_of_three.repository;\r\n\r\nimport com.oak.legends_of_three.database.Database;\r\nimport com.oak.legends_of_three.model.User;\r\nimport java.sql.*;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.UUID;\r\n\r\npublic class UserRepository {\r\n    public List<User> findAll() throws SQLException {\r\n        String sql = \"SELECT * FROM users\";\r\n\r\n        try (Connection conn = Database.getConnection()){\r\n            PreparedStatement stmt = conn.prepareStatement(sql);\r\n            ResultSet rs = stmt.executeQuery();\r\n\r\n            List<User> users = new ArrayList<>();\r\n\r\n            while (rs.next()) {\r\n                users.add(mapResultSetToUser(rs));\r\n            }\r\n\r\n            return users;\r\n        }\r\n\r\n    }\r\n\r\n    public User save(User user) throws SQLException {\r\n        String sql = \"INSERT INTO users (id, name, nickname, email, password) VALUES (?, ?, ?, ?, ?)\";\r\n        try (Connection conn = Database.getConnection();\r\n             PreparedStatement stmt = conn.prepareStatement(sql)) {\r\n            user.setId(UUID.randomUUID().toString());\r\n            stmt.setString(1, user.getId());\r\n            stmt.setString(2, user.getName());\r\n            stmt.setString(3, user.getNickname());\r\n            stmt.setString(4, user.getEmail());\r\n            stmt.setString(5, user.getPassword());\r\n            stmt.executeUpdate();\r\n            return user;\r\n        }\r\n    }\r\n\r\n    private User mapResultSetToUser(ResultSet rs) throws SQLException {\r\n        User user = new User();\r\n        user.setId(rs.getString(\"id\"));\r\n        user.setName(rs.getString(\"name\"));\r\n        user.setNickname(rs.getString(\"nickname\"));\r\n        user.setEmail(rs.getString(\"email\"));\r\n        user.setPassword(rs.getString(\"password\"));\r\n        return user;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/oak/legends_of_three/repository/UserRepository.java b/src/main/java/com/oak/legends_of_three/repository/UserRepository.java
+--- a/src/main/java/com/oak/legends_of_three/repository/UserRepository.java	(revision 2957053c7b39a97b1c8fe8eaa0b0ba4352e7138e)
++++ b/src/main/java/com/oak/legends_of_three/repository/UserRepository.java	(date 1755639873223)
+@@ -23,7 +23,6 @@
+ 
+             return users;
+         }
+-
+     }
+ 
+     public User save(User user) throws SQLException {
+@@ -43,6 +42,7 @@
+ 
+     private User mapResultSetToUser(ResultSet rs) throws SQLException {
+         User user = new User();
++
+         user.setId(rs.getString("id"));
+         user.setName(rs.getString("name"));
+         user.setNickname(rs.getString("nickname"));
+Index: src/main/java/com/oak/http/HttpRouter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.oak.http;\r\n\r\nimport java.io.IOException;\r\nimport java.util.Map;\r\nimport java.util.HashMap;\r\nimport java.util.regex.Pattern;\r\nimport java.util.regex.Matcher;\r\n\r\npublic class HttpRouter {\r\n    private final Map<String, Map<String, HttpHandler>> staticRoutes = new HashMap<>();\r\n    private final Map<String, Map<Pattern, DynamicRoute>> dynamicRoutes = new HashMap<>();\r\n\r\n    private static class DynamicRoute {\r\n        final HttpHandler handler;\r\n        final String[] paramNames;\r\n\r\n        DynamicRoute(HttpHandler handler, String[] paramNames) {\r\n            this.handler = handler;\r\n            this.paramNames = paramNames;\r\n        }\r\n    }\r\n\r\n    public void addRoute(String method, String path, HttpHandler handler) {\r\n        if (path.contains(\"{\") && path.contains(\"}\")) {\r\n            // Processa rota dinâmica\r\n            String[] paramNames = extractParamNames(path);\r\n            String regex = path.replaceAll(\"\\\\{(.*?)\\\\}\", \"([^/]+)\");\r\n            Pattern pattern = Pattern.compile(\"^\" + regex + \"$\");\r\n\r\n            dynamicRoutes.computeIfAbsent(method.toUpperCase(), k -> new HashMap<>())\r\n                    .put(pattern, new DynamicRoute(handler, paramNames));\r\n        } else {\r\n            // Rota estática\r\n            staticRoutes.computeIfAbsent(method.toUpperCase(), k -> new HashMap<>())\r\n                    .put(path, handler);\r\n        }\r\n    }\r\n\r\n    private String[] extractParamNames(String path) {\r\n        java.util.List<String> paramNames = new java.util.ArrayList<>();\r\n        Matcher m = Pattern.compile(\"\\\\{(.*?)\\\\}\").matcher(path);\r\n        while (m.find()) {\r\n            paramNames.add(m.group(1));\r\n        }\r\n        return paramNames.toArray(new String[0]);\r\n    }\r\n\r\n    public void handle(HttpRequest request, HttpResponse response) throws IOException {\r\n        String method = request.getMethod();\r\n        String path = request.getPath();\r\n\r\n        // Primeiro tenta rotas estáticas\r\n        if (staticRoutes.containsKey(method) && staticRoutes.get(method).containsKey(path)) {\r\n            staticRoutes.get(method).get(path).handle(request, response);\r\n            return;\r\n        }\r\n\r\n        // Depois tenta rotas dinâmicas\r\n        if (dynamicRoutes.containsKey(method)) {\r\n            for (Map.Entry<Pattern, DynamicRoute> entry : dynamicRoutes.get(method).entrySet()) {\r\n                Matcher matcher = entry.getKey().matcher(path);\r\n                if (matcher.matches()) {\r\n                    DynamicRoute route = entry.getValue();\r\n                    // Adiciona parâmetros à requisição\r\n                    for (int i = 0; i < route.paramNames.length; i++) {\r\n                        request.addParam(route.paramNames[i], matcher.group(i + 1));\r\n                    }\r\n                    route.handler.handle(request, response);\r\n                    return;\r\n                }\r\n            }\r\n        }\r\n\r\n        response.setStatus(404);\r\n        response.send(\"Route not found\");\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/oak/http/HttpRouter.java b/src/main/java/com/oak/http/HttpRouter.java
+--- a/src/main/java/com/oak/http/HttpRouter.java	(revision 2957053c7b39a97b1c8fe8eaa0b0ba4352e7138e)
++++ b/src/main/java/com/oak/http/HttpRouter.java	(date 1755641288940)
+@@ -21,16 +21,19 @@
+     }
+ 
+     public void addRoute(String method, String path, HttpHandler handler) {
++        // processamento de rota dinâmica
+         if (path.contains("{") && path.contains("}")) {
+-            // Processa rota dinâmica
+             String[] paramNames = extractParamNames(path);
++
+             String regex = path.replaceAll("\\{(.*?)\\}", "([^/]+)");
+             Pattern pattern = Pattern.compile("^" + regex + "$");
+ 
+             dynamicRoutes.computeIfAbsent(method.toUpperCase(), k -> new HashMap<>())
+                     .put(pattern, new DynamicRoute(handler, paramNames));
+-        } else {
+-            // Rota estática
++        }
++
++        // processamento de rota estática
++        else {
+             staticRoutes.computeIfAbsent(method.toUpperCase(), k -> new HashMap<>())
+                     .put(path, handler);
+         }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"a830f271-bab9-40f3-9e2f-b203763a9a52\" name=\"Changes\" comment=\"feat: adiciona seed\">\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/repository/CardRepository.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/oak/http/HttpResponse.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/oak/http/HttpResponse.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/model/Deck.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/model/Deck.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/UserService.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/UserService.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Dockerfile\" />\r\n        <option value=\"Enum\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"feature/card\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"KubernetesApiPersistence\">{}</component>\r\n  <component name=\"KubernetesApiProvider\">{\r\n  &quot;isMigrated&quot;: true\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 0\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"31M0jOeIIOBw62lJDCZrxO0H9m3\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;Application.Main.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;feature/card&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/robso/OneDrive/Área de Trabalho/github/legends-of-three&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\robso\\OneDrive\\Área de Trabalho\\github\\legends-of-three\\src\\main\\java\\oak\\http\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <envs>\r\n        <env name=\"DB_PASSWORD\" value=\"postgres\" />\r\n        <env name=\"DB_URL\" value=\"jdbc:postgresql://localhost:5432/legends_three\" />\r\n        <env name=\"DB_USER\" value=\"postgres\" />\r\n      </envs>\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.oak.legends_of_three.Main\" />\r\n      <module name=\"legends-of-three\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.oak.legends_of_three.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"a830f271-bab9-40f3-9e2f-b203763a9a52\" name=\"Changes\" comment=\"\" />\r\n      <created>1755357775726</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1755357775726</updated>\r\n      <workItem from=\"1755357776525\" duration=\"207000\" />\r\n      <workItem from=\"1755357986230\" duration=\"22000\" />\r\n      <workItem from=\"1755358009921\" duration=\"207000\" />\r\n      <workItem from=\"1755360853814\" duration=\"1315000\" />\r\n      <workItem from=\"1755362182397\" duration=\"2267000\" />\r\n      <workItem from=\"1755367602208\" duration=\"1861000\" />\r\n      <workItem from=\"1755444064081\" duration=\"533000\" />\r\n      <workItem from=\"1755535248790\" duration=\"6155000\" />\r\n      <workItem from=\"1755544780864\" duration=\"330000\" />\r\n      <workItem from=\"1755566334180\" duration=\"1402000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"feet: ajustes de código\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1755541973731</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1755541973731</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"feet: adiciona classe Card\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1755542001387</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1755542001387</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"feet: adiciona classe Deck\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1755542008860</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1755542008860</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"feet: cria classe de partida\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1755543458593</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1755543458593</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"feat: adiciona seed\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1755567844153</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1755567844153</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"6\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <ignored-roots>\r\n      <path value=\"$PROJECT_DIR$/../..\" />\r\n    </ignored-roots>\r\n    <MESSAGE value=\"feet: ajustes de código\" />\r\n    <MESSAGE value=\"feet: adiciona classe Card\" />\r\n    <MESSAGE value=\"feet: adiciona classe Deck\" />\r\n    <MESSAGE value=\"feet: cria classe de partida\" />\r\n    <MESSAGE value=\"feat: adiciona seed\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"feat: adiciona seed\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 2957053c7b39a97b1c8fe8eaa0b0ba4352e7138e)
++++ b/.idea/workspace.xml	(date 1755642678065)
+@@ -5,11 +5,14 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona seed">
+-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/repository/CardRepository.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpResponse.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRouter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRouter.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/controller/AuthController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/model/Card.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/model/Deck.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/UserService.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/model/User.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/repository/UserRepository.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/AuthService.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -45,24 +48,24 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+-    &quot;git-widget-placeholder&quot;: &quot;feature/card&quot;,
+-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;C:/Users/robso/OneDrive/Área de Trabalho/github/legends-of-three&quot;,
+-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "Application.Main.executor": "Run",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
++    "RunOnceActivity.git.unshallow": "true",
++    "extract.method.default.visibility": "private",
++    "git-widget-placeholder": "develop",
++    "kotlin-language-version-configured": "true",
++    "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/legends-of-three",
++    "node.js.detected.package.eslint": "true",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
++    "vue.rearranger.settings.migration": "true"
+   }
+-}</component>
++}]]></component>
+   <component name="RecentsManager">
+     <key name="MoveFile.RECENT_KEYS">
+       <recent name="C:\Users\robso\OneDrive\Área de Trabalho\github\legends-of-three\src\main\java\oak\http" />
+@@ -160,7 +163,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1755567844153</updated>
+     </task>
+-    <option name="localTasksCounter" value="6" />
++    <task id="LOCAL-00006" summary="feat: adiciona seed">
++      <option name="closed" value="true" />
++      <created>1755637251453</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1755637251453</updated>
++    </task>
++    <option name="localTasksCounter" value="7" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -175,6 +186,8 @@
+     <MESSAGE value="feet: adiciona classe Deck" />
+     <MESSAGE value="feet: cria classe de partida" />
+     <MESSAGE value="feat: adiciona seed" />
+-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona seed" />
++    <MESSAGE value="Merge branch 'feature/user' into develop&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;src/main/java/com/oak/legends_of_three/controller/AuthController.java&#10;#&#9;src/main/java/com/oak/legends_of_three/service/AuthService.java" />
++    <MESSAGE value="Merge branch 'feature/card' into develop&#10;&#10;# Conflicts:&#10;#&#9;src/main/java/com/oak/http/HttpResponse.java&#10;#&#9;src/main/java/com/oak/legends_of_three/service/UserService.java" />
++    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'feature/card' into develop&#10;&#10;# Conflicts:&#10;#&#9;src/main/java/com/oak/http/HttpResponse.java&#10;#&#9;src/main/java/com/oak/legends_of_three/service/UserService.java" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/main/java/com/oak/legends_of_three/model/Deck.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.oak.legends_of_three.model;\r\n\r\nimport java.util.Objects;\r\nimport java.util.UUID;\r\n\r\npublic class Deck {\r\n    private String id;\r\n    private String name;\r\n    private String userId;\r\n    private String card1Id;\r\n    private String card2Id;\r\n    private String card3Id;\r\n    private String card4Id;\r\n    private String card5Id;\r\n\r\n    public Deck() {\r\n        this.id = UUID.randomUUID().toString();\r\n    }\r\n\r\n    public Deck(String name, String userId, String card1Id, String card2Id, String card3Id, String card4Id, String card5Id) {\r\n        this.id = UUID.randomUUID().toString();\r\n        this.name = name;\r\n        this.userId = userId;\r\n        this.card1Id = card1Id;\r\n        this.card2Id = card2Id;\r\n        this.card3Id = card3Id;\r\n        this.card4Id = card4Id;\r\n        this.card5Id = card5Id;\r\n    }\r\n\r\n    public String getId() {\r\n        return id;\r\n    }\r\n\r\n    public String getName() {\r\n        return name;\r\n    }\r\n\r\n    public void setName(String name) {\r\n        this.name = name;\r\n    }\r\n\r\n    public void setId(String id) {\r\n        this.id = id;\r\n    }\r\n\r\n    public String getUserId() {\r\n        return userId;\r\n    }\r\n\r\n    public void setUserId(String userId) {\r\n        this.userId = userId;\r\n    }\r\n\r\n    public String getCard1Id() {\r\n        return card1Id;\r\n    }\r\n\r\n    public void setCard1Id(String card1Id) {\r\n        this.card1Id = card1Id;\r\n    }\r\n\r\n    public String getCard2Id() {\r\n        return card2Id;\r\n    }\r\n\r\n    public void setCard2Id(String card2Id) {\r\n        this.card2Id = card2Id;\r\n    }\r\n\r\n    public String getCard3Id() {\r\n        return card3Id;\r\n    }\r\n\r\n    public void setCard3Id(String card3Id) {\r\n        this.card3Id = card3Id;\r\n    }\r\n\r\n    public String getCard4Id() {\r\n        return card4Id;\r\n    }\r\n\r\n    public void setCard4Id(String card4Id) {\r\n        this.card4Id = card4Id;\r\n    }\r\n\r\n    public String getCard5Id() {\r\n        return card5Id;\r\n    }\r\n\r\n    public void setCard5Id(String card5Id) {\r\n        this.card5Id = card5Id;\r\n    }\r\n\r\n    public boolean hasDuplicateCards() {\r\n        return card1Id.equals(card2Id) ||\r\n                card1Id.equals(card3Id) ||\r\n                card1Id.equals(card4Id) ||\r\n                card1Id.equals(card5Id) ||\r\n                card2Id.equals(card3Id) ||\r\n                card2Id.equals(card4Id) ||\r\n                card2Id.equals(card5Id) ||\r\n                card3Id.equals(card4Id) ||\r\n                card3Id.equals(card5Id) ||\r\n                card4Id.equals(card5Id);\r\n    }\r\n\r\n    @Override\r\n    public boolean equals(Object o) {\r\n        if (this == o) return true;\r\n        if (o == null || getClass() != o.getClass()) return false;\r\n        Deck deck = (Deck) o;\r\n\r\n        return Objects.equals(id, deck.id) &&\r\n                Objects.equals(userId, deck.userId) &&\r\n                Objects.equals(card1Id, deck.card1Id) &&\r\n                Objects.equals(card2Id, deck.card2Id) &&\r\n                Objects.equals(card3Id, deck.card3Id) &&\r\n                Objects.equals(card4Id, deck.card4Id) &&\r\n                Objects.equals(card5Id, deck.card5Id);\r\n    }\r\n\r\n    @Override\r\n    public int hashCode() {\r\n        return Objects.hash(id, userId, card1Id, card2Id, card3Id, card4Id, card5Id);\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"Deck{\" +\r\n                \"id='\" + id + '\\'' +\r\n                \", userId='\" + userId + '\\'' +\r\n                \", card1Id='\" + card1Id + '\\'' +\r\n                \", card2Id='\" + card2Id + '\\'' +\r\n                \", card3Id='\" + card3Id + '\\'' +\r\n                \", card4Id='\" + card4Id + '\\'' +\r\n                \", card5Id='\" + card5Id + '\\'' +\r\n                '}';\r\n    }\r\n}
+===================================================================
+diff --git a/src/main/java/com/oak/legends_of_three/model/Deck.java b/src/main/java/com/oak/legends_of_three/model/Deck.java
+--- a/src/main/java/com/oak/legends_of_three/model/Deck.java	(revision 2957053c7b39a97b1c8fe8eaa0b0ba4352e7138e)
++++ b/src/main/java/com/oak/legends_of_three/model/Deck.java	(date 1755642566709)
+@@ -1,11 +1,9 @@
+ package com.oak.legends_of_three.model;
+ 
+-import java.util.Objects;
+ import java.util.UUID;
+ 
+ public class Deck {
+     private String id;
+-    private String name;
+     private String userId;
+     private String card1Id;
+     private String card2Id;
+@@ -17,9 +15,8 @@
+         this.id = UUID.randomUUID().toString();
+     }
+ 
+-    public Deck(String name, String userId, String card1Id, String card2Id, String card3Id, String card4Id, String card5Id) {
++    public Deck(String userId, String card1Id, String card2Id, String card3Id, String card4Id, String card5Id) {
+         this.id = UUID.randomUUID().toString();
+-        this.name = name;
+         this.userId = userId;
+         this.card1Id = card1Id;
+         this.card2Id = card2Id;
+@@ -32,14 +29,6 @@
+         return id;
+     }
+ 
+-    public String getName() {
+-        return name;
+-    }
+-
+-    public void setName(String name) {
+-        this.name = name;
+-    }
+-
+     public void setId(String id) {
+         this.id = id;
+     }
+@@ -92,49 +81,18 @@
+         this.card5Id = card5Id;
+     }
+ 
+-    public boolean hasDuplicateCards() {
+-        return card1Id.equals(card2Id) ||
+-                card1Id.equals(card3Id) ||
+-                card1Id.equals(card4Id) ||
+-                card1Id.equals(card5Id) ||
+-                card2Id.equals(card3Id) ||
+-                card2Id.equals(card4Id) ||
+-                card2Id.equals(card5Id) ||
+-                card3Id.equals(card4Id) ||
+-                card3Id.equals(card5Id) ||
+-                card4Id.equals(card5Id);
+-    }
+-
+-    @Override
+-    public boolean equals(Object o) {
+-        if (this == o) return true;
+-        if (o == null || getClass() != o.getClass()) return false;
+-        Deck deck = (Deck) o;
+-
+-        return Objects.equals(id, deck.id) &&
+-                Objects.equals(userId, deck.userId) &&
+-                Objects.equals(card1Id, deck.card1Id) &&
+-                Objects.equals(card2Id, deck.card2Id) &&
+-                Objects.equals(card3Id, deck.card3Id) &&
+-                Objects.equals(card4Id, deck.card4Id) &&
+-                Objects.equals(card5Id, deck.card5Id);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return Objects.hash(id, userId, card1Id, card2Id, card3Id, card4Id, card5Id);
+-    }
+-
+-    @Override
+-    public String toString() {
+-        return "Deck{" +
+-                "id='" + id + '\'' +
+-                ", userId='" + userId + '\'' +
+-                ", card1Id='" + card1Id + '\'' +
+-                ", card2Id='" + card2Id + '\'' +
+-                ", card3Id='" + card3Id + '\'' +
+-                ", card4Id='" + card4Id + '\'' +
+-                ", card5Id='" + card5Id + '\'' +
+-                '}';
++    public String toJson() {
++        return String.format(
++                "{" +
++                        "\"id\":\"%s\"," +
++                        "\"userId\":\"%s\"," +
++                        "\"card1Id\":\"%s\"," +
++                        "\"card2Id\":\"%s\"," +
++                        "\"card3Id\":\"%s\"," +
++                        "\"card4Id\":\"%s\"," +
++                        "\"card5Id\":\"%s\"" +
++                        "}",
++                id, userId, card1Id, card2Id, card3Id, card4Id, card5Id
++        );
+     }
+ }
+\ No newline at end of file
+Index: src/main/java/com/oak/legends_of_three/model/Card.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.oak.legends_of_three.model;\r\n\r\nimport com.oak.legends_of_three.enums.ElementCard;\r\nimport com.oak.legends_of_three.enums.PhaseCard;\r\nimport com.oak.legends_of_three.enums.RarityCard;\r\n\r\nimport java.util.UUID;\r\n\r\npublic class Card {\r\n    private final String id;\r\n    private String userId;\r\n    private String name;\r\n    private ElementCard element;\r\n    private PhaseCard phase;\r\n    private int attack;\r\n    private int defense;\r\n    private RarityCard rarity;\r\n    private String description;\r\n\r\n    public Card(String userId) {\r\n        this.id = UUID.randomUUID().toString();\r\n    }\r\n\r\n    public Card(String userId, String name, ElementCard element, PhaseCard phase, int attack, int defense, RarityCard rarity, String description) {\r\n        this.id = UUID.randomUUID().toString();\r\n        this.userId = userId;\r\n        this.name = name;\r\n        this.element = element;\r\n        this.phase = phase;\r\n        this.attack = attack;\r\n        this.defense = defense;\r\n        this.rarity = rarity;\r\n        this.description = description;\r\n    }\r\n\r\n    public String getId() {\r\n        return id;\r\n    }\r\n\r\n    public String getUserId() {\r\n        return userId;\r\n    }\r\n\r\n    public String setUserId(String userId) {\r\n        return this.userId = userId;\r\n    }\r\n\r\n    public String getName() {\r\n        return name;\r\n    }\r\n\r\n    public void setName(String name) {\r\n        this.name = name;\r\n    }\r\n\r\n    public ElementCard getElement() {\r\n        return element;\r\n    }\r\n\r\n    public void setElement(ElementCard element) {\r\n        this.element = element;\r\n    }\r\n\r\n    public PhaseCard getPhase() {\r\n        return phase;\r\n    }\r\n\r\n    public void setPhase(PhaseCard phase) {\r\n        this.phase = phase;\r\n    }\r\n\r\n    public int getAttack() {\r\n        return attack;\r\n    }\r\n\r\n    public void setAttack(int attack) {\r\n        this.attack = attack;\r\n    }\r\n\r\n    public int getDefense() {\r\n        return defense;\r\n    }\r\n\r\n    public void setDefense(int defense) {\r\n        this.defense = defense;\r\n    }\r\n\r\n    public RarityCard getRarity() {\r\n        return rarity;\r\n    }\r\n\r\n    public void setRarity(RarityCard rarity) {\r\n        this.rarity = rarity;\r\n    }\r\n\r\n    public String getDescription() {\r\n        return description;\r\n    }\r\n\r\n    public void setDescription(String description) {\r\n        this.description = description;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"Card{\" +\r\n                \"id='\" + id + '\\'' +\r\n                \", name='\" + name + '\\'' +\r\n                \", element=\" + element +\r\n                \", phase=\" + phase +\r\n                \", attack=\" + attack +\r\n                \", defense=\" + defense +\r\n                \", rarity=\" + rarity +\r\n                \", description='\" + description + '\\'' +\r\n                '}';\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/src/main/java/com/oak/legends_of_three/model/Card.java b/src/main/java/com/oak/legends_of_three/model/Card.java
+--- a/src/main/java/com/oak/legends_of_three/model/Card.java	(revision 2957053c7b39a97b1c8fe8eaa0b0ba4352e7138e)
++++ b/src/main/java/com/oak/legends_of_three/model/Card.java	(date 1755642702066)
+@@ -41,8 +41,8 @@
+         return userId;
+     }
+ 
+-    public String setUserId(String userId) {
+-        return this.userId = userId;
++    public void setUserId(String userId) {
++        this.userId = userId;
+     }
+ 
+     public String getName() {
+@@ -101,17 +101,20 @@
+         this.description = description;
+     }
+ 
+-    @Override
+-    public String toString() {
+-        return "Card{" +
+-                "id='" + id + '\'' +
+-                ", name='" + name + '\'' +
+-                ", element=" + element +
+-                ", phase=" + phase +
+-                ", attack=" + attack +
+-                ", defense=" + defense +
+-                ", rarity=" + rarity +
+-                ", description='" + description + '\'' +
+-                '}';
++    public String toJson() {
++        return String.format(
++                "{" +
++                        "\"id\":\"%s\"," +
++                        "\"name\":\"%s\"," +
++                        "\"element\":\"%s\"," +
++                        "\"phase\":\"%s\"," +
++                        "\"attack\":%d," +
++                        "\"defense\":%d," +
++                        "\"rarity\":\"%s\"," +
++                        "\"description\":\"%s\"" +
++                        "}",
++                id, name, element, phase, attack, defense, rarity, description
++        );
+     }
++
+ }

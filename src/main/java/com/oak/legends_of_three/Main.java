@@ -3,13 +3,17 @@ package com.oak.legends_of_three;
 import com.oak.http.HttpServer;
 import com.oak.legends_of_three.controller.AuthController;
 import com.oak.legends_of_three.controller.WebSocketController;
+import com.oak.legends_of_three.database.Migrations;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
         HttpServer server = new HttpServer(8080);
+
+        Migrations.runMigrations();
 
         AuthController authController = new AuthController();
         WebSocketController webSocketController = new WebSocketController();

@@ -4,33 +4,40 @@ import com.oak.legends_of_three.enums.ElementCard;
 import com.oak.legends_of_three.enums.PhaseCard;
 import com.oak.legends_of_three.enums.RarityCard;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class Card {
-    private final String id;
+    private String id;
     private String userId;
     private String name;
     private ElementCard element;
     private PhaseCard phase;
     private int attack;
+    private int life;
     private int defense;
     private RarityCard rarity;
     private String description;
 
-    public Card(String userId) {
+    public Card() {
         this.id = UUID.randomUUID().toString();
     }
 
-    public Card(String userId, String name, ElementCard element, PhaseCard phase, int attack, int defense, RarityCard rarity, String description) {
+    public Card(String userId, String name, ElementCard element, PhaseCard phase, int attack, int life, int defense, RarityCard rarity, String description) {
         this.id = UUID.randomUUID().toString();
         this.userId = userId;
         this.name = name;
         this.element = element;
         this.phase = phase;
         this.attack = attack;
+        this.life = life;
         this.defense = defense;
         this.rarity = rarity;
         this.description = description;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getId() {
@@ -77,6 +84,14 @@ public class Card {
         this.attack = attack;
     }
 
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
     public int getDefense() {
         return defense;
     }
@@ -101,17 +116,19 @@ public class Card {
         this.description = description;
     }
 
-    @Override
-    public String toString() {
-        return "Card{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", element=" + element +
-                ", phase=" + phase +
-                ", attack=" + attack +
-                ", defense=" + defense +
-                ", rarity=" + rarity +
-                ", description='" + description + '\'' +
-                '}';
+
+    public Map<String, Object> toJson() {
+        return Map.of(
+        "id", this.id,
+        "name", this.name,
+        "userId", this.userId,
+        "element", this.element,
+        "phase", this.phase,
+        "attack", this.attack,
+        "life", this.life,
+        "defense", this.defense,
+        "rarity", this.rarity,
+        "description", this.description
+        );
     }
 }

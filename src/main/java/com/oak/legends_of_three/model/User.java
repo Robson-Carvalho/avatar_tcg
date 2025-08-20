@@ -1,5 +1,6 @@
 package com.oak.legends_of_three.model;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class User {
@@ -56,10 +57,22 @@ public class User {
         this.password = password;
     }
 
-    public String toJson() {
-        return String.format(
-                "{\"id\":\"%s\",\"name\":\"%s\",\"nickname\":\"%s\",\"email\":\"%s\"}",
-                id, name, nickname, email
+    public Map<String, Object> toJson() {
+        return Map.of(
+                "id", this.id,
+                "name", this.name,
+                "nickname", this.nickname,
+                "email", this.email,
+                "password", this.password
+        );
+    }
+
+    public Map<String, Object> toJsonWithoutPassword () {
+         return Map.of(
+            "id", this.id,
+            "name", this.name,
+            "nickname", this.nickname,
+            "email", this.email
         );
     }
 }
