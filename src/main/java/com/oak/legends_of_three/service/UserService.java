@@ -36,11 +36,11 @@ public class UserService {
         return null;
     }
 
-    public User findByNickname(String nickname) throws SQLException {
+    public User findById(String id) throws SQLException {
         List<User> users = userRepository.findAll();
 
         for (User u : users) {
-            if (u.getNickname().equals(nickname)) {
+            if (u.getId().equals(id)) {
                 return u;
             }
         }

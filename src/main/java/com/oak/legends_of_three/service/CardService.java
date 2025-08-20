@@ -9,9 +9,11 @@ import java.util.List;
 
 public class CardService {
     private final CardRepository cardRepository;
+    private final UserService userService;
 
     public CardService() {
         this.cardRepository = new CardRepository();
+        this.userService = new UserService();
     }
 
     public List<Card> findByUserId(String userId) {
@@ -47,7 +49,11 @@ public class CardService {
     }
 
     // Thread-safe: abre um pacote de cartas para o usuário
-    public synchronized List<Card> openPackage(String userId) {
+    public synchronized List<Card> openPackage(String userId) throws Exception {
+        if(userService.findById(userId) == null){
+            throw new Exception("Invalid user id");
+        }
+
         List<Card> allCards = cardRepository.findAll();
         List<Card> packageCards = new ArrayList<>();
         List<String> legendaryDistributed = findAllLegendaryCardsDealt();

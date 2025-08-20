@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="refactor: adiciona melhorias">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/controller/CardController.java" afterDir="false" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona abertura de pacote">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/repository/CardRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/repository/CardRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/AuthService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/CardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V2__Create_cards_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V2__Create_cards_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V8__Seed_system_cards.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V8__Seed_system_cards.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/legends_of_three/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,7 +175,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755649967338</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="feat: adiciona abertura de pacote">
+      <option name="closed" value="true" />
+      <created>1755655813863</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1755655813863</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -198,6 +200,7 @@
     <MESSAGE value="feat: adiciona seed" />
     <MESSAGE value="feat: atualiza migrations" />
     <MESSAGE value="refactor: adiciona melhorias" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: adiciona melhorias" />
+    <MESSAGE value="feat: adiciona abertura de pacote" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona abertura de pacote" />
   </component>
 </project>
