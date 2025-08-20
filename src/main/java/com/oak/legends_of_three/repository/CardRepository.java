@@ -62,7 +62,7 @@ public class CardRepository {
             stmt.setString(4, card.getElement().name());
             stmt.setString(5, card.getPhase().name());
             stmt.setInt(6, card.getAttack());
-            stmt.setInt(7, card.getAttack());
+            stmt.setInt(7, card.getLife());
             stmt.setInt(8, card.getDefense());
             stmt.setString(9, card.getRarity().name());
             stmt.setString(10, card.getDescription());

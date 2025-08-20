@@ -2,6 +2,7 @@ CREATE TABLE cards (
    id VARCHAR(36) PRIMARY KEY,
    user_id VARCHAR(36),
    name VARCHAR(100) NOT NULL,
+   description TEXT NOT NULL,
    element VARCHAR(100) NOT NULL,
    rarity VARCHAR(100) NOT NULL,
    phase VARCHAR(100) NOT NULL,

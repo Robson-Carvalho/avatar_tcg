@@ -2,6 +2,7 @@ package com.oak.legends_of_three;
 
 import com.oak.http.HttpServer;
 import com.oak.legends_of_three.controller.AuthController;
+import com.oak.legends_of_three.controller.CardController;
 import com.oak.legends_of_three.controller.WebSocketController;
 import com.oak.legends_of_three.database.Migrations;
 
@@ -16,6 +17,7 @@ public class Main {
         Migrations.runMigrations();
 
         AuthController authController = new AuthController();
+        CardController cardController = new CardController();
         WebSocketController webSocketController = new WebSocketController();
 
         // Welcome
@@ -26,6 +28,9 @@ public class Main {
         // Auth
         server.post("/auth/login", authController::login);
         server.post("/auth/register", authController::register);
+
+        // Card and Deck
+        server.get("/card/open/card", cardController::openPackage);
 
         // WebSocket (agora com parâmetro nomeado {roomId}, e alias param1 mantido)
         server.websocket("/ws", webSocketController.websocket());

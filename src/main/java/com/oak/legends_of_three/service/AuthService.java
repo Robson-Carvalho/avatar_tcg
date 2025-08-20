@@ -2,14 +2,13 @@ package com.oak.legends_of_three.service;
 
 import com.oak.legends_of_three.model.User;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
 
 public class AuthService {
     private final UserService userService;
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final Key key = Keys.hmacShaKeyFor(System.getenv("JWT_SECRET").getBytes());
 
     public AuthService() {
         this.userService = new UserService();
@@ -27,16 +26,16 @@ public class AuthService {
                 .compact();
     }
 
-    public String validateToken(String token) {
+    public String validateToken(String token) throws Exception {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .getSubject();
+                   .setSigningKey(key)
+                   .build()
+                   .parseClaimsJws(token)
+                   .getBody()
+                   .getSubject();
         } catch (Exception e) {
-            return null;
+            throw new Exception("Invalid token");
         }
     }
 

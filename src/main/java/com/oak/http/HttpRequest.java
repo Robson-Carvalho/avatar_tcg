@@ -37,9 +37,10 @@ public class HttpRequest {
     }
 
     public String getBearerToken() {
-        String auth = getHeader("Authorization");
-        if (auth != null && auth.startsWith("Bearer ")) {
-            return auth.substring(7);
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase("Authorization") && entry.getValue().startsWith("Bearer ")) {
+                return entry.getValue().substring(7);
+            }
         }
         return null;
     }
