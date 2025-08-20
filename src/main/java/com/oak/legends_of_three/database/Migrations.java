@@ -17,6 +17,7 @@ public class Migrations {
             "V1__Create_users_table.sql",
             "V2__Create_cards_table.sql",
             "V3__Create_decks_table.sql",
+            "V4__Create_system_cards_table.sql",
             "V8__Seed_system_cards.sql"
     );
 

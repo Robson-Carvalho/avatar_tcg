@@ -37,6 +37,7 @@ public class CardRepository {
         Card card = new Card();
         card.setId(rs.getString("id"));
         card.setUserId(rs.getString("user_id"));
+
         card.setName(rs.getString("name"));
         card.setPhase(PhaseCard.valueOf(rs.getString("phase")));
         card.setRarity(RarityCard.valueOf(rs.getString("rarity")));

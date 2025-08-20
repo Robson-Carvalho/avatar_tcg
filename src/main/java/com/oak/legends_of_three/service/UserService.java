@@ -52,15 +52,15 @@ public class UserService {
         return null;
     }
 
-    public User findById(String id) {
+    public boolean findById(String id) {
         List<User> users = userRepository.findAll();
 
         for (User u : users) {
             if (u.getId().equals(id)) {
-                return u;
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 }
