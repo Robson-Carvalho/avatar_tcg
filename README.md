@@ -1,4 +1,4 @@
-<h1 align="center">✨ Legends of the Four Elements ✨</h1>
+<h1 align="center">Avatar TCG: Online</h1>
 
 ### 📜 Sobre o Jogo
 
