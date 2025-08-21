@@ -12,7 +12,6 @@ public class OakServer {
     private final int port;
     private final HttpRouter router;
 
-    // ===== Rotas de WebSocket com parâmetros nomeados =====
     private static class WsRoute {
         final Pattern pattern;
         final WebSocketHandler handler;
@@ -37,7 +36,7 @@ public class OakServer {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Oak Server running on http://localhost:" + port);
 
-            for (;;) {
+            while(true) {
                 Socket clientSocket = serverSocket.accept();
                 handleConnection(clientSocket);
             }
@@ -48,6 +47,7 @@ public class OakServer {
         new Thread(() -> {
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
                 HttpRequest request = parseRequest(in);
                 HttpResponse response = new HttpResponse(clientSocket.getOutputStream());
 
@@ -57,6 +57,7 @@ public class OakServer {
                     // Requisição HTTP normal
                     router.handle(request, response);
                     try { clientSocket.shutdownOutput(); } catch (IOException ignored) {}
+
                     try { clientSocket.close(); } catch (IOException ignored) {}
                 }
             } catch (IOException e) {
@@ -96,7 +97,7 @@ public class OakServer {
                 for (int i = 1; i <= matcher.groupCount(); i++) {
                     String value = matcher.group(i);
 
-                    // Alias posicional (compatibilidade): param1, param2...
+
                     request.addParam("param" + i, value);
 
                     // Param nomeado (se existir)
@@ -110,37 +111,37 @@ public class OakServer {
 
                 WebSocketHandler handler = route.handler;
 
-                // Handshake (padrão é aceitar)
+
                 handler.handleHandshake(request, response);
 
-                // Se o handshake definiu 101 (Switching Protocols), inicia o WS
+
                 if (response.getStatus() == 101) {
                     WebSocket ws = new WebSocket(socket, request);
 
-                    // Notifica abertura
+
                     try {
                         handler.onOpen(ws);
                     } catch (IOException openEx) {
-                        // Se der erro em onOpen, garante fechamento
                         try { ws.close(); } catch (IOException ignored) {}
                         throw openEx;
                     }
 
-                    // Loop de escuta do WebSocket (mensagens)
+
                     new Thread(() -> listenWebSocket(ws, handler), "oak-ws-listener").start();
                 } else {
-                    // Handshake rejeitado; envia status adequado
+
                     if (response.getStatus() == 0) {
                         response.setStatus(400);
                     }
+
                     response.send("WebSocket handshake failed");
                     try { socket.close(); } catch (IOException ignored) {}
                 }
+
                 return;
             }
         }
 
-        // Nenhuma rota WS bateu
         response.setStatus(404);
         response.send("WebSocket endpoint not found");
         try { socket.close(); } catch (IOException ignored) {}
@@ -156,8 +157,7 @@ public class OakServer {
                 handler.onMessage(ws, message);
             }
         } catch (IOException e) {
-            // Erros de IO durante o loop (cliente desconectou, etc.)
-            // e.printStackTrace(); // opcional log
+            System.out.println("error: "+e.getMessage());
         } finally {
             try {
                 handler.onClose(ws);
@@ -215,7 +215,6 @@ public class OakServer {
         return new HttpRequest(method, path, body, headers);
     }
 
-    // === Roteamento HTTP ===
     public void get(String path, HttpHandler handler) {
         router.addRoute("GET", path, handler);
     }
@@ -232,7 +231,6 @@ public class OakServer {
         router.addRoute("DELETE", path, handler);
     }
 
-    // === WebSockets ===
     public void websocket(String path, WebSocketHandler handler) {
         // Extrai nomes dos parâmetros e monta regex
         String[] paramNames = extractParamNames(path);
