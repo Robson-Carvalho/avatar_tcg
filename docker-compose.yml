@@ -12,6 +12,7 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/legends_three
       DB_USER: postgres
       DB_PASSWORD: postgres
+      JWT_SECRET: 016998dad6c68fea05b9df7f6f56fb96
     depends_on:
       - postgres
     networks:

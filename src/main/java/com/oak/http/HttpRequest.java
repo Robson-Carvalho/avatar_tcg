@@ -29,7 +29,7 @@ public class HttpRequest {
     public String getBody() { return body; }
 
     public String getHeader(String name) {
-        return headers.getOrDefault(name, null);
+        return headers.getOrDefault(name.toLowerCase(), null);
     }
 
     public Map<String, String> getParams() {

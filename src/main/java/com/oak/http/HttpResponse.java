@@ -61,6 +61,16 @@ public class HttpResponse {
         outputStream.flush();
     }
 
+    public void sendHandshake() throws IOException {
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+        out.write("HTTP/1.1 " + status + " Switching Protocols\r\n");
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            out.write(entry.getKey() + ": " + entry.getValue() + "\r\n");
+        }
+        out.write("\r\n");
+        out.flush();
+    }
+
     public void sendHtml(String html) throws IOException {
         setHeader("Content-Type", "text/html");
         send(html);

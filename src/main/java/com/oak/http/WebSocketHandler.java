@@ -17,18 +17,4 @@ public interface WebSocketHandler {
 
     // Chamado quando a conexão fecha
     default void onClose(WebSocket ws) {}
-
-    // Loop de escuta (opcional, já implementado pelo servidor)
-    default void listen(WebSocket ws) throws IOException {
-        try {
-            onOpen(ws);
-            String msg;
-            while ((msg = ws.receive()) != null) {
-                onMessage(ws, msg);
-            }
-        } finally {
-            onClose(ws);
-            ws.close();
-        }
-    }
 }

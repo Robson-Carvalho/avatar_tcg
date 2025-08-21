@@ -12,7 +12,6 @@ public class WebSocket {
     private final OutputStream output;
     private final String requestPath;
 
-
     public WebSocket(Socket socket, HttpRequest request) throws IOException {
         this.socket = socket;
         this.input = socket.getInputStream();
@@ -54,19 +53,13 @@ public class WebSocket {
         output.flush();
     }
 
-    public String receive() {
+    public String receive() throws IOException {
         try {
-            if (socket.isClosed() || !socket.isConnected()) {
-                return null;
-            }
-
-            // Lê o primeiro byte para verificar se há dados
-            if (input.available() <= 0) {
-                return null;
-            }
-
+            // Lê o primeiro byte (bloqueante)
             int b = input.read();
-            if (b == -1) return null;
+            if (b == -1) {
+                return null; // Conexão fechada
+            }
 
             int opcode = b & 0x0F;
             if (opcode == 8) { // close frame
@@ -74,42 +67,83 @@ public class WebSocket {
                 return null;
             } else if (opcode == 9) { // ping frame
                 sendPong();
-                return null;
+                return receive(); // Continua lendo após pong
             } else if (opcode != 1 && opcode != 2) { // não é texto ou binary frame
-                return null;
+                // Ignora frames não suportados e continua lendo
+                skipFrame();
+                return receive();
             }
 
             b = input.read();
+            if (b == -1) return null;
+
             int length = b & 0x7F;
+            boolean masked = (b & 0x80) != 0;
 
             if (length == 126) {
                 length = (input.read() << 8) | input.read();
             } else if (length == 127) {
-                length = 0;
+                // Lê 8 bytes para o length (64-bit)
+                long longLength = 0;
                 for (int i = 0; i < 8; i++) {
-                    length = (length << 8) | input.read();
+                    longLength = (longLength << 8) | (input.read() & 0xFF);
                 }
+                if (longLength > Integer.MAX_VALUE) {
+                    throw new IOException("Frame too large");
+                }
+                length = (int) longLength;
             }
 
             byte[] mask = new byte[4];
-            input.read(mask, 0, 4);
+            if (masked) {
+                input.read(mask, 0, 4);
+            }
 
             byte[] payload = new byte[length];
-            input.read(payload, 0, length);
+            int totalRead = 0;
+            while (totalRead < length) {
+                int read = input.read(payload, totalRead, length - totalRead);
+                if (read == -1) {
+                    throw new IOException("Incomplete frame");
+                }
+                totalRead += read;
+            }
 
-            // Aplica a máscara
-            for (int i = 0; i < payload.length; i++) {
-                payload[i] ^= mask[i % 4];
+            // Aplica a máscara se presente
+            if (masked) {
+                for (int i = 0; i < payload.length; i++) {
+                    payload[i] ^= mask[i % 4];
+                }
             }
 
             return new String(payload, "UTF-8");
         } catch (SocketException e) {
-            System.out.println("Cliente desconectou abruptamente");
-            try { close(); } catch (IOException ex) {}
+            // Cliente desconectou
             return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        }
+    }
+
+    private void skipFrame() throws IOException {
+        // Lê o segundo byte para obter o length
+        int b = input.read();
+        if (b == -1) return;
+
+        int length = b & 0x7F;
+        boolean masked = (b & 0x80) != 0;
+
+        if (length == 126) {
+            input.read(); input.read(); // Skip 2 bytes
+        } else if (length == 127) {
+            for (int i = 0; i < 8; i++) input.read(); // Skip 8 bytes
+        }
+
+        if (masked) {
+            for (int i = 0; i < 4; i++) input.read(); // Skip mask
+        }
+
+        // Skip o payload
+        for (int i = 0; i < length; i++) {
+            input.read();
         }
     }
 
@@ -137,6 +171,7 @@ public class WebSocket {
 
     public static void doHandshake(HttpRequest request, HttpResponse response) throws IOException {
         String key = request.getHeader("Sec-WebSocket-Key");
+
         if (key == null) {
             throw new IOException("Missing Sec-WebSocket-Key");
         }
@@ -147,7 +182,7 @@ public class WebSocket {
         response.setHeader("Upgrade", "websocket");
         response.setHeader("Connection", "Upgrade");
         response.setHeader("Sec-WebSocket-Accept", acceptKey);
-        response.send("");
+        response.sendHandshake();
     }
 
     private static String generateAcceptKey(String key) throws IOException {
