@@ -69,11 +69,11 @@
       <h2>🎮 Como Jogar</h2>
       <div class="grid grid-2">
         <div>
-          <h3>1) Monte seu Deck</h3>
+          <h4>1) Monte seu Deck</h4>
           <p>Selecione cartas que criem <strong>sinergias elementais</strong> e <strong>curva de custo</strong> equilibrada. Combine defesas, ataques e táticas de controle.</p>
-          <h3>2) Entre no Duelo</h3>
+          <h4>2) Entre no Duelo</h4>
           <p>Partidas <strong>1v1 em tempo real</strong>. Cada turno exige decisões: invocar, defender ou pular turno.</p>
-          <h3>3) Use Subdobras</h3>
+          <h4>3) Use Subdobras</h4>
           <p>Subdobras adicionam camadas estratégicas (Metal, Relâmpago, Sangue). São raras, mas decisivas.</p>
         </div>
       </div>
