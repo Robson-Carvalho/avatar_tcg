@@ -4,9 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="build: ajustes de build">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona interface do cliente">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/DeckController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/DeckController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/DeckRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/DeckRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V3__Create_decks_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V3__Create_decks_table.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +34,7 @@
         <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/client" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -50,7 +56,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/avatar_tcg",
     "node.js.detected.package.eslint": "true",
@@ -151,7 +157,8 @@
       <workItem from="1755827820226" duration="139000" />
       <workItem from="1755827973082" duration="2276000" />
       <workItem from="1755830298975" duration="123000" />
-      <workItem from="1755830487388" duration="6785000" />
+      <workItem from="1755830487388" duration="7049000" />
+      <workItem from="1755872765382" duration="8656000" />
     </task>
     <task id="LOCAL-00001" summary="feet: ajustes de código">
       <option name="closed" value="true" />
@@ -329,7 +336,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755833160741</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="feat: adiciona interface do cliente">
+      <option name="closed" value="true" />
+      <created>1755837526888</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1755837526888</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -362,6 +377,7 @@
     <MESSAGE value="feat: suporte de envio e recebimento de json via websocket" />
     <MESSAGE value="feat: adiciona client" />
     <MESSAGE value="build: ajustes de build" />
-    <option name="LAST_COMMIT_MESSAGE" value="build: ajustes de build" />
+    <MESSAGE value="feat: adiciona interface do cliente" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona interface do cliente" />
   </component>
 </project>

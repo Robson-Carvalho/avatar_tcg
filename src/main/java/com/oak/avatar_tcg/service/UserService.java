@@ -29,11 +29,11 @@ public class UserService {
 
         Deck deck = new Deck();
         deck.setUserId(user.getId());
-        deck.setCard1Id(null);  // Change from "" to null
-        deck.setCard2Id(null);  // Change from "" to null
-        deck.setCard3Id(null);  // Change from "" to null
-        deck.setCard4Id(null);  // Change from "" to null
-        deck.setCard5Id(null);  // Change from "" to null
+        deck.setCard1Id(null);
+        deck.setCard2Id(null);
+        deck.setCard3Id(null);
+        deck.setCard4Id(null);
+        deck.setCard5Id(null);
 
         deckRepository.save(deck);
 

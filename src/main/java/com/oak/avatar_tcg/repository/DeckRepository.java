@@ -38,13 +38,30 @@ public class DeckRepository {
         Deck deck = new Deck();
         deck.setId(rs.getString("id"));
         deck.setUserId(rs.getString("user_id"));
-        deck.setCard1Id(rs.getString("card1_id"));
-        deck.setCard2Id(rs.getString("card2_id"));
-        deck.setCard3Id(rs.getString("card3_id"));
-        deck.setCard4Id(rs.getString("card4_id"));
-        deck.setCard5Id(rs.getString("card5_id"));
+        deck.setCard1Id(rs.getString("card1_id") == null ? "" : rs.getString( "card1_id"));
+        deck.setCard2Id(rs.getString("card2_id") == null ? "" : rs.getString( "card2_id"));
+        deck.setCard3Id(rs.getString("card3_id") == null ? "" : rs.getString( "card3_id"));
+        deck.setCard4Id(rs.getString("card4_id") == null ? "" : rs.getString( "card4_id"));
+        deck.setCard5Id(rs.getString("card5_id") == null ? "" : rs.getString( "card5_id"));
 
         return deck;
+    }
+
+    public Deck update(Deck deck) throws SQLException {
+        String sql = "UPDATE decks SET card1_id = ?, card2_id = ?, card3_id = ?, card4_id = ?, card5_id = ? WHERE id = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, deck.getCard1Id());
+            stmt.setString(2, deck.getCard2Id());
+            stmt.setString(3, deck.getCard3Id());
+            stmt.setString(4, deck.getCard4Id());
+            stmt.setString(5, deck.getCard5Id());
+            stmt.setString(6, deck.getId());
+
+            stmt.executeUpdate();
+            return deck;
+        }
     }
 
     public Deck save(Deck deck) throws SQLException {

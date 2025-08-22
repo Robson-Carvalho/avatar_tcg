@@ -24,21 +24,21 @@ public class DeckService {
         return null;
     }
 
+    public Deck findById(String id) throws Exception {
+        List<Deck> decks = deckRepository.findAll();
+
+        for (Deck deck : decks) {
+            if (deck.getId().equals(id)) {
+                return deck;
+            }
+        }
+
+        return null;
+    }
+
+
     public Deck updateDeck(Deck deck) throws Exception {
-       Deck oldDeck = findByUserId(deck.getUserId());
-
-       if (oldDeck == null) {
-           throw new Exception("Deck not found");
-       }
-
-       oldDeck.setCard1Id(deck.getCard1Id());
-       oldDeck.setCard2Id(deck.getCard2Id());
-       oldDeck.setCard3Id(deck.getCard3Id());
-       oldDeck.setCard4Id(deck.getCard4Id());
-       oldDeck.setCard5Id(deck.getCard5Id());
-
-       deckRepository.save(oldDeck);
-
-       return oldDeck;
+       deckRepository.update(deck);
+       return this.findById(deck.getId());
     }
 }
