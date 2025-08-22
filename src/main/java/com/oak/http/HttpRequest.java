@@ -57,12 +57,4 @@ public class HttpRequest {
             throw new IllegalArgumentException("Invalid JSON body", e);
         }
     }
-
-    public <T> T getJsonBodyAs(Class<T> clazz) {
-        try {
-            return mapper.readValue(body, clazz);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid JSON body for type " + clazz.getSimpleName(), e);
-        }
-    }
 }

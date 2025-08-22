@@ -1,6 +1,7 @@
 package com.oak.http;
 
 import java.io.IOException;
+import java.util.Map;
 
 public interface WebSocketHandler {
 
@@ -13,8 +14,8 @@ public interface WebSocketHandler {
     default void onOpen(WebSocket ws) throws IOException {}
 
     // Chamado quando recebe uma mensagem (JSON ou texto)
-    default void onMessage(WebSocket ws, String message) throws IOException {}
+    default void onMessage(WebSocket ws, Map<String, String> message) throws IOException {}
 
     // Chamado quando a conexão fecha
-    default void onClose(WebSocket ws) {}
+    default void onClose(WebSocket ws) throws IOException {}
 }

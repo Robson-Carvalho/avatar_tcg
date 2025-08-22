@@ -1,5 +1,7 @@
 package com.oak.http;
 
+import com.oak.avatar_tcg.util.JsonParser;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -54,7 +56,6 @@ public class OakServer {
                 if (isWebSocketUpgrade(request)) {
                     handleWebSocket(request, response, clientSocket);
                 } else {
-                    // Requisição HTTP normal
                     router.handle(request, response);
                     try { clientSocket.shutdownOutput(); } catch (IOException ignored) {}
 
@@ -152,9 +153,12 @@ public class OakServer {
             while (ws.isOpen()) {
                 String message = ws.receive();
                 if (message == null) {
-                    break; // conexão fechada pelo cliente
+                    break;
                 }
-                handler.onMessage(ws, message);
+
+                Map<String, String> receive = JsonParser.parseSimpleJson(message);
+
+                handler.onMessage(ws, receive);
             }
         } catch (IOException e) {
             System.out.println("error: "+e.getMessage());
@@ -232,7 +236,6 @@ public class OakServer {
     }
 
     public void websocket(String path, WebSocketHandler handler) {
-        // Extrai nomes dos parâmetros e monta regex
         String[] paramNames = extractParamNames(path);
 
         String regex = path.replaceAll("\\{(.*?)\\}", "([^/]+)");

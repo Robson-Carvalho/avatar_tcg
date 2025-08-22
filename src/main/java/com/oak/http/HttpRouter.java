@@ -49,13 +49,11 @@ public class HttpRouter {
         String method = request.getMethod();
         String path = request.getPath();
 
-        // Primeiro tenta rotas estáticas
         if (staticRoutes.containsKey(method) && staticRoutes.get(method).containsKey(path)) {
             staticRoutes.get(method).get(path).handle(request, response);
             return;
         }
 
-        // Depois tenta rotas dinâmicas
         if (dynamicRoutes.containsKey(method)) {
             for (Map.Entry<Pattern, DynamicRoute> entry : dynamicRoutes.get(method).entrySet()) {
                 Matcher matcher = entry.getKey().matcher(path);

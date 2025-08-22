@@ -57,6 +57,7 @@ public class WebSocket {
         try {
             // Lê o primeiro byte (bloqueante)
             int b = input.read();
+
             if (b == -1) {
                 return null; // Conexão fechada
             }
