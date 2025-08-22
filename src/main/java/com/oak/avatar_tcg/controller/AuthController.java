@@ -27,7 +27,7 @@ public class AuthController {
 
             if (email == null || password == null) {
                 response.setStatus(400);
-                response.json(Map.of("error", "Email and password are required"));
+                response.json(Map.of("error", "Email e senha são requeridos"));
                 return;
             }
 
@@ -45,8 +45,8 @@ public class AuthController {
             response.setStatus(400);
             response.json(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            response.setStatus(401);
-            response.json(Map.of("error", "Invalid email or password"));
+            response.setStatus(400);
+            response.json(Map.of("error", "E-mail ou senha inválidos"));
         }
     }
 
@@ -63,6 +63,7 @@ public class AuthController {
             if(user.getEmail() == null || user.getNickname() == null || user.getPassword() == null){
                 response.setStatus(400);
                 response.json(Map.of("error", "Name, Email, Password and nickname are required"));
+                return;
             }
 
             User registeredUser = userService.register(user);
@@ -74,7 +75,6 @@ public class AuthController {
                     "token", token,
                     "user", userWithoutPassword
             ));
-
         } catch (SQLException e) {
             response.setStatus(500);
             response.json(Map.of("error", "Database error"));
