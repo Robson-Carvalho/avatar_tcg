@@ -15,6 +15,6 @@ FROM eclipse-temurin:24-jre
 WORKDIR /app
 
 # Copiar o JAR com nome explícito (ajuste conforme o nome gerado)
-COPY --from=build /app/target/legends-of-three-*.jar app.jar
+COPY --from=build /app/target/avatar_tcg-*.jar app.jar
 
 CMD ["java", "-jar", "app.jar"]

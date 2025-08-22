@@ -32,7 +32,7 @@ public class WebSocketController {
                   o socket vai pega sua instância dessa classe e tratar o envio do client */
 
 
-                System.out.println("Received message: " + message.get("action"));
+                System.out.println("Received message: " + message.get("message"));
 
                 broadcastMessage(ws, message);
             }

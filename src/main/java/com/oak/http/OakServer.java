@@ -45,6 +45,26 @@ public class OakServer {
         }
     }
 
+    private void handlePreflightRequest(HttpResponse response) throws IOException {
+        response.setStatus(200);
+        response.send("");
+    }
+
+    private void addCorsHeaders(HttpResponse response, HttpRequest request) {
+        String origin = request.getHeader("Origin");
+
+        if (origin == null) {
+            origin = "*";
+        }
+
+        response.setHeader("Access-Control-Allow-Origin", origin);
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+        response.setHeader("Access-Control-Max-Age", "3600");
+    }
+
     private void handleConnection(Socket clientSocket) {
         new Thread(() -> {
             try {
@@ -53,12 +73,19 @@ public class OakServer {
                 HttpRequest request = parseRequest(in);
                 HttpResponse response = new HttpResponse(clientSocket.getOutputStream());
 
+                addCorsHeaders(response, request);
+
                 if (isWebSocketUpgrade(request)) {
                     handleWebSocket(request, response, clientSocket);
                 } else {
+                    if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+                        handlePreflightRequest(response);
+                        clientSocket.close();
+                        return;
+                    }
+
                     router.handle(request, response);
                     try { clientSocket.shutdownOutput(); } catch (IOException ignored) {}
-
                     try { clientSocket.close(); } catch (IOException ignored) {}
                 }
             } catch (IOException e) {

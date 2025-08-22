@@ -4,14 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="docs: update readme.md">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: suporte de envio e recebimento de json via websocket">
+      <change afterPath="$PROJECT_DIR$/client/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/nginx.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRouter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRouter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocketHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +59,7 @@
     "extract.method.default.visibility": "private",
     "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/legends-of-three",
+    "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/avatar_tcg",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -79,7 +81,7 @@
         <env name="DB_USER" value="postgres" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="com.oak.legends_of_three.Main" />
-      <module name="legends-of-three" />
+      <module name="avatar_tcg" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.oak.legends_of_three.*" />
@@ -93,12 +95,12 @@
     <configuration name="com.oak.avatar_tcg.Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
         <env name="DB_PASSWORD" value="postgres" />
-        <env name="DB_URL" value="jdbc:postgresql://localhost:5432/legends_three" />
+        <env name="DB_URL" value="jdbc:postgresql://localhost:5432/avatar_tcg" />
         <env name="DB_USER" value="postgres" />
         <env name="JWT_SECRET" value="016998dad6c68fea05b9df7f6f56fb96" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="com.oak.avatar_tcg.Main" />
-      <module name="legends-of-three" />
+      <module name="avatar_tcg" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.oak.avatar_tcg.*" />
@@ -154,7 +156,9 @@
       <workItem from="1755801809571" duration="5349000" />
       <workItem from="1755823929187" duration="37000" />
       <workItem from="1755827820226" duration="139000" />
-      <workItem from="1755827973082" duration="1893000" />
+      <workItem from="1755827973082" duration="2276000" />
+      <workItem from="1755830298975" duration="123000" />
+      <workItem from="1755830487388" duration="2465000" />
     </task>
     <task id="LOCAL-00001" summary="feet: ajustes de código">
       <option name="closed" value="true" />
@@ -308,11 +312,22 @@
       <option name="project" value="LOCAL" />
       <updated>1755792492936</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="feat: suporte de envio e recebimento de json via websocket">
+      <option name="closed" value="true" />
+      <created>1755829953729</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1755829953729</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="nginx.conf" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
@@ -335,6 +350,7 @@
     <MESSAGE value="feat: inicia desenvolvimento da partida" />
     <MESSAGE value="styles: muda nome da pasta raiz" />
     <MESSAGE value="docs: update readme.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="docs: update readme.md" />
+    <MESSAGE value="feat: suporte de envio e recebimento de json via websocket" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: suporte de envio e recebimento de json via websocket" />
   </component>
 </project>

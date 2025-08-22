@@ -1,28 +1,40 @@
 version: "3.9"
 
 services:
-  legends_three:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: legends_three
+    container_name: avatar_tcg
     ports:
       - "8080:8080"
     environment:
-      DB_URL: jdbc:postgresql://postgres:5432/legends_three
+      DB_URL: jdbc:postgresql://postgres:5432/avatar_tcg
       DB_USER: postgres
       DB_PASSWORD: postgres
       JWT_SECRET: 016998dad6c68fea05b9df7f6f56fb96
     depends_on:
       - postgres
     networks:
+      - avatar_network
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: avatar_tcg_client
+    ports:
+      - "3000:80"
+    networks:
+      - avatar_network
+    depends_on:
       - backend
 
   postgres:
     image: postgres:15
     container_name: postgres
     environment:
-      POSTGRES_DB: legends_three
+      POSTGRES_DB: avatar_tcg
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -30,10 +42,10 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     networks:
-      - backend
+      - avatar_network
 
 networks:
-  backend:
+  avatar_network:
     driver: bridge
 
 volumes:
