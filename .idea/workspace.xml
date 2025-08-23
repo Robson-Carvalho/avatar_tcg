@@ -4,15 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona interface do cliente">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: ajustes para desenvolvimento do jogo">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/SocketMessenger.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/DeckController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/DeckController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/DeckRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/DeckRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/scripts/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/scripts/game.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/scripts/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/scripts/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/Match.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/MatchManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V3__Create_decks_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V3__Create_decks_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocketHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,25 +53,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Application.com.oak.avatar_tcg.Main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "develop",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/avatar_tcg",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.com.oak.avatar_tcg.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/robso/OneDrive/Área de Trabalho/github/avatar_tcg&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\robso\OneDrive\Área de Trabalho\github\legends-of-three\src\main\java\oak\http" />
@@ -158,7 +163,10 @@
       <workItem from="1755827973082" duration="2276000" />
       <workItem from="1755830298975" duration="123000" />
       <workItem from="1755830487388" duration="7049000" />
-      <workItem from="1755872765382" duration="8656000" />
+      <workItem from="1755872765382" duration="11930000" />
+      <workItem from="1755910313889" duration="6955000" />
+      <workItem from="1755954561800" duration="3313000" />
+      <workItem from="1755959695257" duration="2745000" />
     </task>
     <task id="LOCAL-00001" summary="feet: ajustes de código">
       <option name="closed" value="true" />
@@ -344,7 +352,39 @@
       <option name="project" value="LOCAL" />
       <updated>1755837526888</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="feat: adiciona gerenciamento de deck no cliente">
+      <option name="closed" value="true" />
+      <created>1755883798013</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1755883798013</updated>
+    </task>
+    <task id="LOCAL-00025" summary="fix: resolve problemas de deck duplicado e cartas duplicadas no deck">
+      <option name="closed" value="true" />
+      <created>1755883840671</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1755883840671</updated>
+    </task>
+    <task id="LOCAL-00026" summary="feat: adiciona scripts do client">
+      <option name="closed" value="true" />
+      <created>1755884894785</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1755884894785</updated>
+    </task>
+    <task id="LOCAL-00027" summary="feat: ajustes para desenvolvimento do jogo">
+      <option name="closed" value="true" />
+      <created>1755887367784</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1755887367784</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -378,6 +418,10 @@
     <MESSAGE value="feat: adiciona client" />
     <MESSAGE value="build: ajustes de build" />
     <MESSAGE value="feat: adiciona interface do cliente" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona interface do cliente" />
+    <MESSAGE value="feat: adiciona gerenciamento de deck no cliente" />
+    <MESSAGE value="fix: resolve problemas de deck duplicado e cartas duplicadas no deck" />
+    <MESSAGE value="feat: adiciona scripts do client" />
+    <MESSAGE value="feat: ajustes para desenvolvimento do jogo" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: ajustes para desenvolvimento do jogo" />
   </component>
 </project>

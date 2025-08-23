@@ -179,6 +179,7 @@ public class OakServer {
         try {
             while (ws.isOpen()) {
                 String message = ws.receive();
+
                 if (message == null) {
                     break;
                 }
@@ -189,6 +190,8 @@ public class OakServer {
             }
         } catch (IOException e) {
             System.out.println("error: "+e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         } finally {
             try {
                 handler.onClose(ws);

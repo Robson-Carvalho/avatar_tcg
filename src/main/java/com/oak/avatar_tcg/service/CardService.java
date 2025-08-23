@@ -3,6 +3,7 @@ package com.oak.avatar_tcg.service;
 import com.oak.avatar_tcg.enums.RarityCard;
 import com.oak.avatar_tcg.model.Card;
 import com.oak.avatar_tcg.model.SystemCard;
+import com.oak.avatar_tcg.model.User;
 import com.oak.avatar_tcg.repository.CardRepository;
 import com.oak.avatar_tcg.repository.SystemCardRepository;
 import java.util.Random;
@@ -46,7 +47,9 @@ public class CardService {
     }
 
     public synchronized List<Card> openPackage(String userId) throws Exception {
-        if(!userService.findById(userId)){
+        User user = userService.findById(userId);
+
+        if(user==null){
             throw new Exception("User not found");
         };
 

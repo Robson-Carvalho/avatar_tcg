@@ -1,6 +1,5 @@
 package com.oak.avatar_tcg.controller;
 
-import com.oak.avatar_tcg.util.JsonParser;
 import com.oak.http.WebSocket;
 import com.oak.http.WebSocketHandler;
 
@@ -27,7 +26,7 @@ public class WebSocketController {
 
             @Override
             public void onMessage(WebSocket ws,  Map<String, String> message) {
-                /* Toda lógica estará aqui - cada client terá um socket com essa
+                /* toda lógica estará aqui - cada client terá um socket com essa
                  classe instanciada, logo quando um client específico manda uma mensagem
                   o socket vai pega sua instância dessa classe e tratar o envio do client */
 
