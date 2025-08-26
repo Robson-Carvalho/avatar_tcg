@@ -4,17 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona novas funcionalidades para o jogo">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona client">
       <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/scripts/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/scripts/auth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/scripts/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/scripts/dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/scripts/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/scripts/game.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/scripts/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/scripts/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +50,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/avatar_tcg",
     "node.js.detected.package.eslint": "true",
@@ -152,7 +143,7 @@
       <workItem from="1756148654873" duration="2291000" />
       <workItem from="1756153789905" duration="4458000" />
       <workItem from="1756172348979" duration="797000" />
-      <workItem from="1756243672340" duration="2934000" />
+      <workItem from="1756243672340" duration="3268000" />
     </task>
     <task id="LOCAL-00001" summary="feet: ajustes de código">
       <option name="closed" value="true" />
@@ -402,7 +393,31 @@
       <option name="project" value="LOCAL" />
       <updated>1756158258986</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="refactor: adiciona melhorias no cliente e visualização de partidas">
+      <option name="closed" value="true" />
+      <created>1756246672348</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1756246672348</updated>
+    </task>
+    <task id="LOCAL-00033" summary="fix: resolve problema de cliente com duas sessões no servidor ativas">
+      <option name="closed" value="true" />
+      <created>1756246702743</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1756246702743</updated>
+    </task>
+    <task id="LOCAL-00034" summary="feat: adiciona client">
+      <option name="closed" value="true" />
+      <created>1756246884176</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1756246884176</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -415,8 +430,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: adiciona seed" />
-    <MESSAGE value="feat: atualiza migrations" />
     <MESSAGE value="refactor: adiciona melhorias" />
     <MESSAGE value="feat: adiciona abertura de pacote" />
     <MESSAGE value="refactor: valida se o id do user existe" />
@@ -429,7 +442,6 @@
     <MESSAGE value="styles: muda nome da pasta raiz" />
     <MESSAGE value="docs: update readme.md" />
     <MESSAGE value="feat: suporte de envio e recebimento de json via websocket" />
-    <MESSAGE value="feat: adiciona client" />
     <MESSAGE value="build: ajustes de build" />
     <MESSAGE value="feat: adiciona interface do cliente" />
     <MESSAGE value="feat: adiciona gerenciamento de deck no cliente" />
@@ -440,6 +452,9 @@
     <MESSAGE value="feat: adiciona classe da partida" />
     <MESSAGE value="feat: adiciona classe para gerenciar partida" />
     <MESSAGE value="feat: adiciona novas funcionalidades para o jogo" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona novas funcionalidades para o jogo" />
+    <MESSAGE value="refactor: adiciona melhorias no cliente e visualização de partidas" />
+    <MESSAGE value="fix: resolve problema de cliente com duas sessões no servidor ativas" />
+    <MESSAGE value="feat: adiciona client" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona client" />
   </component>
 </project>

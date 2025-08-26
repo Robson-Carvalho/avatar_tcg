@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar TCG: Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card {
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+
+        #gameContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <!-- LOGIN / CADASTRO -->
+    <div id="auth" class="w-full max-w-sm bg-white p-6 rounded-2xl shadow-lg">
+        <h2 id="authTitle" class="text-2xl font-bold mb-4 text-center">Login</h2>
+
+        <div id="errorMsg" class="text-red-500 text-sm mb-3 hidden"></div>
+
+
+        <!-- Campos do cadastro -->
+        <input id="name" type="text" placeholder="Nome"
+            class="hidden w-full mb-3 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+        <input id="nickname" type="text" placeholder="Nickname"
+            class="hidden w-full mb-3 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+
+        <!-- Campos comuns -->
+        <input id="email" type="email" placeholder="Email"
+            class="w-full mb-3 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+        <input id="password" type="password" placeholder="Senha"
+            class="w-full mb-3 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+        <input id="confirmPassword" type="password" placeholder="Confirmar Senha"
+            class="hidden w-full mb-4 px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300">
+
+        <button id="authBtn" onclick="handleAuth()"
+            class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Entrar</button>
+
+        <p class="mt-4 text-center text-sm">
+            <span id="toggleText">Não tem conta?</span>
+            <button id="toggleBtn" onclick="toggleAuth()" class="text-blue-500 hover:underline">Cadastre-se</button>
+        </p>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="hidden w-full h-screen flex flex-col">
+        <!-- HEADER -->
+        <header class="bg-white shadow-md p-4 flex justify-between items-center">
+            <div class="w-full mx-auto flex justify-between items-center" style="max-width: 1400px;">
+
+                <h1 class="text-xl font-bold">Avatar TCG</h1>
+
+                <div class="flex justify-between items-center gap-4">
+                    <button onclick="connectToGame()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Jogar</button>
+                    
+                    <button onclick="openDeckModal()"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Deck</button>
+                    <button onclick="openPack()"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Abrir pacote</button>
+                    <button onclick="showCards()"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Cartas</button>
+                    <button onclick="logout()"
+                        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Sair</button>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- CONTEÚDO -->
+        <main class="w-full mx-auto p-4" style="max-width: 1400px;">
+            <div class="my-8 py-4 border-b flex justify-between items-center">
+                <h2 class="text-xl font-bold">Partidas</h2>
+            </div>
+
+            <div id="matchs"></div>
+        </main>
+    </div>
+
+    <!-- GAME -->
+    <div id="gameContainer" class="hidden w-full h-screen flex flex-col">
+        <div id="loading_game"></div>
+
+
+    </div>
+
+    <!-- MODAL DE CARTAS -->
+    <div id="cardsModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden modal">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h2 class="text-xl font-bold">Minhas Cartas</h2>
+                <button onclick="closeCardsModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-4 overflow-y-auto flex-grow">
+                <div id="loadingCards" class="text-center py-8">
+                    <p>Carregando suas cartas...</p>
+                </div>
+
+                <div id="cardsContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <!-- As cartas serão inseridas aqui via JavaScript -->
+                </div>
+
+                <div id="noCards" class="hidden text-center py-8">
+                    <p class="text-gray-500">Você não possui cartas ainda.</p>
+                </div>
+
+                <div id="cardsError" class="hidden text-center py-8">
+                    <p class="text-red-500">Erro ao carregar cartas.</p>
+                    <button onclick="loadCards()"
+                        class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                        Tentar novamente
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 border-t flex justify-end">
+                <button onclick="closeCardsModal()"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE DECK -->
+    <div id="deckModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+            <!-- Header -->
+            <div class="p-4 border-b flex justify-between items-center">
+                <h2 class="text-xl font-bold">Montar Deck</h2>
+                <button onclick="closeDeckModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Conteúdo -->
+            <div class="p-4 flex flex-col space-y-6 overflow-y-auto">
+                <!-- Slots do deck -->
+                <div class="grid grid-cols-5 gap-4" id="deckSlots">
+                    <!-- Slots vazios -->
+                </div>
+
+                <hr />
+
+                <!-- Cartas disponíveis -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Suas cartas</h3>
+                    <div id="availableCards"
+                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 max-h-80 overflow-y-auto">
+
+                        <!-- Cartas para arrastar -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-4 border-t flex justify-end space-x-2">
+                <button onclick="closeDeckModal()"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Cancelar</button>
+                <button onclick="saveDeck()"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Salvar
+                    Deck</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE ABRIR PACOTE -->
+    <div id="packModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden modal">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h2 class="text-xl font-bold">Cartas do Pacote</h2>
+                <button onclick="closePackModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-4 overflow-y-auto flex-grow">
+                <div id="loadingPack" class="text-center py-8">
+                    <p>Abrindo pacote...</p>
+                </div>
+
+                <div id="packContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <!-- Cartas do pacote serão inseridas aqui -->
+                </div>
+
+                <div id="packError" class="hidden text-center py-8">
+                    <p class="text-red-500">Erro ao abrir pacote.</p>
+                    <button onclick="openPack()"
+                        class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Tentar
+                        novamente</button>
+                </div>
+            </div>
+
+            <div class="p-4 border-t flex justify-end">
+                <button onclick="closePackModal()"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./scripts/utils.js"></script>
+    <script src="./scripts/auth.js"></script>
+    <script src="./scripts/dashboard.js"></script>
+    <script src="./scripts/cards.js"></script>
+    <script src="./scripts/pack.js"></script>
+    <script src="./scripts/deck.js"></script>
+    <script src="./scripts/game.js"></script>
+</body>
+
+</html>
