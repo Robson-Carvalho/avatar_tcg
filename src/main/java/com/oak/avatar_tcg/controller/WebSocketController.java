@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class WebSocketController {
     private final ConcurrentLinkedQueue<WebSocket> waitingQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentHashMap<WebSocket, String> playersInQueue = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, WebSocket> playersInQueue = new ConcurrentHashMap<>();
 
     final MatchManager matchManager = new MatchManager();
     final AuthService authService = new AuthService();
@@ -24,27 +24,38 @@ public class WebSocketController {
 
             private void handleJoin(WebSocket socket, String userID) {
                 try {
-                    WebSocket opponent = waitingQueue.poll();
+                    WebSocket existing = playersInQueue.putIfAbsent(userID, socket);
+                    if (existing != null) {
+                        sendMessage(socket, "ERROR:You are already connected on another session");
+                        socket.close();
+                        return;
+                    }
 
-                    if (opponent != null) {
-                        String opponentID = playersInQueue.get(opponent);
+                    WebSocket opponentSocket = waitingQueue.poll();
 
-                        String matchID = matchManager.createIfNotPlaying(socket, userID, opponent, opponentID);
+                    if (opponentSocket != null) {
+                        String opponentID = null;
 
-                        playersInQueue.remove(socket);
-                        playersInQueue.remove(opponent);
+                        for (Map.Entry<String, WebSocket> entry : playersInQueue.entrySet()) {
+                            if (entry.getValue().equals(opponentSocket)) {
+                                opponentID = entry.getKey();
+                                break;
+                            }
+                        }
+
+                        String matchID = matchManager.createIfNotPlaying(socket, userID, opponentSocket, opponentID);
+
+                        playersInQueue.remove(userID);
+                        playersInQueue.remove(opponentID);
+
                         waitingQueue.remove(socket);
 
                         System.out.println("Match created: " + matchID);
 
                         sendMessage(socket, "MATCH_CREATED:" + matchID);
-                        sendMessage(opponent, "MATCH_CREATED:" + matchID);
-
-                        // matchManager.getStateMatch(userID) - função que envia estado e deck do player
-                        // matchManager.getStateMatch(opponentID) - função que envia estado e deck do player
+                        sendMessage(opponentSocket, "MATCH_CREATED:" + matchID);
                     } else {
                         waitingQueue.add(socket);
-                        playersInQueue.put(socket, userID);
                         sendMessage(socket, "IN_QUEUE:Waiting for opponent");
                     }
                 } catch (IllegalStateException e) {
@@ -61,10 +72,10 @@ public class WebSocketController {
                         return;
                     }
 
+                    // verificar se é o turno do player, se não for devolve mensagem de aviso
+
                     // Lógica de ativação de carta
                     // matchManager.activateCard(matchID, userID, cardID);
-
-                    sendMessage(socket, "CARD_ACTIVATED:" + cardID);
                     broadcastToMatchExceptSender(matchID, socket, "OPPONENT_ACTIVATED_CARD:" + cardID);
 
                 } catch (Exception e) {
@@ -81,8 +92,6 @@ public class WebSocketController {
 
                     // Lógica de jogada
                     // matchManager.makePlay(matchID, userID, contentText);
-
-                    sendMessage(socket, "PLAY_ACCEPTED:" + contentText);
                     broadcastToMatchExceptSender(matchID, socket, "OPPONENT_PLAYED:" + contentText);
 
                 } catch (Exception e) {
@@ -96,7 +105,7 @@ public class WebSocketController {
                         WebSocket socketOpponent = matchManager.getOpponentInMatch(userID, matchID);
 
                         if(socketOpponent != null){
-                            // Avisa ao oponente que ganhou por desconexão
+                            // Avisa ao oponente que ganhou por desconexão do outro player
                             sendMessage(socketOpponent, "VICTORY:Opponent disconnected");
 
                             // Fecha apenas o socket do oponente (o atual já está fechando)
@@ -174,11 +183,12 @@ public class WebSocketController {
             public void onClose(WebSocket socket) {
                 String clientInfo = "closed: " + socket.getSocket().getRemoteSocketAddress();
 
-                playersInQueue.remove(socket);
                 waitingQueue.remove(socket);
+                playersInQueue.entrySet().removeIf(entry -> entry.getValue().equals(socket));
 
                 System.out.println("Player disconnected: " + clientInfo);
             }
+
 
             private boolean validateGameAction(WebSocket socket, String token, String userID, String matchID) {
                 try {
