@@ -10,6 +10,7 @@ function showLoadingState() {
 }
 
 function showMatches() {
+    document.getElementById("userName").innerText = localStorage.getItem("avatar_tcg_user_name").split(" ")[0];
     const matchesContainer = document.getElementById("matchs");
     matchesContainer.classList.remove("hidden");
     loadMatches();

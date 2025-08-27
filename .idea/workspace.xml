@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona client">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/util/JsonParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/util/JsonParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocketHandler.java" afterDir="false" />
-    </list>
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="refactor: remove métodos compartilhados de dentro do WebSocketHandler" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -157,7 +148,7 @@
       <workItem from="1756262873138" duration="3819000" />
       <workItem from="1756309251937" duration="293000" />
       <workItem from="1756309555304" duration="123000" />
-      <workItem from="1756334233253" duration="3207000" />
+      <workItem from="1756334233253" duration="3633000" />
     </task>
     <task id="LOCAL-00001" summary="feet: ajustes de código">
       <option name="closed" value="true" />
@@ -431,7 +422,39 @@
       <option name="project" value="LOCAL" />
       <updated>1756246884176</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="feat: adiciona record para padronização de envio de mensagens">
+      <option name="closed" value="true" />
+      <created>1756337746133</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1756337746133</updated>
+    </task>
+    <task id="LOCAL-00036" summary="feat: adiciona parse de json utilizando a lib gson do google">
+      <option name="closed" value="true" />
+      <created>1756337770763</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1756337770763</updated>
+    </task>
+    <task id="LOCAL-00037" summary="feat: modificações para usar o gson">
+      <option name="closed" value="true" />
+      <created>1756337818506</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1756337818506</updated>
+    </task>
+    <task id="LOCAL-00038" summary="refactor: remove métodos compartilhados de dentro do WebSocketHandler">
+      <option name="closed" value="true" />
+      <created>1756337856266</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1756337856266</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -444,10 +467,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="refactor: adiciona melhorias" />
-    <MESSAGE value="feat: adiciona abertura de pacote" />
-    <MESSAGE value="refactor: valida se o id do user existe" />
-    <MESSAGE value="feat: adiciona criação e atualização de deck" />
     <MESSAGE value="feat: teste de rota dinâmica" />
     <MESSAGE value="refactor: abertura de pacotes refatorada" />
     <MESSAGE value="docs: update README.md" />
@@ -469,6 +488,10 @@
     <MESSAGE value="refactor: adiciona melhorias no cliente e visualização de partidas" />
     <MESSAGE value="fix: resolve problema de cliente com duas sessões no servidor ativas" />
     <MESSAGE value="feat: adiciona client" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona client" />
+    <MESSAGE value="feat: adiciona record para padronização de envio de mensagens" />
+    <MESSAGE value="feat: adiciona parse de json utilizando a lib gson do google" />
+    <MESSAGE value="feat: modificações para usar o gson" />
+    <MESSAGE value="refactor: remove métodos compartilhados de dentro do WebSocketHandler" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: remove métodos compartilhados de dentro do WebSocketHandler" />
   </component>
 </project>

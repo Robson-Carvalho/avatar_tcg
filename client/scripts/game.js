@@ -5,12 +5,13 @@ let myTurn = false;
 
 function connectToGame() {
     const token = localStorage.getItem("token");
+
     if (!token) return alert("Você precisa estar logado!");
 
     socket = new WebSocket("ws://localhost:8080/game");
 
     socket.onopen = () => {
-        console.log("Conectado ao servidor WebSocket!");
+        console.log("Conexão estabelecida.");
         socket.send(JSON.stringify({
             type: "joinQueue",
             token,
@@ -19,10 +20,8 @@ function connectToGame() {
     };
 
     socket.onmessage = (event) => {
-        console.log("oi", event.data);
-
-        //const msg = JSON.parse(event.data);
-        //handleServerMessage(msg);
+        const receive = JSON.parse(event.data);
+        handleServerMessage(receive);
     };
 
     socket.onclose = () => {
@@ -31,52 +30,66 @@ function connectToGame() {
     };
 }
 
-function handleServerMessage(msg) {
-    console.log("Mensagem recebida:", msg);
+function showWaitingMatch() {
+    const gameContainer = document.getElementById("gameContainer");
+    const waitingQueue = document.getElementById("waitingQueue");
 
-    switch (msg.type) {
-        case "queueStatus":
-            alert(msg.payload.message);
+    if (gameContainer) gameContainer.classList.remove("hidden");
+    if (waitingQueue) waitingQueue.classList.remove("hidden");
+}
+
+function matchMake(id) {
+    const gameContainer = document.getElementById("gameContainer");
+    const waitingQueue = document.getElementById("waitingQueue");
+    const game = document.getElementById("game");
+
+    if (gameContainer) gameContainer.classList.remove("hidden");
+    if (waitingQueue) waitingQueue.classList.add("hidden");
+    if (game) game.classList.remove("hidden");
+
+    if (id) matchId = id; // guarda o id da partida
+}
+
+function handleServerMessage(receive) {
+    switch (receive.type) {
+        case "IN_QUEUE":
+            // jogador foi colocado na fila
+            showWaitingMatch();
             break;
 
-        case "matchStart":
-            matchId = msg.payload.matchId;
-            myTurn = msg.payload.yourTurn;
-            document.getElementById("dashboard").classList.add("hidden");
-            document.getElementById("gameContainer").classList.remove("hidden");
-            updateTurnInfo();
+        case "MATCH_FOUND":
+            console.log("oiii")
+            matchMake(receive.message);
             break;
 
-        case "matchUpdate":
-            myTurn = (msg.payload.turn === userId);
-            renderBattlefield(msg.payload);
-            updateTurnInfo();
+        case "UPDATE":
+            console.log("UPDATE:", receive.message);
             break;
 
-        case "gameOver":
-            alert("Fim de jogo! Vencedor: " + msg.payload.winner);
-            endGame();
+        case "ERROR":
+            console.error("ERROR:", receive.message);
+            alert("Erro: " + receive.message);
             break;
 
-        case "error":
-            alert("Erro: " + msg.payload.message);
+        default:
+            console.warn("Mensagem desconhecida:", receive);
             break;
     }
 }
 
-// Mostrar de quem é o turno
 function updateTurnInfo() {
     const turnInfo = document.getElementById("turnInfo");
     turnInfo.innerText = myTurn ? "Seu turno!" : "Turno do oponente";
 }
 
-// Enviar ataque
 function attack(cardId) {
     if (!myTurn) return alert("Não é seu turno!");
+
     socket.send(JSON.stringify({
         type: "attack",
         token: localStorage.getItem("token"),
         userID: userId,
+        matchId: matchId,
         cardId
     }));
 }
@@ -87,6 +100,7 @@ function changeActiveCard(cardId) {
         type: "changeCard",
         token: localStorage.getItem("token"),
         userID: userId,
+        matchId: matchId,
         cardId
     }));
 }
@@ -94,19 +108,25 @@ function changeActiveCard(cardId) {
 function surrender() {
     if (!socket) return;
     socket.send(JSON.stringify({
-        type: "exitGame",
+        type: "exit",
         token: localStorage.getItem("token"),
+        matchId: matchId,
         userID: userId
     }));
+
     endGame();
 }
 
 function endGame() {
     document.getElementById("gameContainer").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
+    document.getElementById("waitingQueue").classList.add("hidden");
+    document.getElementById("game").classList.add("hidden");
 
     if (socket) socket.close();
     socket = null;
     matchId = null;
     myTurn = false;
+
+    showMatches();
 }
+
