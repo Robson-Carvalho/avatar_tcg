@@ -1,26 +1,22 @@
 package com.oak.avatar_tcg.util;
 
-import java.util.HashMap;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.Map;
 
 public class JsonParser {
-    public static Map<String, String> parseSimpleJson(String json) {
-        Map<String, String> map = new HashMap<>();
-        if (json == null || json.isEmpty()) {
-            return map;
-        }
+    private static final Gson gson = new Gson();
 
-        // Remove curly braces and whitespace
-        json = json.replaceAll("[{}\"]", "").trim();
+    public static <T> T parseJson(String json, Class<T> clazz) {
+        return gson.fromJson(json, clazz);
+    }
 
-        // Split into key-value pairs
-        String[] pairs = json.split(",");
-        for (String pair : pairs) {
-            String[] keyValue = pair.split(":");
-            if (keyValue.length == 2) {
-                map.put(keyValue[0].trim(), keyValue[1].trim());
-            }
-        }
-        return map;
+    public static Map<String, Object> parseJsonToMap(String json) {
+        return gson.fromJson(json, new TypeToken<Map<String, Object>>(){}.getType());
+    }
+
+    public static String toJson(Object object) {
+        return gson.toJson(object);
     }
 }
