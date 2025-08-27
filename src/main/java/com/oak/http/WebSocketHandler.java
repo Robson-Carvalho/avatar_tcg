@@ -14,7 +14,7 @@ public interface WebSocketHandler {
     default void onOpen(WebSocket ws) throws IOException {}
 
     // Chamado quando recebe uma mensagem (JSON ou texto)
-    default void onMessage(WebSocket ws, Map<String, String> message) throws Exception {}
+    default void onMessage(WebSocket ws, Map<String, Object> message) throws Exception {}
 
     // Chamado quando a conexão fecha
     default void onClose(WebSocket ws) throws IOException {}

@@ -184,7 +184,7 @@ public class OakServer {
                     break;
                 }
 
-                Map<String, String> receive = JsonParser.parseSimpleJson(message);
+                Map<String, Object> receive = JsonParser.parseJsonToMap(message);
 
                 handler.onMessage(ws, receive);
             }
