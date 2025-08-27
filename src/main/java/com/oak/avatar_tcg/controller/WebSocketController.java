@@ -1,149 +1,159 @@
 package com.oak.avatar_tcg.controller;
 
-import com.oak.avatar_tcg.game.Match;
+import com.oak.avatar_tcg.game.GameMessage;
 import com.oak.avatar_tcg.game.MatchManager;
 import com.oak.avatar_tcg.service.AuthService;
+import com.oak.avatar_tcg.util.JsonParser;
 import com.oak.http.WebSocket;
 import com.oak.http.WebSocketHandler;
 
 import java.io.IOException;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class WebSocketController {
-    private final ConcurrentLinkedQueue<WebSocket> waitingQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentHashMap<String, WebSocket> playersInQueue = new ConcurrentHashMap<>();
+    private final ConcurrentLinkedQueue<String> waitingQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentHashMap<String, WebSocket> playerSockets = new ConcurrentHashMap<>();
 
-    final MatchManager matchManager = new MatchManager();
-    final AuthService authService = new AuthService();
+    private final MatchManager matchManager = new MatchManager();
+    private final AuthService authService = new AuthService();
 
-    public WebSocketHandler websocket() {
+    private synchronized void handleJoin(WebSocket socket, String userID) {
+        try {
+            if (playerSockets.containsKey(userID)) {
+                WebSocket existingSocket = playerSockets.get(userID);
 
-        return new WebSocketHandler() {
-
-            private void handleJoin(WebSocket socket, String userID) {
-                try {
-                    WebSocket existing = playersInQueue.putIfAbsent(userID, socket);
-                    if (existing != null) {
-                        sendMessage(socket, "ERROR:You are already connected on another session");
-                        socket.close();
-                        return;
-                    }
-
-                    WebSocket opponentSocket = waitingQueue.poll();
-
-                    if (opponentSocket != null) {
-                        String opponentID = null;
-
-                        for (Map.Entry<String, WebSocket> entry : playersInQueue.entrySet()) {
-                            if (entry.getValue().equals(opponentSocket)) {
-                                opponentID = entry.getKey();
-                                break;
-                            }
-                        }
-
-                        String matchID = matchManager.createIfNotPlaying(socket, userID, opponentSocket, opponentID);
-
-                        playersInQueue.remove(userID);
-                        playersInQueue.remove(opponentID);
-
-                        waitingQueue.remove(socket);
-
-                        System.out.println("Match created: " + matchID);
-
-                        sendMessage(socket, "MATCH_CREATED:" + matchID);
-                        sendMessage(opponentSocket, "MATCH_CREATED:" + matchID);
-                    } else {
-                        waitingQueue.add(socket);
-                        sendMessage(socket, "IN_QUEUE:Waiting for opponent");
-                    }
-                } catch (IllegalStateException e) {
-                    sendMessage(socket, "ERROR:Player already in a match");
-                } catch (Exception e) {
-                    sendMessage(socket, "ERROR:Failed to join match");
+                if (existingSocket != null && existingSocket.isOpen()) {
+                    sendMessage(socket, new GameMessage("ERROR", "Você já está conectado em outra sessão"));
+                    socket.close();
+                    return;
+                } else {
+                    playerSockets.remove(userID);
+                    waitingQueue.remove(userID);
                 }
             }
 
-            private void handleActivateCard(WebSocket socket, String userID, String matchID, String cardID) {
-                try {
-                    if (!matchManager.isPlayerInMatch(userID, matchID)) { // Corrigido aqui
-                        sendMessage(socket, "ERROR:Player not in this match");
-                        return;
-                    }
+            playerSockets.put(userID, socket);
 
-                    // verificar se é o turno do player, se não for devolve mensagem de aviso
+            String opponentId = null;
+            while (!waitingQueue.isEmpty()) {
+                String firstId = waitingQueue.poll();
+                WebSocket opponentSocket = playerSockets.get(firstId);
 
-                    // Lógica de ativação de carta
-                    // matchManager.activateCard(matchID, userID, cardID);
-                    broadcastToMatchExceptSender(matchID, socket, "OPPONENT_ACTIVATED_CARD:" + cardID);
-
-                } catch (Exception e) {
-                    sendMessage(socket, "ERROR:Failed to activate card");
+                if (opponentSocket != null && opponentSocket.isOpen()) {
+                    opponentId = firstId;
+                    break;
+                } else {
+                    playerSockets.remove(firstId);
                 }
             }
 
-            private void handlePlay(WebSocket socket, String userID, String matchID, String contentText) {
-                try {
-                    if (!matchManager.isPlayerInMatch(userID, matchID)) { // Corrigido aqui
-                        sendMessage(socket, "ERROR:Player not in this match");
-                        return;
-                    }
-
-                    // Lógica de jogada
-                    // matchManager.makePlay(matchID, userID, contentText);
-                    broadcastToMatchExceptSender(matchID, socket, "OPPONENT_PLAYED:" + contentText);
-
-                } catch (Exception e) {
-                    sendMessage(socket, "ERROR:Failed to process play");
-                }
+            if (opponentId == null) {
+                waitingQueue.add(userID);
+                sendMessage(socket, new GameMessage("IN_QUEUE", "Aguardando oponente"));
+                System.out.println("Player: " + userID + " entrou na fila");
+                return;
             }
 
-            private void handleClose(WebSocket socket, String userID, String matchID) throws IOException {
-                try {
-                    if (matchID != null && !matchID.isEmpty()) {
-                        WebSocket socketOpponent = matchManager.getOpponentInMatch(userID, matchID);
+            WebSocket opponentSocket = playerSockets.get(opponentId);
+            String matchID = matchManager.createMatch(socket, userID, opponentSocket, opponentId);
 
-                        if(socketOpponent != null){
-                            // Avisa ao oponente que ganhou por desconexão do outro player
-                            sendMessage(socketOpponent, "VICTORY:Opponent disconnected");
+            playerSockets.remove(userID);
+            playerSockets.remove(opponentId);
 
-                            // Fecha apenas o socket do oponente (o atual já está fechando)
-                            socketOpponent.close();
-                        }
+            System.out.println("Partida criada: " + matchID + " entre " + userID + " e " + opponentId);
 
-                        // Finaliza a partida
-                        matchManager.endMatch(matchID);
-                    }
+            sendMessage(socket, new GameMessage("MATCH_FOUND", matchID));
+            sendMessage(opponentSocket, new GameMessage("MATCH_FOUND", matchID));
 
-                    System.out.println("Player " + userID + " exited gracefully");
-                } catch (Exception e) {
-                    System.out.println("Error during player exit: " + e.getMessage());
-                } finally {
+        } catch (Exception e) {
+            System.out.println("Erro ao processar join: " + e.getMessage());
+            sendMessage(socket, new GameMessage("ERROR", "Falha ao entrar na partida"));
+        }
+    }
+
+    private synchronized void handleClose(WebSocket socket, String userID, String matchID) {
+        try {
+            if (matchID != null && !matchID.isEmpty()) {
+                WebSocket socketOpponent = matchManager.getOpponentInMatch(userID, matchID);
+
+                if (socketOpponent != null && socketOpponent.isOpen()) {
+                    sendMessage(socketOpponent, new GameMessage("VICTORY", "Opponent disconnected"));
+                    socketOpponent.close();
+                }
+
+                matchManager.endMatch(matchID);
+            } else {
+                waitingQueue.remove(userID);
+                playerSockets.remove(userID);
+            }
+        } catch (Exception e) {
+            System.out.println("Error during player exit: " + e.getMessage());
+        } finally {
+            try {
+                if (socket != null && socket.isOpen()) {
                     socket.close();
                 }
+            } catch (IOException e) {
+                System.out.println("Error closing socket: " + e.getMessage());
             }
+        }
+    }
 
-            private void handleUnknownType(WebSocket socket) throws IOException {
-                sendMessage(socket, "ERROR:Unknown command type");
+    private void sendMessage(WebSocket socket, Object object) {
+        try {
+            if (socket != null && socket.isOpen()) {
+                socket.send(JsonParser.toJson(object));
             }
+        } catch (Exception e) {
+            System.out.println("Error sending message: " + e.getMessage());
+        }
+    }
 
-            @Override
-            public void onOpen(WebSocket socket) throws IOException {
-                String clientInfo = "connected: " + socket.getSocket().getRemoteSocketAddress();
-                System.out.println("Player connected: " + clientInfo);
-                sendMessage(socket, "CONNECTED:Welcome to Avatar TCG");
-            }
-
-            @Override
-            public void onMessage(WebSocket socket, Map<String, String> message) throws IOException {
+    public WebSocketHandler websocket() {
+        return new WebSocketHandler() {
+            private boolean validateGameAction(WebSocket socket, String token, String userID, String matchID) {
                 try {
-                    String type = message.get("type");
-                    String token = message.get("token");
-                    String userID = message.get("userID");
-                    String matchID = message.get("matchID");
-                    String contentText = message.get("contentText");
-                    String cardID = message.get("cardID");
+                    String authenticatedUserID = authService.validateToken(token);
+
+                    if (!authenticatedUserID.equals(userID)) {
+                        sendMessage(socket, new GameMessage("ERROR", "ID do usuário incompatível"));
+                        return false;
+                    }
+
+                    if (matchID == null || matchID.isEmpty()) {
+                        sendMessage(socket, new GameMessage("ERROR", "ID da partida é requerido"));
+                        return false;
+                    }
+
+                    return true;
+                } catch (Exception e) {
+                    sendMessage(socket, new GameMessage("ERROR", "Autenticação inválida"));
+                    return false;
+                }
+            }
+
+            private void handleUnknownType(WebSocket socket) {
+                sendMessage(socket, new GameMessage("ERROR", "Comando desconhecido"));
+            }
+
+            @Override
+            public void onOpen(WebSocket socket) {
+                int port = socket.getSocket().getPort();
+                System.out.println("Player connected: " + port);
+            }
+
+            @Override
+            public void onMessage(WebSocket socket, Map<String, Object> receive) {
+                try {
+                    String type = (String) receive.get("type");
+                    String token = (String) receive.get("token");
+                    String userID = (String) receive.get("userID");
+                    String matchID = (String) receive.get("matchID");
+                    String contentText = (String) receive.get("contentText");
+                    String cardID = (String) receive.get("cardID");
 
                     if (type == null) {
                         handleUnknownType(socket);
@@ -154,20 +164,21 @@ public class WebSocketController {
                         case "joinQueue" -> {
                             try {
                                 String authenticatedUserID = authService.validateToken(token);
+
                                 handleJoin(socket, authenticatedUserID);
                             } catch (Exception e) {
-                                sendMessage(socket, "ERROR:Invalid token");
+                                sendMessage(socket, new GameMessage("ERROR", "Token invalido"));
                                 socket.close();
                             }
                         }
                         case "activateCard" -> {
                             if (validateGameAction(socket, token, userID, matchID)) {
-                                handleActivateCard(socket, userID, matchID, cardID);
+                                sendMessage(socket, new GameMessage("MESSAGE", ": " + cardID));
                             }
                         }
                         case "play" -> {
                             if (validateGameAction(socket, token, userID, matchID)) {
-                                handlePlay(socket, userID, matchID, contentText);
+                                sendMessage(socket, new GameMessage("MESSAGE", "Play made: " + contentText));
                             }
                         }
                         case "exit" -> handleClose(socket, userID, matchID);
@@ -175,80 +186,15 @@ public class WebSocketController {
                     }
                 } catch (Exception e) {
                     System.out.println("Error processing message: " + e.getMessage());
-                    sendMessage(socket, "ERROR:Internal server error");
+                    sendMessage(socket, new GameMessage("ERROR", "Erro interno do processo"));
                 }
             }
 
             @Override
             public void onClose(WebSocket socket) {
-                String clientInfo = "closed: " + socket.getSocket().getRemoteSocketAddress();
-
-                waitingQueue.remove(socket);
-                playersInQueue.entrySet().removeIf(entry -> entry.getValue().equals(socket));
-
-                System.out.println("Player disconnected: " + clientInfo);
-            }
-
-
-            private boolean validateGameAction(WebSocket socket, String token, String userID, String matchID) {
-                try {
-                    String authenticatedUserID = authService.validateToken(token);
-
-                    if (!authenticatedUserID.equals(userID)) {
-                        sendMessage(socket, "ERROR:User ID mismatch");
-                        return false;
-                    }
-
-                    if (matchID == null || matchID.isEmpty()) {
-                        sendMessage(socket, "ERROR:Match ID required");
-                        return false;
-                    }
-
-                    return true;
-                } catch (Exception e) {
-                    sendMessage(socket, "ERROR:Invalid authentication");
-                    return false;
-                }
+                int port = socket.getSocket().getPort();
+                System.out.println("Player disconnected: " + port);
             }
         };
-    }
-
-    private void sendMessage(WebSocket socket, String message) {
-        try {
-            if (socket != null && socket.isOpen()) {
-                socket.send(message);
-            }
-        } catch (Exception e) {
-            System.out.println("Error sending message to " + socket.getSocket().getRemoteSocketAddress() + ": " + e.getMessage());
-        }
-    }
-
-    private void broadcastToMatch(String matchID, String message) {
-        try {
-            Match match = matchManager.getMatch(matchID);
-
-            if (match != null) {
-                sendMessage(match.getSocketPlayerOne(), message);
-                sendMessage(match.getSocketPlayerTwo(), message);
-            }
-        } catch (Exception e) {
-            System.out.println("Error broadcasting to match " + matchID + ": " + e.getMessage());
-        }
-    }
-
-    private void broadcastToMatchExceptSender(String matchID, WebSocket sender, String message) {
-        try {
-            Match match = matchManager.getMatch(matchID);
-            if (match != null) {
-                if (!match.getSocketPlayerOne().equals(sender)) {
-                    sendMessage(match.getSocketPlayerOne(), message);
-                }
-                if (!match.getSocketPlayerTwo().equals(sender)) {
-                    sendMessage(match.getSocketPlayerTwo(), message);
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Error broadcasting to match " + matchID + ": " + e.getMessage());
-        }
     }
 }
