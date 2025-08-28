@@ -17,12 +17,31 @@ public class MatchManager {
         return match.getId();
     }
 
-    public String getStateMatch(String matchId) {
-        return matches.get(matchId).getGameState();
+    public void handleAction(String action,String cardID, String userID, String matchID) {
+        Match match = matches.get(matchID);
+
+        if(action.equals("activateCard")){
+
+         if (match.getPlayerOneID().equals(userID)) {
+             match.getGameState().getPlayerOne().setActivationCard(cardID);
+         }else{
+             match.getGameState().getPlayerTwo().setActivationCard(cardID);
+         }
+        } else if( action.equals("play")) {
+            if (match.getPlayerOneID().equals(userID)) {
+                match.getGameState().getPlayerOne().setPlayedCard(true);
+            }else{
+                match.getGameState().getPlayerTwo().setPlayedCard(true);
+            }
+
+            if (match.getGameState().getPlayerOne().getPlayedCard()  && match.getGameState().getPlayerTwo().getPlayedCard()){
+                match.battle();
+            }
+        }
     }
 
-    public boolean isPlayerPlaying(String playerID) {
-        return playerToMatch.containsKey(playerID);
+    public String getStateMatch(String matchId) {
+        return matches.get(matchId).getGameStateJson();
     }
 
     public WebSocket getOpponentInMatch(String playerID, String matchID) {
@@ -42,10 +61,13 @@ public class MatchManager {
 
     public void endMatch(String matchID) {
         Match match = matches.remove(matchID);
-        if (match != null) {
+
+        if (!match.getId().isEmpty()) {
             playerToMatch.remove(match.getPlayerOneID());
             playerToMatch.remove(match.getPlayerTwoID());
         }
+
+        matches.remove(matchID);
     }
 
     public String getUserIDBySocket(WebSocket socket) {
