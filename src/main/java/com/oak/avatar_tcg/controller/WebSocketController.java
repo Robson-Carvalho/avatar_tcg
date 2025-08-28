@@ -1,9 +1,6 @@
 package com.oak.avatar_tcg.controller;
 
-import com.oak.avatar_tcg.game.GameMessage;
-import com.oak.avatar_tcg.game.GameStateMessage;
-import com.oak.avatar_tcg.game.MatchManager;
-import com.oak.avatar_tcg.model.Deck;
+import com.oak.avatar_tcg.game.*;
 import com.oak.avatar_tcg.service.AuthService;
 import com.oak.avatar_tcg.service.DeckService;
 import com.oak.avatar_tcg.util.JsonParser;
@@ -110,6 +107,36 @@ public class WebSocketController {
         }
     }
 
+    private synchronized void handleAction(WebSocket socket, String action, String cardID, String userID, String matchID) {
+        try {
+            if (matchID == null) {
+                sendMessage(socket, new GameMessage("ERROR", "ID da partida é requerido"));
+                return;
+            }
+
+            matchManager.handleAction(action, cardID, userID, matchID); // pode ter um problema aqui, não esperar resolver
+            Match match = matchManager.getMatch(matchID);
+            broadcastingGameState(match.getSocketPlayerOne(), match.getSocketPlayerTwo(), match.getId());
+        } catch (Exception e) {
+            System.out.println("Erro durante jogada do player: " + e.getMessage());
+        } finally {
+            try {
+                if (socket != null && socket.isOpen()) {
+                    socket.close();
+                }
+            } catch (IOException e) {
+                System.out.println("Erro: " + e.getMessage());
+            }
+        }
+    }
+
+    private void broadcastingGameState(WebSocket playerOne,WebSocket playerTwo, String matchID) {
+        if(playerOne.isOpen() && playerTwo.isOpen()){
+            sendMessage(playerOne, new GameStateMessage("UPDATE_GAME", matchID, matchManager.getStateMatch(matchID)));
+            sendMessage(playerTwo, new GameStateMessage("UPDATE_GAME", matchID, matchManager.getStateMatch(matchID)));
+        }
+    }
+
     private void sendMessage(WebSocket socket, Object object) {
         try {
             if (socket != null && socket.isOpen()) {
@@ -188,12 +215,14 @@ public class WebSocketController {
                         }
                         case "activateCard" -> {
                             if (validateGameAction(socket, token, userID, matchID)) {
-                                sendMessage(socket, new GameMessage("MESSAGE", ": " + cardID));
+
+                                handleAction(socket, "activateCard", cardID, userID, matchID);
                             }
                         }
-                        case "play" -> {
+                        case "playCard" -> {
                             if (validateGameAction(socket, token, userID, matchID)) {
-                                sendMessage(socket, new GameMessage("MESSAGE", "Play made: " + contentText));
+
+                                handleAction(socket, "playCard", cardID, userID, matchID);
                             }
                         }
                         case "exit" -> handleClose(socket, userID, matchID, true);
