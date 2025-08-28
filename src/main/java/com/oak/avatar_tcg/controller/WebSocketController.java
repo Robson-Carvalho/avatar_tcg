@@ -74,7 +74,7 @@ public class WebSocketController {
         }
     }
 
-    private synchronized void handleClose(WebSocket socket, String userID, String matchID) {
+    private synchronized void handleClose(WebSocket socket, String userID, String matchID, boolean initiatedByClient) {
         try {
             if (matchID == null) {
                 sendMessage(socket, new GameMessage("ERROR", "ID da partida é requerido"));
@@ -86,7 +86,8 @@ public class WebSocketController {
 
                 if (socketOpponent != null && socketOpponent.isOpen()) {
                     sendMessage(socketOpponent, new GameMessage("VICTORY_WITHDRAWAL", "Opponent disconnected"));
-                    socketOpponent.close();
+
+                    if (!initiatedByClient) socketOpponent.close();
                 }
 
                 matchManager.endMatch(matchID);
@@ -186,7 +187,7 @@ public class WebSocketController {
                                 sendMessage(socket, new GameMessage("MESSAGE", "Play made: " + contentText));
                             }
                         }
-                        case "exit" -> handleClose(socket, userID, matchID);
+                        case "exit" -> handleClose(socket, userID, matchID, true);
                         default -> handleUnknownType(socket);
                     }
                 } catch (Exception e) {
@@ -197,6 +198,13 @@ public class WebSocketController {
 
             @Override
             public void onClose(WebSocket socket) {
+                String userID = matchManager.getUserIDBySocket(socket);
+                String matchID = matchManager.getMatchIDBySocket(socket);
+
+                if (userID != null) {
+                    handleClose(socket, userID, matchID, false); // flag false evita loop
+                }
+
                 int port = socket.getSocket().getPort();
                 System.out.println("Player disconnected: " + port);
             }

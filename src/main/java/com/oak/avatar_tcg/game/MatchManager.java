@@ -1,6 +1,8 @@
 package com.oak.avatar_tcg.game;
 
 import com.oak.http.WebSocket;
+
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchManager {
@@ -15,6 +17,9 @@ public class MatchManager {
         return match.getId();
     }
 
+    public void getStateMatch() {
+        // Implementação futura
+    }
 
     public boolean isPlayerPlaying(String playerID) {
         return playerToMatch.containsKey(playerID);
@@ -43,8 +48,21 @@ public class MatchManager {
         }
     }
 
+    public String getUserIDBySocket(WebSocket socket) {
+        for (Match match : matches.values()) {
+            if (match.getSocketPlayerOne() == socket) return match.getPlayerOneID();
+            if (match.getSocketPlayerTwo() == socket) return match.getPlayerTwoID();
+        }
+        return null;
+    }
 
-    public void getStateMatch() {
-        // Implementação futura
+    public String getMatchIDBySocket(WebSocket socket) {
+        for (Map.Entry<String, Match> entry : matches.entrySet()) {
+            Match match = entry.getValue();
+            if (match.getSocketPlayerOne() == socket || match.getSocketPlayerTwo() == socket) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 }
