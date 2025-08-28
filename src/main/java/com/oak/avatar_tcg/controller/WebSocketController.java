@@ -1,8 +1,11 @@
 package com.oak.avatar_tcg.controller;
 
 import com.oak.avatar_tcg.game.GameMessage;
+import com.oak.avatar_tcg.game.GameStateMessage;
 import com.oak.avatar_tcg.game.MatchManager;
+import com.oak.avatar_tcg.model.Deck;
 import com.oak.avatar_tcg.service.AuthService;
+import com.oak.avatar_tcg.service.DeckService;
 import com.oak.avatar_tcg.util.JsonParser;
 import com.oak.http.WebSocket;
 import com.oak.http.WebSocketHandler;
@@ -65,9 +68,8 @@ public class WebSocketController {
 
             System.out.println("Partida criada: " + matchID + " entre " + userID + " e " + opponentId);
 
-            sendMessage(socket, new GameMessage("MATCH_FOUND", matchID));
-            sendMessage(opponentSocket, new GameMessage("MATCH_FOUND", matchID));
-
+            sendMessage(socket, new GameStateMessage("MATCH_FOUND", matchID, matchManager.getStateMatch(matchID)));
+            sendMessage(opponentSocket, new GameStateMessage("MATCH_FOUND", matchID, matchManager.getStateMatch(matchID)));
         } catch (Exception e) {
             System.out.println("Erro ao processar join: " + e.getMessage());
             sendMessage(socket, new GameMessage("ERROR", "Falha ao entrar na partida"));
@@ -120,6 +122,8 @@ public class WebSocketController {
 
     public WebSocketHandler websocket() {
         return new WebSocketHandler() {
+            private final DeckService deckService = new DeckService();
+
             private boolean validateGameAction(WebSocket socket, String token, String userID, String matchID) {
                 try {
                     String authenticatedUserID = authService.validateToken(token);
@@ -171,6 +175,11 @@ public class WebSocketController {
                             try {
                                 String authenticatedUserID = authService.validateToken(token);
 
+                                if (deckService.findByUserId(authenticatedUserID).getCards().size() < 5) {
+                                    sendMessage(socket, new GameMessage("WARNING", "Deck incompleto"));
+                                    return;
+                                }
+
                                 handleJoin(socket, authenticatedUserID);
                             } catch (Exception e) {
                                 sendMessage(socket, new GameMessage("ERROR", "Token invalido"));
@@ -202,7 +211,7 @@ public class WebSocketController {
                 String matchID = matchManager.getMatchIDBySocket(socket);
 
                 if (userID != null) {
-                    handleClose(socket, userID, matchID, false); // flag false evita loop
+                    handleClose(socket, userID, matchID, false);
                 }
 
                 int port = socket.getSocket().getPort();

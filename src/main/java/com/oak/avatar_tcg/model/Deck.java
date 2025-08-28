@@ -1,5 +1,7 @@
 package com.oak.avatar_tcg.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Deck {
@@ -27,6 +29,18 @@ public class Deck {
         this.card3Id = card3Id;
         this.card4Id = card4Id;
         this.card5Id = card5Id;
+    }
+
+    public List<String> getCards() {
+        List<String> cards = new ArrayList<>();
+
+        if (card1Id != null && !card1Id.isEmpty()) cards.add(card1Id);
+        if (card2Id != null && !card2Id.isEmpty()) cards.add(card2Id);
+        if (card3Id != null && !card3Id.isEmpty()) cards.add(card3Id);
+        if (card4Id != null && !card4Id.isEmpty()) cards.add(card4Id);
+        if (card5Id != null && !card5Id.isEmpty()) cards.add(card5Id);
+
+        return cards;
     }
 
     public String getId() {

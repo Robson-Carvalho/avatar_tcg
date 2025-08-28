@@ -1,26 +1,29 @@
 package com.oak.avatar_tcg.game;
 
-import com.oak.avatar_tcg.model.Card;
 import com.oak.http.WebSocket;
 
-import java.util.List;
 import java.util.UUID;
 
 public class Match {
-    private String id;
-    private String PlayerOneID;
-    private String PlayerTwoID;
-    private WebSocket SocketPlayerOne;
-    private WebSocket SocketPlayerTwo;
-    private List<Card> playerOneCards;
-    private List<Card> playerTwoCards;
+    private final String id;
+    private final String PlayerOneID;
+    private final String PlayerTwoID;
+    private final WebSocket SocketPlayerOne;
+    private final WebSocket SocketPlayerTwo;
+    private final GameState gameState;
 
-    public Match(String PlayerOneID, WebSocket SocketPlayerOne, String PlayerTwoID, WebSocket SocketPlayerTwo) {
+    public Match(String PlayerOneID, WebSocket SocketPlayerOne, String PlayerTwoID, WebSocket SocketPlayerTwo) throws Exception {
         this.id = UUID.randomUUID().toString();
         this.PlayerOneID = PlayerOneID;
         this.PlayerTwoID = PlayerTwoID;
         this.SocketPlayerOne = SocketPlayerOne;
         this.SocketPlayerTwo = SocketPlayerTwo;
+
+        this.gameState = new GameState(this.id, this.PlayerOneID, this.PlayerTwoID);
+    }
+
+    public String getGameState() {
+        return gameState.toJson();
     }
 
     public String getId() {
@@ -44,7 +47,7 @@ public class Match {
     }
 
     public void battle(){
-        // resolver jogo
+        // resolver jogo - gameState.battle()
     }
 
     public void getStateMatch(){

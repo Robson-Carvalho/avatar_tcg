@@ -12,7 +12,7 @@ public class DeckService {
         this.deckRepository = new DeckRepository();
     }
 
-    public Deck findByUserId(String id) throws Exception {
+    public Deck findByUserId(String id)  {
         List<Deck> decks = deckRepository.findAll();
 
         for (Deck deck : decks) {
@@ -24,7 +24,7 @@ public class DeckService {
         return null;
     }
 
-    public Deck findById(String id) throws Exception {
+    public Deck findById(String id)  {
         List<Deck> decks = deckRepository.findAll();
 
         for (Deck deck : decks) {

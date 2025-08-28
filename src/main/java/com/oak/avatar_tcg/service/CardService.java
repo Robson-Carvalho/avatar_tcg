@@ -2,6 +2,7 @@ package com.oak.avatar_tcg.service;
 
 import com.oak.avatar_tcg.enums.RarityCard;
 import com.oak.avatar_tcg.model.Card;
+import com.oak.avatar_tcg.model.Deck;
 import com.oak.avatar_tcg.model.SystemCard;
 import com.oak.avatar_tcg.model.User;
 import com.oak.avatar_tcg.repository.CardRepository;
@@ -13,11 +14,13 @@ import java.util.List;
 
 public class CardService {
     private final Random random = new Random();
+    private final DeckService deckService;
     private final CardRepository cardRepository;
     private final SystemCardRepository systemCardRepository;
     private final UserService userService;
 
     public CardService() {
+        this.deckService = new DeckService();
         this.systemCardRepository = new SystemCardRepository();
         this.cardRepository = new CardRepository();
         this.userService = new UserService();
@@ -25,11 +28,28 @@ public class CardService {
 
     public List<Card> findByUserId(String userId) {
         List<Card> cards = new ArrayList<>();
+
         for (Card card : cardRepository.findAll()) {
             if (userId.equals(card.getUserId())) {
                 cards.add(card);
             }
         }
+        return cards;
+    }
+
+
+    public List<Card> findDeckByUserId(String userId) {
+        Deck deck = deckService.findByUserId(userId);
+        List<Card> inventory = findByUserId(userId);
+
+        List<Card> cards = new ArrayList<>();
+
+        for (Card card : inventory) {
+            if (deck.getCards().contains(card.getId())) {
+                cards.add(card);
+            }
+        }
+
         return cards;
     }
 

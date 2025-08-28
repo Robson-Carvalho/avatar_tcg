@@ -4,10 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="refactor: adiciona mais uma verificação para o id da partida">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona forma de lidar com desconexão inesperada">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameStateMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/Deck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -466,7 +474,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756340807684</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="feat: adiciona forma de lidar com desconexão inesperada">
+      <option name="closed" value="true" />
+      <created>1756345038791</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1756345038791</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -479,7 +495,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="refactor: abertura de pacotes refatorada" />
     <MESSAGE value="docs: update README.md" />
     <MESSAGE value="feat: ajustes na atualização do deck" />
     <MESSAGE value="feat: inicia desenvolvimento da partida" />
@@ -504,6 +519,7 @@
     <MESSAGE value="feat: modificações para usar o gson" />
     <MESSAGE value="refactor: remove métodos compartilhados de dentro do WebSocketHandler" />
     <MESSAGE value="refactor: adiciona mais uma verificação para o id da partida" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: adiciona mais uma verificação para o id da partida" />
+    <MESSAGE value="feat: adiciona forma de lidar com desconexão inesperada" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona forma de lidar com desconexão inesperada" />
   </component>
 </project>

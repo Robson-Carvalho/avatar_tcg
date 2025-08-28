@@ -9,7 +9,7 @@ public class MatchManager {
     private final ConcurrentHashMap<String, Match> matches = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> playerToMatch = new ConcurrentHashMap<>();
 
-    public String createMatch(WebSocket socket1, String player1, WebSocket socket2, String player2) {
+    public String createMatch(WebSocket socket1, String player1, WebSocket socket2, String player2) throws Exception {
         Match match = new Match(player1, socket1, player2, socket2);
         matches.put(match.getId(), match);
         playerToMatch.put(player1, match.getId());
@@ -17,8 +17,8 @@ public class MatchManager {
         return match.getId();
     }
 
-    public void getStateMatch() {
-        // Implementação futura
+    public String getStateMatch(String matchId) {
+        return matches.get(matchId).getGameState();
     }
 
     public boolean isPlayerPlaying(String playerID) {
