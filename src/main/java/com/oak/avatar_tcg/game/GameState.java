@@ -21,7 +21,7 @@ public class GameState {
         this.message = "Game state updated";
         this.state = "IN_PROGRESS";
         this.turnPlayerId = ThreadLocalRandom.current().nextBoolean() ? playerOneID : playerTwoID;
-        this.playerWin = "";
+        this.playerWin = "void";
 
         this.playerOne = new Player(playerOneID);
         this.playerTwo = new Player(playerTwoID);
@@ -47,7 +47,12 @@ public class GameState {
     public void setTurnPlayerId(String turnPlayerId) { this.turnPlayerId = turnPlayerId; }
 
     public String getPlayerWin() { return playerWin; }
+
     public void setPlayerWin(String playerWin) { this.playerWin = playerWin; }
+
+    public void battle(){
+
+    }
 
     public String toJson() {
         return new Gson().toJson(this);

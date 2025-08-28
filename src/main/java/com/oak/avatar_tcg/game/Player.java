@@ -12,6 +12,7 @@ public class Player {
     private String activationCard;
     private final List<String> cemetery;
     private final List<Card> cards;
+    private Boolean playedCard;
 
     public Player(String id)  {
         CardService cardService = new CardService();
@@ -19,12 +20,15 @@ public class Player {
         this.points = 0;
         this.activationCard = "";
         this.cemetery = new ArrayList<>();
+        this.playedCard = false;
         this.cards = cardService.findDeckByUserId(this.id);
-        System.out.println(cards.size() + " cards found");
     }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
+
+    public Boolean getPlayedCard() { return playedCard; }
+    public void setPlayedCard(Boolean playedCard) { this.playedCard = playedCard;}
 
     public int getPoints() { return points; }
     public void addPoint() { this.points++; }

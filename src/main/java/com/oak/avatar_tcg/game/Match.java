@@ -22,8 +22,12 @@ public class Match {
         this.gameState = new GameState(this.id, this.PlayerOneID, this.PlayerTwoID);
     }
 
-    public String getGameState() {
-        return gameState.toJson();
+    public String getGameStateJson() {
+        return this.gameState.toJson();
+    }
+
+    public GameState getGameState() {
+        return this.gameState;
     }
 
     public String getId() {
@@ -47,10 +51,6 @@ public class Match {
     }
 
     public void battle(){
-        // resolver jogo - gameState.battle()
-    }
-
-    public void getStateMatch(){
-        // retornar JSON do estado atual
+        this.gameState.battle();
     }
 }

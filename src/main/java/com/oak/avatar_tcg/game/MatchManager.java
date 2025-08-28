@@ -22,11 +22,11 @@ public class MatchManager {
 
         if(action.equals("activateCard")){
 
-         if (match.getPlayerOneID().equals(userID)) {
-             match.getGameState().getPlayerOne().setActivationCard(cardID);
-         }else{
-             match.getGameState().getPlayerTwo().setActivationCard(cardID);
-         }
+            if (match.getPlayerOneID().equals(userID)) {
+                match.getGameState().getPlayerOne().setActivationCard(cardID);
+            }else{
+                match.getGameState().getPlayerTwo().setActivationCard(cardID);
+            }
         } else if( action.equals("play")) {
             if (match.getPlayerOneID().equals(userID)) {
                 match.getGameState().getPlayerOne().setPlayedCard(true);

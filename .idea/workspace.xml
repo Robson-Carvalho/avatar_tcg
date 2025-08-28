@@ -4,13 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona envio do estado do jogo">
-      <change afterPath="$PROJECT_DIR$/src/test/java/avatar_tcg/service/AuthServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/avatar_tcg/service/CardServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/avatar_tcg/service/DeckServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/avatar_tcg/service/UserServiceTest.java" afterDir="false" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: remove método welcome">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/util/JsonParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/util/JsonParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,35 +47,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Application.com.oak.avatar_tcg.Main.executor": "Run",
-    "JUnit.All in avatar_tcg.executor": "Run",
-    "JavaScript Debug.index.html.executor": "Run",
-    "Maven.avatar_tcg [clean].executor": "Run",
-    "Maven.avatar_tcg [install].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "develop",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/robso/OneDrive/Área de Trabalho/github/avatar_tcg",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.com.oak.avatar_tcg.Main.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in avatar_tcg.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.index.html.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.avatar_tcg [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.avatar_tcg [install].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/robso/OneDrive/Área de Trabalho/github/avatar_tcg&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\robso\OneDrive\Área de Trabalho\github\legends-of-three\src\main\java\oak\http" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.All in avatar_tcg">
+  <component name="RunManager" selected="Application.com.oak.avatar_tcg.Main">
     <configuration name="com.oak.avatar_tcg.Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
         <env name="DB_PASSWORD" value="postgres" />
@@ -112,8 +113,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.All in avatar_tcg" />
         <item itemvalue="Application.com.oak.avatar_tcg.Main" />
+        <item itemvalue="JUnit.All in avatar_tcg" />
         <item itemvalue="JavaScript Debug.index.html" />
       </list>
     </recent_temporary>
@@ -167,7 +168,8 @@
       <workItem from="1756309251937" duration="293000" />
       <workItem from="1756309555304" duration="123000" />
       <workItem from="1756334233253" duration="3633000" />
-      <workItem from="1756406676575" duration="2340000" />
+      <workItem from="1756406676575" duration="4039000" />
+      <workItem from="1756417378399" duration="5858000" />
     </task>
     <task id="LOCAL-00001" summary="feet: ajustes de código">
       <option name="closed" value="true" />
@@ -497,7 +499,55 @@
       <option name="project" value="LOCAL" />
       <updated>1756351209781</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="test: adiciona arquivos de teste">
+      <option name="closed" value="true" />
+      <created>1756409717965</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1756409717965</updated>
+    </task>
+    <task id="LOCAL-00043" summary="feat: adiciona forma de lidar com ações durante a partida">
+      <option name="closed" value="true" />
+      <created>1756420876235</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1756420876235</updated>
+    </task>
+    <task id="LOCAL-00044" summary="feat: remove rota welcome">
+      <option name="closed" value="true" />
+      <created>1756420897322</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1756420897322</updated>
+    </task>
+    <task id="LOCAL-00045" summary="test: remove arquivos de teste">
+      <option name="closed" value="true" />
+      <created>1756420915241</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1756420915241</updated>
+    </task>
+    <task id="LOCAL-00046" summary="test: remove dependência de teste">
+      <option name="closed" value="true" />
+      <created>1756420932719</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1756420932719</updated>
+    </task>
+    <task id="LOCAL-00047" summary="feat: remove método welcome">
+      <option name="closed" value="true" />
+      <created>1756420956373</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1756420956373</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -510,12 +560,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: ajustes na atualização do deck" />
-    <MESSAGE value="feat: inicia desenvolvimento da partida" />
-    <MESSAGE value="styles: muda nome da pasta raiz" />
-    <MESSAGE value="docs: update readme.md" />
-    <MESSAGE value="feat: suporte de envio e recebimento de json via websocket" />
-    <MESSAGE value="build: ajustes de build" />
     <MESSAGE value="feat: adiciona interface do cliente" />
     <MESSAGE value="feat: adiciona gerenciamento de deck no cliente" />
     <MESSAGE value="fix: resolve problemas de deck duplicado e cartas duplicadas no deck" />
@@ -535,6 +579,12 @@
     <MESSAGE value="refactor: adiciona mais uma verificação para o id da partida" />
     <MESSAGE value="feat: adiciona forma de lidar com desconexão inesperada" />
     <MESSAGE value="feat: adiciona envio do estado do jogo" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona envio do estado do jogo" />
+    <MESSAGE value="test: adiciona arquivos de teste" />
+    <MESSAGE value="feat: adiciona forma de lidar com ações durante a partida" />
+    <MESSAGE value="feat: remove rota welcome" />
+    <MESSAGE value="test: remove arquivos de teste" />
+    <MESSAGE value="test: remove dependência de teste" />
+    <MESSAGE value="feat: remove método welcome" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: remove método welcome" />
   </component>
 </project>
