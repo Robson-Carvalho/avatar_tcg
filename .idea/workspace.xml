@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: remove método welcome">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona ajustes para implementação do jogo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/util/JsonParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/util/JsonParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,7 +165,7 @@
       <workItem from="1756309555304" duration="123000" />
       <workItem from="1756334233253" duration="3633000" />
       <workItem from="1756406676575" duration="4039000" />
-      <workItem from="1756417378399" duration="5858000" />
+      <workItem from="1756417378399" duration="6623000" />
     </task>
     <task id="LOCAL-00001" summary="feet: ajustes de código">
       <option name="closed" value="true" />
@@ -547,7 +543,23 @@
       <option name="project" value="LOCAL" />
       <updated>1756420956373</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="feat: adiciona verificação de partida acabou">
+      <option name="closed" value="true" />
+      <created>1756423898772</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1756423898772</updated>
+    </task>
+    <task id="LOCAL-00049" summary="feat: adiciona ajustes para implementação do jogo">
+      <option name="closed" value="true" />
+      <created>1756424033756</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1756424033756</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -560,8 +572,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: adiciona interface do cliente" />
-    <MESSAGE value="feat: adiciona gerenciamento de deck no cliente" />
     <MESSAGE value="fix: resolve problemas de deck duplicado e cartas duplicadas no deck" />
     <MESSAGE value="feat: adiciona scripts do client" />
     <MESSAGE value="feat: ajustes para desenvolvimento do jogo" />
@@ -585,6 +595,8 @@
     <MESSAGE value="test: remove arquivos de teste" />
     <MESSAGE value="test: remove dependência de teste" />
     <MESSAGE value="feat: remove método welcome" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: remove método welcome" />
+    <MESSAGE value="feat: adiciona verificação de partida acabou" />
+    <MESSAGE value="feat: adiciona ajustes para implementação do jogo" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona ajustes para implementação do jogo" />
   </component>
 </project>

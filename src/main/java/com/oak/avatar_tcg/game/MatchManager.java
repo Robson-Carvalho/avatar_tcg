@@ -67,6 +67,8 @@ public class MatchManager {
             playerToMatch.remove(match.getPlayerTwoID());
         }
 
+        // adicionar método para salvar a partida aqui - repository match
+
         matches.remove(matchID);
     }
 

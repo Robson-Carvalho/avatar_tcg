@@ -114,9 +114,25 @@ public class WebSocketController {
                 return;
             }
 
-            matchManager.handleAction(action, cardID, userID, matchID); // pode ter um problema aqui, não esperar resolver
+            matchManager.handleAction(action, cardID, userID, matchID);
             Match match = matchManager.getMatch(matchID);
-            broadcastingGameState(match.getSocketPlayerOne(), match.getSocketPlayerTwo(), match.getId());
+
+
+            if(!match.getGameState().getPlayerWin().equals("void")) {
+                WebSocket playerOne =match.getSocketPlayerOne();
+                WebSocket playerTwo = match.getSocketPlayerTwo();
+
+                broadcastingGameState("VICTORY", playerOne, playerTwo, match.getId());
+
+                playerOne.close();
+                playerTwo.close();
+
+                matchManager.endMatch(matchID);
+
+                return;
+            }
+
+            broadcastingGameState("UPDATE_GAME", match.getSocketPlayerOne(), match.getSocketPlayerTwo(), match.getId());
         } catch (Exception e) {
             System.out.println("Erro durante jogada do player: " + e.getMessage());
         } finally {
@@ -130,10 +146,10 @@ public class WebSocketController {
         }
     }
 
-    private void broadcastingGameState(WebSocket playerOne,WebSocket playerTwo, String matchID) {
+    private void broadcastingGameState(String type, WebSocket playerOne,WebSocket playerTwo, String matchID) {
         if(playerOne.isOpen() && playerTwo.isOpen()){
-            sendMessage(playerOne, new GameStateMessage("UPDATE_GAME", matchID, matchManager.getStateMatch(matchID)));
-            sendMessage(playerTwo, new GameStateMessage("UPDATE_GAME", matchID, matchManager.getStateMatch(matchID)));
+            sendMessage(playerOne, new GameStateMessage(type, matchID, matchManager.getStateMatch(matchID)));
+            sendMessage(playerTwo, new GameStateMessage(type, matchID, matchManager.getStateMatch(matchID)));
         }
     }
 
