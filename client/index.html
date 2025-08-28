@@ -113,7 +113,22 @@
             <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-blue-500 mb-4"></div>
             <span class="text-gray-700 text-lg font-medium">Aguardando oponente...</span>
         </div>
-
+   
+        <div id="victoryModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div
+                class="relative flex flex-col items-center justify-center bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                <button onclick="hideVictoryModal()"
+                    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 rounded-full bg-gray-100 w-8 h-8 flex items-center justify-center shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+        
+                <div class="text-6xl mb-4">🏆</div>
+                <span class="text-gray-700 text-xl font-bold">Parabéns! Você venceu!</span>
+            </div>
+        </div>
 
         <div id="game" class="hidden bg-white w-full max-w-3xl h-[80vh] rounded-xl shadow-xl flex flex-col p-4">
             <div class="flex justify-between items-center border-b pb-2">
