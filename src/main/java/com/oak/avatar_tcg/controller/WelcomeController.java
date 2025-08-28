@@ -18,18 +18,4 @@ public class WelcomeController {
             response.json(Map.of("error", e.getMessage()));
         }
     }
-
-    public void welcomeDynamic(HttpRequest request, HttpResponse response) throws IOException {
-        try {
-            String name = request.getParam("name");
-
-            response.json(Map.of(
-                    "message", "Welcome to Oak Server, "+name+ "!"
-            ));
-
-        } catch (IllegalArgumentException e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
-        }
-    }
 }
