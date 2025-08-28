@@ -21,6 +21,10 @@ function connectToGame() {
 
     socket.onmessage = (event) => {
         const receive = JSON.parse(event.data);
+
+        if (receive.data) {    
+            console.log(JSON.parse(receive.data));
+        }
         handleServerMessage(receive);
     };
 
@@ -44,6 +48,7 @@ function showWaitingMatch() {
 }
 
 function matchMake(id) {
+
     const gameContainer = document.getElementById("gameContainer");
 
     if (gameContainer) gameContainer.classList.remove("hidden");
@@ -106,6 +111,11 @@ function handleServerMessage(receive) {
         case "ERROR":
             console.error("ERROR:", receive.message);
             alert("Erro: " + receive.message);
+            break;
+        
+        case "WARNING":
+            console.error("AVISO:", receive.message);
+            alert("Atenção: " + receive.message);
             break;
 
         default:
