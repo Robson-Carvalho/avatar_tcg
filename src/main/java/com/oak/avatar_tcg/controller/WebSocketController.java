@@ -76,11 +76,16 @@ public class WebSocketController {
 
     private synchronized void handleClose(WebSocket socket, String userID, String matchID) {
         try {
-            if (matchID != null && !matchID.isEmpty()) {
+            if (matchID == null) {
+                sendMessage(socket, new GameMessage("ERROR", "ID da partida é requerido"));
+                return;
+            }
+
+            if (!matchID.isEmpty()) {
                 WebSocket socketOpponent = matchManager.getOpponentInMatch(userID, matchID);
 
                 if (socketOpponent != null && socketOpponent.isOpen()) {
-                    sendMessage(socketOpponent, new GameMessage("VICTORY", "Opponent disconnected"));
+                    sendMessage(socketOpponent, new GameMessage("VICTORY_WITHDRAWAL", "Opponent disconnected"));
                     socketOpponent.close();
                 }
 
