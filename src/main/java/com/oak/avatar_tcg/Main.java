@@ -21,7 +21,6 @@ public class Main {
 
         // Welcome
         server.get("/", welcomeController::welcome);
-        server.get("/{name}", welcomeController::welcomeDynamic);
 
         // Auth
         server.post("/auth/login", authController::login);
