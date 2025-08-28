@@ -4,18 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona forma de lidar com desconexão inesperada">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameStateMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" afterDir="false" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona envio do estado do jogo">
+      <change afterPath="$PROJECT_DIR$/src/test/java/avatar_tcg/service/AuthServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/avatar_tcg/service/CardServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/avatar_tcg/service/DeckServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/avatar_tcg/service/UserServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +50,7 @@
   "keyToString": {
     "Application.Main.executor": "Run",
     "Application.com.oak.avatar_tcg.Main.executor": "Run",
+    "JUnit.All in avatar_tcg.executor": "Run",
     "JavaScript Debug.index.html.executor": "Run",
     "Maven.avatar_tcg [clean].executor": "Run",
     "Maven.avatar_tcg [install].executor": "Run",
@@ -78,7 +74,7 @@
       <recent name="C:\Users\robso\OneDrive\Área de Trabalho\github\legends-of-three\src\main\java\oak\http" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.com.oak.avatar_tcg.Main">
+  <component name="RunManager" selected="JUnit.All in avatar_tcg">
     <configuration name="com.oak.avatar_tcg.Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
         <env name="DB_PASSWORD" value="postgres" />
@@ -98,15 +94,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="All in avatar_tcg" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="avatar_tcg" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/avatar_tcg/client/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
     <list>
       <item itemvalue="Application.com.oak.avatar_tcg.Main" />
       <item itemvalue="JavaScript Debug.index.html" />
+      <item itemvalue="JUnit.All in avatar_tcg" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in avatar_tcg" />
         <item itemvalue="Application.com.oak.avatar_tcg.Main" />
         <item itemvalue="JavaScript Debug.index.html" />
       </list>
@@ -161,6 +167,7 @@
       <workItem from="1756309251937" duration="293000" />
       <workItem from="1756309555304" duration="123000" />
       <workItem from="1756334233253" duration="3633000" />
+      <workItem from="1756406676575" duration="2340000" />
     </task>
     <task id="LOCAL-00001" summary="feet: ajustes de código">
       <option name="closed" value="true" />
@@ -482,7 +489,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756345038791</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="feat: adiciona envio do estado do jogo">
+      <option name="closed" value="true" />
+      <created>1756351209781</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1756351209781</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -495,7 +510,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="docs: update README.md" />
     <MESSAGE value="feat: ajustes na atualização do deck" />
     <MESSAGE value="feat: inicia desenvolvimento da partida" />
     <MESSAGE value="styles: muda nome da pasta raiz" />
@@ -520,6 +534,7 @@
     <MESSAGE value="refactor: remove métodos compartilhados de dentro do WebSocketHandler" />
     <MESSAGE value="refactor: adiciona mais uma verificação para o id da partida" />
     <MESSAGE value="feat: adiciona forma de lidar com desconexão inesperada" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona forma de lidar com desconexão inesperada" />
+    <MESSAGE value="feat: adiciona envio do estado do jogo" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona envio do estado do jogo" />
   </component>
 </project>
