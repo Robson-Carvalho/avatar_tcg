@@ -117,7 +117,6 @@ public class WebSocketController {
             matchManager.handleAction(action, cardID, userID, matchID);
             Match match = matchManager.getMatch(matchID);
 
-
             if(!match.getGameState().getPlayerWin().equals("void")) {
                 WebSocket playerOne =match.getSocketPlayerOne();
                 WebSocket playerTwo = match.getSocketPlayerTwo();
@@ -135,14 +134,6 @@ public class WebSocketController {
             broadcastingGameState("UPDATE_GAME", match.getSocketPlayerOne(), match.getSocketPlayerTwo(), match.getId());
         } catch (Exception e) {
             System.out.println("Erro durante jogada do player: " + e.getMessage());
-        } finally {
-            try {
-                if (socket != null && socket.isOpen()) {
-                    socket.close();
-                }
-            } catch (IOException e) {
-                System.out.println("Erro: " + e.getMessage());
-            }
         }
     }
 
