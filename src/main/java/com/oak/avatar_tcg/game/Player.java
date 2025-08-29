@@ -28,43 +28,62 @@ public class Player {
     public void setId(String id) { this.id = id; }
 
     public Boolean getPlayedCard() { return playedCard; }
-    public void setPlayedCard(Boolean playedCard) { this.playedCard = playedCard;}
+    public void setPlayedCard(Boolean playedCard) {
+        this.playedCard = playedCard;
+
+        if(this.activationCard.equals("")){
+            for(Card card : this.cards){
+                if(card.getLife() > 0) {
+                    this.activationCard = card.getId();
+                    return;
+                }
+            }
+        }
+    }
 
     public int getPoints() { return points; }
+
     public void addPoint() { this.points++; }
 
-    public String getActivationCard() { return activationCard; }
-    public void setActivationCard(String cardID) {
-        Card card = this.cards.stream()
-                .filter(c -> c.getId().equals(cardID))
-                .findFirst()
-                .orElse(null);
+    public Card getActivationCard() {
+        for (Card card : this.cards) {
+            if(card.getId().equals(this.activationCard))
+                return card;
+        }
 
-        if (card == null || card.getLife() <= 0) return;
-        this.activationCard = cardID;
+        return null;
+    }
+
+    public void setActivationCard(String cardID) {
+        if(cemetery.contains(cardID)){
+            return;
+        }
+
+        for(Card c : cards){
+            if(c.getId().equals(cardID)){
+                this.activationCard = c.getId();
+            }
+        }
     }
 
     public List<String> getCemetery() { return cemetery; }
+
     public List<Card> getCards() { return cards; }
 
-    public void reduceLifeCard(String cardID, int attack) {
-        Card card = this.cards.stream()
-                .filter(c -> c.getId().equals(cardID))
-                .findFirst()
-                .orElse(null);
+    public Boolean reduceLifeCard(int attack) {
+        Card card = this.getActivationCard();
 
-        if (card == null) return;
+        int damage = Math.max(attack - card.getDefense(), 0);
+        int newLife = card.getLife() - damage;
 
-        int newLife = card.getLife() - attack;
-        card.setLife(newLife);
-
-        if (newLife <= 0) {
+        if(newLife <= 0){
+            card.setLife(0);
             this.cemetery.add(card.getId());
-            this.cards.remove(card);
-
-            if (card.getId().equals(this.activationCard)) {
-                this.activationCard = null;
-            }
+            this.activationCard = "";
+        }else{
+            card.setLife(newLife);
         }
+
+        return newLife <= 0;
     }
 }
