@@ -41,12 +41,12 @@ public class MatchManager {
                 if (match.getGameState().getPlayerOne().getPlayedCard()  && match.getGameState().getPlayerTwo().getPlayedCard()){
                     match.battle();
                 }
-            }
 
-            if(match.getGameState().getTurnPlayerId().equals(match.getPlayerOneID())) {
-                match.getGameState().setTurnPlayerId(match.getPlayerTwoID());
-            }else{
-                match.getGameState().setTurnPlayerId(match.getPlayerOneID());
+                if(match.getGameState().getTurnPlayerId().equals(match.getPlayerOneID())) {
+                    match.getGameState().setTurnPlayerId(match.getPlayerTwoID());
+                }else{
+                    match.getGameState().setTurnPlayerId(match.getPlayerOneID());
+                }
             }
         }
     }
