@@ -235,7 +235,7 @@ public class WebSocketController {
                                 handleAction(socket, "activateCard", cardID, userID, matchID);
                             }
                         }
-                        case "playCard" -> {
+                        case "play" -> {
                             if (validateGameAction(socket, token, userID, matchID)) {
 
                                 handleAction(socket, "playCard", cardID, userID, matchID);
