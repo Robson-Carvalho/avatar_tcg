@@ -14,7 +14,6 @@ public class CardController {
     private final CardService cardService;
     private final AuthService authService;
 
-
     public CardController() {
         this.cardService = new CardService();
         this.authService = new AuthService();

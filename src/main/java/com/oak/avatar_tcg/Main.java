@@ -16,6 +16,7 @@ public class Main {
         AuthController authController = new AuthController();
         CardController cardController = new CardController();
         DeckController deckController = new DeckController();
+        MatchController matchController = new MatchController();
         WelcomeController welcomeController = new WelcomeController();
         WebSocketController webSocketController = new WebSocketController();
 
@@ -33,6 +34,9 @@ public class Main {
         // Deck
         server.put("/deck", deckController::updateDeck);
         server.get("/deck", deckController::getDeck);
+
+        // Match
+        server.get("/match", matchController::getMatchs);
 
         // WebSocket
         server.websocket("/game", webSocketController.websocket());
