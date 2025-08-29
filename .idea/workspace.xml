@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona lógica de quando ocorrer uma vitória">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: altera nome do comando de jogar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,47 +164,7 @@
       <workItem from="1756309555304" duration="123000" />
       <workItem from="1756334233253" duration="3633000" />
       <workItem from="1756406676575" duration="4039000" />
-      <workItem from="1756417378399" duration="8781000" />
-    </task>
-    <task id="LOCAL-00002" summary="feet: adiciona classe Card">
-      <option name="closed" value="true" />
-      <created>1755542001387</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1755542001387</updated>
-    </task>
-    <task id="LOCAL-00003" summary="feet: adiciona classe Deck">
-      <option name="closed" value="true" />
-      <created>1755542008860</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1755542008860</updated>
-    </task>
-    <task id="LOCAL-00004" summary="feet: cria classe de partida">
-      <option name="closed" value="true" />
-      <created>1755543458593</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1755543458593</updated>
-    </task>
-    <task id="LOCAL-00005" summary="feat: adiciona seed">
-      <option name="closed" value="true" />
-      <created>1755567844153</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1755567844153</updated>
-    </task>
-    <task id="LOCAL-00006" summary="feat: atualiza migrations">
-      <option name="closed" value="true" />
-      <created>1755647739816</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1755647739816</updated>
+      <workItem from="1756417378399" duration="12491000" />
     </task>
     <task id="LOCAL-00007" summary="refactor: adiciona melhorias">
       <option name="closed" value="true" />
@@ -562,7 +518,47 @@
       <option name="project" value="LOCAL" />
       <updated>1756424599538</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="feat: adiciona alternância de turno">
+      <option name="closed" value="true" />
+      <created>1756427027647</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1756427027647</updated>
+    </task>
+    <task id="LOCAL-00052" summary="feat: adiciona chamada de método de batalha">
+      <option name="closed" value="true" />
+      <created>1756427054896</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1756427054896</updated>
+    </task>
+    <task id="LOCAL-00053" summary="feat: adiciona lógica de batalha">
+      <option name="closed" value="true" />
+      <created>1756427073180</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1756427073180</updated>
+    </task>
+    <task id="LOCAL-00054" summary="feat: adiciona as atualizações de estado dentro de cada player">
+      <option name="closed" value="true" />
+      <created>1756427138435</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1756427138435</updated>
+    </task>
+    <task id="LOCAL-00055" summary="feat: altera nome do comando de jogar">
+      <option name="closed" value="true" />
+      <created>1756427170816</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1756427170816</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -575,11 +571,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: adiciona scripts do client" />
-    <MESSAGE value="feat: ajustes para desenvolvimento do jogo" />
-    <MESSAGE value="feat: adiciona broadcasting" />
-    <MESSAGE value="feat: adiciona classe da partida" />
-    <MESSAGE value="feat: adiciona classe para gerenciar partida" />
     <MESSAGE value="feat: adiciona novas funcionalidades para o jogo" />
     <MESSAGE value="refactor: adiciona melhorias no cliente e visualização de partidas" />
     <MESSAGE value="fix: resolve problema de cliente com duas sessões no servidor ativas" />
@@ -600,6 +591,11 @@
     <MESSAGE value="feat: adiciona verificação de partida acabou" />
     <MESSAGE value="feat: adiciona ajustes para implementação do jogo" />
     <MESSAGE value="feat: adiciona lógica de quando ocorrer uma vitória" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona lógica de quando ocorrer uma vitória" />
+    <MESSAGE value="feat: adiciona alternância de turno" />
+    <MESSAGE value="feat: adiciona chamada de método de batalha" />
+    <MESSAGE value="feat: adiciona lógica de batalha" />
+    <MESSAGE value="feat: adiciona as atualizações de estado dentro de cada player" />
+    <MESSAGE value="feat: altera nome do comando de jogar" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: altera nome do comando de jogar" />
   </component>
 </project>

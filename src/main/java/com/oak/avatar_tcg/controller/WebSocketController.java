@@ -241,6 +241,7 @@ public class WebSocketController {
                                 handleAction(socket, "playCard", cardID, userID, matchID);
                             }
                         }
+                        case "ping" -> sendMessage(socket, new GameMessage( "PONG", "pong"));
                         case "exit" -> handleClose(socket, userID, matchID, true);
                         default -> handleUnknownType(socket);
                     }
