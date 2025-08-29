@@ -2,14 +2,14 @@ let socket;
 let matchId = null;
 let userId = localStorage.getItem("avatar_tcg_user_id");
 let myTurn = false;
+let pingInterval = null;
 
 let lastPingTime = 0;
 
 function startPingLoop() {
-    setInterval(() => {
+    pingInterval = setInterval(() => {
         if (socket.readyState === WebSocket.OPEN) {
             lastPingTime = performance.now();
-
             socket.send(JSON.stringify({ type: "ping" }));
         }
     }, 1000); 
@@ -64,6 +64,8 @@ function connectToGame() {
 
     socket.onclose = () => {
         console.log("Conexão encerrada.");
+
+        clearInterval(pingInterval);
         
         if (!document.getElementById("victoryModal").classList.contains("hidden")) {
             return;

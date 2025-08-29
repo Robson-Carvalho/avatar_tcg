@@ -25,17 +25,18 @@ async function loadMatches() {
     showLoadingState();
 
     try {
-        const res = await fetch(`${API_URL}/matches`, {
+        const res = await fetch("http://localhost:8080/match", {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
         if (!res.ok) throw new Error("Erro ao carregar partidas");
 
-        const data = await res.json();
-        const matches = data.matches || data;
+        const json = await res.json();
+        const data = json;
+        const matchs = data.matchs.slice().reverse();
 
-        if (matches && matches.length > 0) {
-            renderMatches(matches);
+        if (matchs && matchs.length > 0) {
+            renderMatches(matchs);
         } else {
             showNoMatches();
         }
@@ -62,19 +63,14 @@ function createMatchElement(match) {
     const div = document.createElement("div");
     div.className = "match-item bg-white p-4 rounded-lg shadow-md mb-4";
 
+    let winner = match.playerWin == localStorage.getItem("avatar_tcg_user_id")
+
     div.innerHTML = `
-        <div class="flex justify-between items-center">
-            <h3 class="text-lg font-semibold text-gray-800">Partida #${match.id}</h3>
-            <span class="px-3 py-1 rounded-full text-sm font-medium ${
-        match.won ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-    }">
-                ${match.won ? 'Vitória' : 'Derrota'}
+        <div class="flex  justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-800">Partida ID: ${match.id}</h3>
+            <span class="px-3 py-1 rounded-full text-sm font-medium ${winner ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                ${winner ? 'Vitória' : 'Derrota'}
             </span>
-        </div>
-        <div class="mt-2 text-gray-600">
-            <p>Data: ${new Date(match.date).toLocaleDateString()}</p>
-            <p>Pontuação: ${match.score || 'N/A'}</p>
-            ${match.opponent ? `<p>Oponente: ${match.opponent}</p>` : ''}
         </div>
     `;
 
