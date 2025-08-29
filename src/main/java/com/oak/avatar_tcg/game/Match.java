@@ -22,6 +22,10 @@ public class Match {
         this.gameState = new GameState(this.id, this.PlayerOneID, this.PlayerTwoID);
     }
 
+    public void battle(){
+        this.gameState.battle();
+    }
+
     public String getGameStateJson() {
         return this.gameState.toJson();
     }
@@ -48,9 +52,5 @@ public class Match {
 
     public WebSocket getSocketPlayerTwo() {
         return this.SocketPlayerTwo;
-    }
-
-    public void battle(){
-        this.gameState.battle();
     }
 }
