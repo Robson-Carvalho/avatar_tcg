@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="build: ajusta de build e execução">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona id da partida no estado do jogo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,23 +168,7 @@
       <workItem from="1756406676575" duration="4039000" />
       <workItem from="1756417378399" duration="13188000" />
       <workItem from="1756438478721" duration="6034000" />
-      <workItem from="1756476083715" duration="9119000" />
-    </task>
-    <task id="LOCAL-00013" summary="docs: update README.md">
-      <option name="closed" value="true" />
-      <created>1755727138062</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1755727138062</updated>
-    </task>
-    <task id="LOCAL-00014" summary="feat: ajustes na atualização do deck">
-      <option name="closed" value="true" />
-      <created>1755728856267</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1755728856267</updated>
+      <workItem from="1756476083715" duration="10314000" />
     </task>
     <task id="LOCAL-00015" summary="feat: inicia desenvolvimento da partida">
       <option name="closed" value="true" />
@@ -561,7 +546,23 @@
       <option name="project" value="LOCAL" />
       <updated>1756480060765</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="fix: resolve bug de desconexão após uma ação">
+      <option name="closed" value="true" />
+      <created>1756492058493</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1756492058493</updated>
+    </task>
+    <task id="LOCAL-00063" summary="feat: adiciona id da partida no estado do jogo">
+      <option name="closed" value="true" />
+      <created>1756492123727</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1756492123727</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -574,8 +575,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: modificações para usar o gson" />
-    <MESSAGE value="refactor: remove métodos compartilhados de dentro do WebSocketHandler" />
     <MESSAGE value="refactor: adiciona mais uma verificação para o id da partida" />
     <MESSAGE value="feat: adiciona forma de lidar com desconexão inesperada" />
     <MESSAGE value="feat: adiciona envio do estado do jogo" />
@@ -599,6 +598,8 @@
     <MESSAGE value="feat: adiciona lógica de persistência de partida" />
     <MESSAGE value="feat: modifica a lógica da troca de turno para acontecer após uma action do tipo play" />
     <MESSAGE value="build: ajusta de build e execução" />
-    <option name="LAST_COMMIT_MESSAGE" value="build: ajusta de build e execução" />
+    <MESSAGE value="fix: resolve bug de desconexão após uma ação" />
+    <MESSAGE value="feat: adiciona id da partida no estado do jogo" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona id da partida no estado do jogo" />
   </component>
 </project>

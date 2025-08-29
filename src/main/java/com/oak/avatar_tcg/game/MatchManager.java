@@ -31,7 +31,7 @@ public class MatchManager {
                     match.getGameState().getPlayerTwo().setActivationCard(cardID);
                 }
             }
-            else if(action.equals("play")) {
+            else if(action.equals("playCard")) {
                 if (match.getPlayerOneID().equals(userID)) {
                     match.getGameState().getPlayerOne().setPlayedCard(true);
                 }else{

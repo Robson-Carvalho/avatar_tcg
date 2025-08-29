@@ -109,13 +109,14 @@ public class WebSocketController {
 
     private synchronized void handleAction(WebSocket socket, String action, String cardID, String userID, String matchID) {
         try {
-            if (matchID == null) {
+            Match match = matchManager.getMatch(matchID);
+
+            if (match == null) {
                 sendMessage(socket, new GameMessage("ERROR", "ID da partida é requerido"));
                 return;
             }
 
             matchManager.handleAction(action, cardID, userID, matchID);
-            Match match = matchManager.getMatch(matchID);
 
             if(!match.getGameState().getPlayerWin().equals("void")) {
                 WebSocket playerOne =match.getSocketPlayerOne();
@@ -226,7 +227,7 @@ public class WebSocketController {
                                 handleAction(socket, "activateCard", cardID, userID, matchID);
                             }
                         }
-                        case "play" -> {
+                        case "playCard" -> {
                             if (validateGameAction(socket, token, userID, matchID)) {
 
                                 handleAction(socket, "playCard", cardID, userID, matchID);
