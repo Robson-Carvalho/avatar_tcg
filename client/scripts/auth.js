@@ -66,6 +66,7 @@ async function handleAuth() {
             localStorage.setItem("avatar_tcg_user_id", data.user.id);
             localStorage.setItem("avatar_tcg_deck_id", data.deck_id);
             localStorage.setItem("avatar_tcg_user_name", data.user.name);
+            localStorage.setItem("avatar_tcg_user_nickname", data.user.nickname);
             document.getElementById("auth").classList.add("hidden");
             document.getElementById("dashboard").classList.remove("hidden");
     

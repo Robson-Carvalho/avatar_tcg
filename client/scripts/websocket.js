@@ -52,25 +52,30 @@ function connectToGame() {
         const receive = JSON.parse(event.data);
 
         if (receive.message === "pong") {
-             updatePing();
-        } 
-        
-        if (receive.data) {    
+            updatePing();
+        }
+
+        if (receive.type === "MATCH_FOUND" || receive.type === "UPDATE_GAME") {
             localStorage.setItem("gameState", event.data);
+        }
+
+        if (receive.type === "MATCH_FOUND" || receive.type === "UPDATE_GAME") { 
+            //console.log("debug", JSON.parse(receive.data));
         }
 
         handleServerMessage(receive);
     };
 
     socket.onclose = () => {
-        console.log("Conexão encerrada.");
-
         clearInterval(pingInterval);
+
+        console.log("Conexão encerrada.");
         
         if (!document.getElementById("victoryModal").classList.contains("hidden")) {
             return;
         }
 
+        localStorage.removeItem("gameState");
         endGame();
     };
 }
@@ -144,8 +149,8 @@ function handleServerMessage(receive) {
             console.log("Match finalizada.");
             break;
 
-        case "UPDATE":
-            console.log("UPDATE:", receive.message);
+        case "UPDATE_GAME":
+            updateGame();
             break;
 
         case "ERROR":
@@ -189,6 +194,7 @@ function endGame() {
     matchId = null;
     myTurn = false;
 
+    clearInterval(pingInterval);
     showMatches();
 }
 

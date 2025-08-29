@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona id da partida no estado do jogo">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
-    </list>
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="fix: corrige bug de usar o match antes de verificar se existe" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -168,15 +163,7 @@
       <workItem from="1756406676575" duration="4039000" />
       <workItem from="1756417378399" duration="13188000" />
       <workItem from="1756438478721" duration="6034000" />
-      <workItem from="1756476083715" duration="10314000" />
-    </task>
-    <task id="LOCAL-00015" summary="feat: inicia desenvolvimento da partida">
-      <option name="closed" value="true" />
-      <created>1755732899252</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1755732899252</updated>
+      <workItem from="1756476083715" duration="10727000" />
     </task>
     <task id="LOCAL-00016" summary="styles: muda nome da pasta raiz">
       <option name="closed" value="true" />
@@ -562,7 +549,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756492123727</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="fix: corrige bug de usar o match antes de verificar se existe">
+      <option name="closed" value="true" />
+      <created>1756493538333</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1756493538333</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -575,7 +570,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="refactor: adiciona mais uma verificação para o id da partida" />
     <MESSAGE value="feat: adiciona forma de lidar com desconexão inesperada" />
     <MESSAGE value="feat: adiciona envio do estado do jogo" />
     <MESSAGE value="test: adiciona arquivos de teste" />
@@ -600,6 +594,7 @@
     <MESSAGE value="build: ajusta de build e execução" />
     <MESSAGE value="fix: resolve bug de desconexão após uma ação" />
     <MESSAGE value="feat: adiciona id da partida no estado do jogo" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona id da partida no estado do jogo" />
+    <MESSAGE value="fix: corrige bug de usar o match antes de verificar se existe" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: corrige bug de usar o match antes de verificar se existe" />
   </component>
 </project>
