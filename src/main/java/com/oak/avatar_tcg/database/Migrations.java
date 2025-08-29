@@ -22,7 +22,6 @@ public class Migrations {
             "V8__Seed_system_cards.sql"
     );
 
-
     public static void runMigrations() throws SQLException, IOException {
         try (Connection conn = Database.getConnection()) {
             createMigrationTableIfNotExists(conn);

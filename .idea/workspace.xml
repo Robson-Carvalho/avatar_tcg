@@ -4,15 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona reconhecimento de comando ping">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/MatchController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/Match.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/MatchRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/MatchService.java" afterDir="false" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona criação da tabela de partida">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/database/Migrations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/database/Migrations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/Match.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/MatchRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/MatchRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V5__Create_matchs_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V5__Create_matchs_table.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,23 +171,7 @@
       <workItem from="1756334233253" duration="3633000" />
       <workItem from="1756406676575" duration="4039000" />
       <workItem from="1756417378399" duration="13188000" />
-      <workItem from="1756438478721" duration="1005000" />
-    </task>
-    <task id="LOCAL-00008" summary="feat: adiciona abertura de pacote">
-      <option name="closed" value="true" />
-      <created>1755655813863</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1755655813863</updated>
-    </task>
-    <task id="LOCAL-00009" summary="refactor: valida se o id do user existe">
-      <option name="closed" value="true" />
-      <created>1755656075451</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1755656075451</updated>
+      <workItem from="1756438478721" duration="4873000" />
     </task>
     <task id="LOCAL-00010" summary="feat: adiciona criação e atualização de deck">
       <option name="closed" value="true" />
@@ -565,7 +549,23 @@
       <option name="project" value="LOCAL" />
       <updated>1756433056230</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="feat: adiciona criação e recuperação de histórico de partida">
+      <option name="closed" value="true" />
+      <created>1756439832475</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1756439832475</updated>
+    </task>
+    <task id="LOCAL-00058" summary="feat: adiciona criação da tabela de partida">
+      <option name="closed" value="true" />
+      <created>1756439860666</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1756439860666</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -578,8 +578,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="refactor: adiciona melhorias no cliente e visualização de partidas" />
-    <MESSAGE value="fix: resolve problema de cliente com duas sessões no servidor ativas" />
     <MESSAGE value="feat: adiciona client" />
     <MESSAGE value="feat: adiciona record para padronização de envio de mensagens" />
     <MESSAGE value="feat: adiciona parse de json utilizando a lib gson do google" />
@@ -603,6 +601,8 @@
     <MESSAGE value="feat: adiciona as atualizações de estado dentro de cada player" />
     <MESSAGE value="feat: altera nome do comando de jogar" />
     <MESSAGE value="feat: adiciona reconhecimento de comando ping" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona reconhecimento de comando ping" />
+    <MESSAGE value="feat: adiciona criação e recuperação de histórico de partida" />
+    <MESSAGE value="feat: adiciona criação da tabela de partida" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona criação da tabela de partida" />
   </component>
 </project>

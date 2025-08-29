@@ -1,5 +1,7 @@
 package com.oak.avatar_tcg.model;
 
+import java.util.UUID;
+
 public class Match {
     private String id;
     private String playerOneID;
@@ -7,7 +9,9 @@ public class Match {
     private String playerWin;
 
 
-    public Match() {}
+    public Match() {
+        this.id = UUID.randomUUID().toString();
+    }
 
     public String getId() {return this.id;}
     public String getPlayerOneID() {return this.playerOneID;}

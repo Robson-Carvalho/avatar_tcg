@@ -89,7 +89,7 @@ public class WebSocketController {
                     if (!initiatedByClient) socketOpponent.close();
                 }
 
-                matchManager.endMatch(matchID);
+                matchManager.endMatch(matchID, userID);
             } else {
                 waitingQueue.remove(userID);
                 playerSockets.remove(userID);

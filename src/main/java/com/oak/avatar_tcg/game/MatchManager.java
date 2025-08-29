@@ -1,5 +1,6 @@
 package com.oak.avatar_tcg.game;
 
+import com.oak.avatar_tcg.service.MatchService;
 import com.oak.http.WebSocket;
 
 import java.util.Map;
@@ -8,6 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MatchManager {
     private final ConcurrentHashMap<String, Match> matches = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> playerToMatch = new ConcurrentHashMap<>();
+
+    private final MatchService  matchService =  new MatchService();
 
     public String createMatch(WebSocket socket1, String player1, WebSocket socket2, String player2) throws Exception {
         Match match = new Match(player1, socket1, player2, socket2);
@@ -67,6 +70,34 @@ public class MatchManager {
         return matches.get(matchID);
     }
 
+    // partida finalizada por desconexão ou desistência
+    public void endMatch(String matchID, String userID) {
+        Match match = matches.remove(matchID);
+
+        if (!match.getId().isEmpty()) {
+            playerToMatch.remove(match.getPlayerOneID());
+            playerToMatch.remove(match.getPlayerTwoID());
+        }
+
+        if(match.getPlayerOneID().equals(userID)){
+            match.getGameState().setPlayerWin(match.getPlayerTwoID());
+        }else{
+            match.getGameState().setPlayerWin(match.getPlayerOneID());
+        }
+
+        com.oak.avatar_tcg.model.Match newMatch = new com.oak.avatar_tcg.model.Match();
+
+        newMatch.setPlayerOneID(match.getPlayerOneID());
+        newMatch.setPlayerTwoID(match.getPlayerTwoID());
+
+        newMatch.setPlayerWin(match.getGameState().getPlayerWin());
+
+        matchService.save(newMatch);
+
+        matches.remove(matchID);
+    }
+
+    // partida finalizada por fluxo normal
     public void endMatch(String matchID) {
         Match match = matches.remove(matchID);
 
@@ -75,7 +106,13 @@ public class MatchManager {
             playerToMatch.remove(match.getPlayerTwoID());
         }
 
-        // adicionar método para salvar a partida aqui - repository match
+        com.oak.avatar_tcg.model.Match newMatch = new com.oak.avatar_tcg.model.Match();
+
+        newMatch.setPlayerOneID(match.getPlayerOneID());
+        newMatch.setPlayerTwoID(match.getPlayerTwoID());
+        newMatch.setPlayerWin(match.getGameState().getPlayerWin());
+
+        matchService.save(newMatch);
 
         matches.remove(matchID);
     }

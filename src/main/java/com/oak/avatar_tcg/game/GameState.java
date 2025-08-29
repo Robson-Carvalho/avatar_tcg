@@ -58,6 +58,8 @@ public class GameState {
 
     public void setType(String type) { this.type = type; }
 
+    public void setPlayerWin(String playerWin) { this.playerWin = playerWin; }
+
     public String getMessage() { return message; }
 
     public void setMessage(String message) { this.message = message; }

@@ -36,22 +36,22 @@ public class MatchRepository {
         Match match = new Match();
 
         match.setId(rs.getString("id"));
-        match.setPlayerOneID(rs.getString("playerOneID"));
-        match.setPlayerTwoID(rs.getString("playerOneID"));
-        match.setPlayerWin(rs.getString("playerWin"));
+        match.setPlayerOneID(rs.getString("player1_id"));
+        match.setPlayerTwoID(rs.getString("player2_id"));
+        match.setPlayerWin(rs.getString("player_win"));
 
         return match;
     }
 
     public void save(Match match) {
-        String sql = "INSERT INTO cards (id, playerOneID, playerOneID, playerWin) " + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO matchs (id, player1_id, player2_id, player_win) " + "VALUES (?, ?, ?, ?)";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, match.getId());
             stmt.setString(2, match.getPlayerOneID());
-            stmt.setString(3, match.getPlayerOneID());
+            stmt.setString(3, match.getPlayerTwoID());
             stmt.setString(4, match.getPlayerWin());
 
             stmt.executeUpdate();
