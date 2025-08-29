@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public class GameState {
     private final String id;
+    private final String matchID;
     private String type;
     private String message;
     private Player playerOne;
@@ -17,8 +18,9 @@ public class GameState {
     private String playerWin;
 
     public GameState(String matchID, String playerOneID, String playerTwoID) {
-        this.id = matchID != null ? matchID : UUID.randomUUID().toString();
-        this.type = "GAME_UPDATE";
+        this.id = UUID.randomUUID().toString();
+        this.matchID = matchID;
+        this.type = "UPDATE_GAME";
         this.message = "Game state updated";
         this.state = "IN_PROGRESS";
         this.turnPlayerId = ThreadLocalRandom.current().nextBoolean() ? playerOneID : playerTwoID;

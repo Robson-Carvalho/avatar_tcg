@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona lógica de persistência de partida">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="build: ajusta de build e execução">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,23 +167,7 @@
       <workItem from="1756406676575" duration="4039000" />
       <workItem from="1756417378399" duration="13188000" />
       <workItem from="1756438478721" duration="6034000" />
-      <workItem from="1756476083715" duration="3006000" />
-    </task>
-    <task id="LOCAL-00011" summary="feat: teste de rota dinâmica">
-      <option name="closed" value="true" />
-      <created>1755704028160</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1755704028160</updated>
-    </task>
-    <task id="LOCAL-00012" summary="refactor: abertura de pacotes refatorada">
-      <option name="closed" value="true" />
-      <created>1755727066236</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1755727066236</updated>
+      <workItem from="1756476083715" duration="9119000" />
     </task>
     <task id="LOCAL-00013" summary="docs: update README.md">
       <option name="closed" value="true" />
@@ -561,7 +545,23 @@
       <option name="project" value="LOCAL" />
       <updated>1756443502896</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="feat: modifica a lógica da troca de turno para acontecer após uma action do tipo play">
+      <option name="closed" value="true" />
+      <created>1756479948416</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1756479948416</updated>
+    </task>
+    <task id="LOCAL-00061" summary="build: ajusta de build e execução">
+      <option name="closed" value="true" />
+      <created>1756480060764</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1756480060765</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -574,8 +574,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: adiciona record para padronização de envio de mensagens" />
-    <MESSAGE value="feat: adiciona parse de json utilizando a lib gson do google" />
     <MESSAGE value="feat: modificações para usar o gson" />
     <MESSAGE value="refactor: remove métodos compartilhados de dentro do WebSocketHandler" />
     <MESSAGE value="refactor: adiciona mais uma verificação para o id da partida" />
@@ -599,6 +597,8 @@
     <MESSAGE value="feat: adiciona criação e recuperação de histórico de partida" />
     <MESSAGE value="feat: adiciona criação da tabela de partida" />
     <MESSAGE value="feat: adiciona lógica de persistência de partida" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona lógica de persistência de partida" />
+    <MESSAGE value="feat: modifica a lógica da troca de turno para acontecer após uma action do tipo play" />
+    <MESSAGE value="build: ajusta de build e execução" />
+    <option name="LAST_COMMIT_MESSAGE" value="build: ajusta de build e execução" />
   </component>
 </project>
