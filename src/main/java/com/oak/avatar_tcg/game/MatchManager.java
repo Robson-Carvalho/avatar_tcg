@@ -20,22 +20,30 @@ public class MatchManager {
     public void handleAction(String action,String cardID, String userID, String matchID) {
         Match match = matches.get(matchID);
 
-        if(action.equals("activateCard")){
-
-            if (match.getPlayerOneID().equals(userID)) {
-                match.getGameState().getPlayerOne().setActivationCard(cardID);
-            }else{
-                match.getGameState().getPlayerTwo().setActivationCard(cardID);
+        if(match.getGameState().getTurnPlayerId().equals(userID)){
+            if(action.equals("activateCard")){
+                if (match.getPlayerOneID().equals(userID)) {
+                    match.getGameState().getPlayerOne().setActivationCard(cardID);
+                }else{
+                    match.getGameState().getPlayerTwo().setActivationCard(cardID);
+                }
             }
-        } else if( action.equals("play")) {
-            if (match.getPlayerOneID().equals(userID)) {
-                match.getGameState().getPlayerOne().setPlayedCard(true);
-            }else{
-                match.getGameState().getPlayerTwo().setPlayedCard(true);
+            else if(action.equals("play")) {
+                if (match.getPlayerOneID().equals(userID)) {
+                    match.getGameState().getPlayerOne().setPlayedCard(true);
+                }else{
+                    match.getGameState().getPlayerTwo().setPlayedCard(true);
+                }
+
+                if (match.getGameState().getPlayerOne().getPlayedCard()  && match.getGameState().getPlayerTwo().getPlayedCard()){
+                    match.battle();
+                }
             }
 
-            if (match.getGameState().getPlayerOne().getPlayedCard()  && match.getGameState().getPlayerTwo().getPlayedCard()){
-                match.battle();
+            if(match.getGameState().getTurnPlayerId().equals(match.getPlayerOneID())) {
+                match.getGameState().setTurnPlayerId(match.getPlayerTwoID());
+            }else{
+                match.getGameState().setTurnPlayerId(match.getPlayerOneID());
             }
         }
     }
