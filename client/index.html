@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="./assets/favicon.jpg">
     <title>Avatar TCG: Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -103,9 +104,7 @@
     </div>
 
     <!-- GAME -->
-    <!-- IMPORTANTE: Voltar com o hidden depois em gameContainer -->
-    <!-- LEMBRE-SE: Adiciona o localStorage.remove gameState em endGame de novo  -->
-    <div id="gameContainer" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
+    <div id="gameContainer" class="px-12 hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
         <div id="waitingQueue"
             class="hidden relative flex flex-col items-center justify-center bg-white p-6 rounded-xl shadow-lg border border-gray-200">
             <button onclick="endGame()"
@@ -136,7 +135,6 @@
             </div>
         </div>
 
-        <!-- IMPORTANTE: Voltar com o hidden depois em game -->
         <div id="game" style="max-width: 1400px; max-height: 800px;" class="hidden bg-white w-full h-full mx-auto rounded-xl shadow-xl flex flex-col p-4">
             <div class="flex justify-between items-center border-b pb-2">
                 <h2 class="text-lg font-bold">Partida</h2>
@@ -163,21 +161,29 @@
             <div id="battle" class="flex flex-1 justify-center items-center gap-6">
                 <div id="hero" class="h-full flex-1 max-w-sm flex justify-center items-center border-2 border-dashed border-gray-300 rounded-xl p-4">
                     
+
+
+                    
                 </div>
         
                 <div class="flex flex-col items-center px-4 h-full">
                     <div class="flex-1"></div>
                     <span class="flex-1 text-4xl">⚔️</span>
-                    <button id="buttonPlayCard" class="bg-green-500  text-white px-4 py-2 rounded-lg hover:bg-green-600" onclick="playCard()">Jogar</button>
+                    <button id="buttonPlayCard" class="px-4 py-2 rounded text-white 
+         bg-green-500 hover:bg-green-600 cursor-pointer 
+         disabled:bg-gray-500 disabled:cursor-not-allowed disabled:hover:bg-gray-600" onclick="playCard()">Jogar</button>
                 </div>
         
                 <div id="opponent" class="h-full flex-1 max-w-sm flex justify-center items-center border-2 border-dashed border-gray-300 rounded-xl p-4">>
+
                 </div>
             </div>
 
             
         
             <div id="myHand" class="flex-1 flex justify-center items-center border-2 border-gray-200 rounded-xl mt-6 p-4 bg-gray-50 min-h-[200px] flex-wrap">
+
+                
             </div>
         </div>
         </div>

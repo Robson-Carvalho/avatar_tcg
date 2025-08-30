@@ -47,14 +47,14 @@ function updateGameContent(gameState) {
   document.getElementById("opponent").innerHTML = "";
 
   player.cards.forEach((card) => {
-    const cardElement = createCardElement(card, true);
+    const cardElement = createBattleCard(card, true);
     document.getElementById("myHand").appendChild(cardElement);
   });
 
   if (player.activationCard) {
     const playedCard = player.cards.find((c) => c.id === player.activationCard);
     if (playedCard) {
-      const cardElement = createCardElement(playedCard, false);
+      const cardElement = createBattleCard(playedCard, false);
       document.getElementById("hero").appendChild(cardElement);
     }
   }
@@ -64,7 +64,7 @@ function updateGameContent(gameState) {
       (c) => c.id === opponent.activationCard
     );
     if (playedCard) {
-      const cardElement = createCardElement(playedCard, false);
+      const cardElement = createBattleCard(playedCard, false);
       document.getElementById("opponent").appendChild(cardElement);
     }
   }
@@ -74,7 +74,7 @@ function updateGameContent(gameState) {
   }
 }
 
-function createCardElement(card, isDraggable) {
+function createBattleCard(card, isDraggable) {
   const cardDiv = document.createElement("div");
   cardDiv.dataset.card = JSON.stringify(card);
   cardDiv.dataset.cardId = card.id;
@@ -89,8 +89,8 @@ function createCardElement(card, isDraggable) {
     "duration-200",
     "border-2",
     "border-gray-200",
-    "w-28",
-    "h-36",
+    "w-40", // ~160px
+    "h-56", // ~224px
     "flex",
     "flex-col",
     "justify-between",
@@ -106,11 +106,9 @@ function createCardElement(card, isDraggable) {
     );
     cardDiv.draggable = true;
 
-    // 🔹 Evento direto aqui, sem depender de querySelectorAll
     cardDiv.addEventListener("dragstart", (e) => {
       const cardData = JSON.parse(cardDiv.dataset.card);
 
-      // salva todos os dados da carta no dataTransfer
       e.dataTransfer.setData("cardId", cardData.id);
       e.dataTransfer.setData("cardName", cardData.name);
       e.dataTransfer.setData("cardElement", cardData.element);
@@ -129,21 +127,19 @@ function createCardElement(card, isDraggable) {
 
   cardDiv.className = baseClasses.join(" ");
 
-  // cores por elemento
   const elementColors = {
-    WATER: "bg-blue-100 border-blue-300",
-    FIRE: "bg-red-100 border-red-300",
-    EARTH: "bg-green-100 border-green-300",
-    AIR: "bg-gray-100 border-gray-300",
-    BLOOD: "bg-red-200 border-red-400",
-    METAL: "bg-zinc-100 border-zinc-300",
-    LIGHTNING: "bg-yellow-100 border-yellow-300",
-    AVATAR: "bg-purple-100 border-purple-300",
+    WATER: "border-blue-300",
+    FIRE: "border-red-300",
+    EARTH: "border-amber-600",
+    AIR: "border-sky-100",
+    BLOOD: "border-rose-600",
+    METAL: "border-slate-400",
+    LIGHTNING: "border-yellow-300",
+    AVATAR: "border-purple-300",
   };
   if (elementColors[card.element])
     cardDiv.classList.add(...elementColors[card.element].split(" "));
 
-  // raridade
   const rarityClasses = {
     COMMON: "bg-gray-200 text-gray-800",
     RARE: "bg-green-200 text-green-800",
@@ -153,33 +149,43 @@ function createCardElement(card, isDraggable) {
   const styles = rarityClasses[card.rarity] || "";
 
   cardDiv.innerHTML = `
-      <div class="text-sm font-bold text-gray-800 truncate">${
-        card.name.split(" ")[0]
-      }</div>
-      <div class="text-xs text-gray-600"><span class="font-semibold">${
-        card.element
-      }</span></div>
-      <div class="text-xs space-y-1">
-          <div class="flex justify-between"><span class="font-medium">ATK:</span><span class="text-red-600">${
-            card.attack
-          }</span></div>
-          <div class="flex justify-between"><span class="font-medium">DEF:</span><span class="text-blue-600">${
-            card.defense
-          }</span></div>
-          <div class="flex justify-between"><span class="font-medium">HP:</span><span class="text-green-600">${
-            card.life
-          }</span></div>
-      </div>
-      <div class="text-xs text-center mt-1 px-2 py-1 rounded-full ${styles}">${
-    card.rarity
-  }</div>
-  `;
+  <div class="text-lg font-bold text-gray-800 text-center break-words leading-tight">
+    ${card.name}
+  </div>
+
+
+  <div class="text-sm text-gray-600 text-center mb-1">
+    <span class="font-semibold">${card.element}</span>
+  </div>
+
+  <div class="text-sm space-y-1">
+    <div class="flex justify-between">
+      <span class="font-medium">ATK:</span>
+      <span class="text-red-600 font-semibold">${card.attack}</span>
+    </div>
+
+    <div class="flex justify-between">
+      <span class="font-medium">DEF:</span>
+      <span class="text-blue-600 font-semibold">${card.defense}</span>
+    </div>
+
+    <div class="flex justify-between">
+      <span class="font-medium">HP:</span>
+      <span class="text-green-600 font-semibold">${card.life}</span>
+    </div>
+  </div>
+
+  <div class="text-xs text-center mt-2 px-2 py-1 rounded-full ${styles}">
+    <strong>${card.rarity}</strong>
+  </div>
+`;
 
   return cardDiv;
 }
 
 function setupHeroSlot(gameState) {
   const heroSlot = document.getElementById("hero");
+
   heroSlot.classList.add(
     "min-h-[200px]",
     "bg-gray-50",
@@ -187,9 +193,14 @@ function setupHeroSlot(gameState) {
     "duration-200"
   );
 
+  if (heroSlot.dataset.listeners === "true") return;
+  heroSlot.dataset.listeners = "true";
+
   heroSlot.addEventListener("dragover", (e) => {
     e.preventDefault();
-    heroSlot.classList.add("bg-blue-100", "border-blue-500", "border-2");
+    if (gameState.turnPlayerId === localStorage.getItem("avatar_tcg_user_id")) {
+      heroSlot.classList.add("bg-blue-100", "border-blue-500", "border-2");
+    }
   });
 
   heroSlot.addEventListener("dragleave", () => {
@@ -199,6 +210,12 @@ function setupHeroSlot(gameState) {
 
   heroSlot.addEventListener("drop", (e) => {
     e.preventDefault();
+
+    if (gameState.turnPlayerId !== localStorage.getItem("avatar_tcg_user_id")) {
+      console.warn("Não é seu turno!");
+      return;
+    }
+
     heroSlot.classList.remove("bg-blue-100", "border-blue-500", "border-2");
     heroSlot.classList.add("bg-gray-50");
 
@@ -212,19 +229,16 @@ function setupHeroSlot(gameState) {
       rarity: e.dataTransfer.getData("cardRarity"),
     };
 
-    if (cardData.id && heroSlot.children.length === 0) {
-      // Remove carta da mão
-      const cardElement = document.querySelector(
-        `[data-card-id="${cardData.id}"]`
-      );
-      if (cardElement) cardElement.remove();
+    if (!cardData.id) return;
 
-      // Renderiza no campo
-      heroSlot.appendChild(createCardElement(cardData, false));
+    heroSlot.innerHTML = ""; 
+    const cardElement = document.querySelector(
+      `[data-card-id="${cardData.id}"]`
+    );
+    if (cardElement) cardElement.remove();
 
-      // Envia jogada
-      activationCard(gameState, cardData.id);
-    }
+    heroSlot.appendChild(createBattleCard(cardData, false));
+    activationCard(gameState, cardData.id);
   });
 }
 
@@ -255,8 +269,8 @@ function playCard() {
       type: "playCard",
       token: localStorage.getItem("token"),
       userID: localStorage.getItem("avatar_tcg_user_id"),
-      cardID:  player.activationCard,
-      matchID: gameState.matchID
+      cardID: player.activationCard,
+      matchID: gameState.matchID,
     })
   );
 

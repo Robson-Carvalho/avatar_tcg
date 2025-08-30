@@ -35,6 +35,7 @@ function renderDeck(deck, cards) {
     const deckSlots = document.getElementById("deckSlots");
     deckSlots.innerHTML = "";
 
+    // cria 5 slots
     for (let i = 1; i <= 5; i++) {
         const slotId = deck[`card${i}Id`];
         const slot = document.createElement("div");
@@ -47,20 +48,21 @@ function renderDeck(deck, cards) {
             const card = cards.find(c => c.id === slotId);
             if (card) {
                 slot.appendChild(createCardElement(card, true));
-                slot.dataset.cardId = card.id; 
+                slot.dataset.cardId = card.id; // 👈 ESSENCIAL: manter o id no dataset
             } else {
                 // segurança: se id não existir mais na coleção de cartas
                 slot.innerHTML = "<span class='text-gray-400'>Slot vazio</span>";
-                slot.dataset.cardId = "";
+                slot.dataset.cardId = ""; // 👈 garante vazio
             }
         } else {
             slot.innerHTML = "<span class='text-gray-400'>Slot vazio</span>";
-            slot.dataset.cardId = ""; 
+            slot.dataset.cardId = ""; // 👈 garante vazio
         }
 
         deckSlots.appendChild(slot);
     }
 
+    // cartas disponíveis
     const available = document.getElementById("availableCards");
     available.innerHTML = "";
     cards.forEach(c => {
@@ -71,7 +73,7 @@ function renderDeck(deck, cards) {
 function createCardElement(card, inDeck = false) {
     const div = document.createElement("div");
     div.className = "card bg-white rounded-lg shadow p-2 flex flex-col items-center relative";
-    div.draggable = !inDeck; 
+    div.draggable = !inDeck; // cartas dentro do deck não podem ser arrastadas novamente (opcional)
     div.dataset.id = card.id;
 
     if (!inDeck) {
@@ -96,7 +98,7 @@ function createCardElement(card, inDeck = false) {
         removeBtn.onclick = () => {
             const slot = div.parentElement;
             slot.innerHTML = "<span class='text-gray-400'>Slot vazio</span>";
-            slot.dataset.cardId = ""; 
+            slot.dataset.cardId = ""; // limpa o slot
         };
         div.appendChild(removeBtn);
     }
