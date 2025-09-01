@@ -7,6 +7,7 @@ function updateGame() {
     const gameState = JSON.parse(json.data);
 
     updateStatusContent(gameState);
+    updateGameContent(gameState);
   } catch (e) {
     console.error("Erro ao atualizar jogo:", e);
   }
@@ -14,26 +15,25 @@ function updateGame() {
 
 function updateStatusContent(gameState) {
   const buttonPlayCard = document.getElementById("buttonPlayCard");
+  const points = document.getElementById("points");
+  const userId = localStorage.getItem("avatar_tcg_user_id");
+  const isMyTurn = userId === gameState.turnPlayerId;
 
-  if (localStorage.getItem("avatar_tcg_user_id") != gameState.turnPlayerId) {
-    document.getElementById("currentTurn").innerText = "Turno do oponente";
+  document.getElementById("currentTurn").innerText = isMyTurn
+    ? "Seu turno"
+    : "Turno do oponente";
 
-    if (buttonPlayCard) {
-      buttonPlayCard.disabled = true;
-      buttonPlayCard.classList.add("cursor-not-allowed");
-      buttonPlayCard.classList.remove("cursor-pointer");
-    }
-  } else {
-    document.getElementById("currentTurn").innerText = "Seu turno";
+  const me =
+    gameState.playerOne.id === userId
+      ? gameState.playerOne
+      : gameState.playerTwo;
+  points.innerText = me.points;
 
-    if (buttonPlayCard) {
-      buttonPlayCard.disabled = false;
-      buttonPlayCard.classList.add("cursor-pointer");
-      buttonPlayCard.classList.remove("cursor-not-allowed");
-    }
+  if (buttonPlayCard) {
+    buttonPlayCard.disabled = !isMyTurn;
+    buttonPlayCard.classList.toggle("cursor-pointer", isMyTurn);
+    buttonPlayCard.classList.toggle("cursor-not-allowed", !isMyTurn);
   }
-
-  updateGameContent(gameState);
 }
 
 function updateGameContent(gameState) {
@@ -53,6 +53,7 @@ function updateGameContent(gameState) {
 
   if (player.activationCard) {
     const playedCard = player.cards.find((c) => c.id === player.activationCard);
+
     if (playedCard) {
       const cardElement = createBattleCard(playedCard, false);
       document.getElementById("hero").appendChild(cardElement);
@@ -89,12 +90,13 @@ function createBattleCard(card, isDraggable) {
     "duration-200",
     "border-2",
     "border-gray-200",
-    "w-40", // ~160px
-    "h-56", // ~224px
+    "w-40",
+    "h-56",
     "flex",
     "flex-col",
     "justify-between",
   ];
+  cardDiv.className = baseClasses.join(" ");
 
   if (isDraggable) {
     cardDiv.classList.add(
@@ -108,15 +110,12 @@ function createBattleCard(card, isDraggable) {
 
     cardDiv.addEventListener("dragstart", (e) => {
       const cardData = JSON.parse(cardDiv.dataset.card);
-
-      e.dataTransfer.setData("cardId", cardData.id);
-      e.dataTransfer.setData("cardName", cardData.name);
-      e.dataTransfer.setData("cardElement", cardData.element);
-      e.dataTransfer.setData("cardAttack", cardData.attack);
-      e.dataTransfer.setData("cardDefense", cardData.defense);
-      e.dataTransfer.setData("cardLife", cardData.life);
-      e.dataTransfer.setData("cardRarity", cardData.rarity);
-
+      Object.entries(cardData).forEach(([key, value]) => {
+        e.dataTransfer.setData(
+          `card${key.charAt(0).toUpperCase() + key.slice(1)}`,
+          value
+        );
+      });
       cardDiv.classList.add("opacity-50", "scale-95");
     });
 
@@ -124,8 +123,6 @@ function createBattleCard(card, isDraggable) {
       cardDiv.classList.remove("opacity-50", "scale-95");
     });
   }
-
-  cardDiv.className = baseClasses.join(" ");
 
   const elementColors = {
     WATER: "border-blue-300",
@@ -137,8 +134,9 @@ function createBattleCard(card, isDraggable) {
     LIGHTNING: "border-yellow-300",
     AVATAR: "border-purple-300",
   };
-  if (elementColors[card.element])
+  if (elementColors[card.element]) {
     cardDiv.classList.add(...elementColors[card.element].split(" "));
+  }
 
   const rarityClasses = {
     COMMON: "bg-gray-200 text-gray-800",
@@ -146,39 +144,33 @@ function createBattleCard(card, isDraggable) {
     EPIC: "bg-red-200 text-red-800",
     LEGENDARY: "bg-yellow-200 text-yellow-800",
   };
-  const styles = rarityClasses[card.rarity] || "";
+  const rarityStyle = rarityClasses[card.rarity] || "";
 
   cardDiv.innerHTML = `
-  <div class="text-lg font-bold text-gray-800 text-center break-words leading-tight">
-    ${card.name}
-  </div>
-
-
-  <div class="text-sm text-gray-600 text-center mb-1">
-    <span class="font-semibold">${card.element}</span>
-  </div>
-
-  <div class="text-sm space-y-1">
-    <div class="flex justify-between">
-      <span class="font-medium">ATK:</span>
-      <span class="text-red-600 font-semibold">${card.attack}</span>
+    <div class="text-lg font-bold text-gray-800 text-center break-words leading-tight">
+      ${card.name}
     </div>
-
-    <div class="flex justify-between">
-      <span class="font-medium">DEF:</span>
-      <span class="text-blue-600 font-semibold">${card.defense}</span>
+    <div class="text-sm text-gray-600 text-center mb-1">
+      <span class="font-semibold">${card.element}</span>
     </div>
-
-    <div class="flex justify-between">
-      <span class="font-medium">HP:</span>
-      <span class="text-green-600 font-semibold">${card.life}</span>
+    <div class="text-sm space-y-1">
+      <div class="flex justify-between">
+        <span class="font-medium">ATK:</span>
+        <span class="text-red-600 font-semibold">${card.attack}</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="font-medium">DEF:</span>
+        <span class="text-blue-600 font-semibold">${card.defense}</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="font-medium">HP:</span>
+        <span class="text-green-600 font-semibold">${card.life}</span>
+      </div>
     </div>
-  </div>
-
-  <div class="text-xs text-center mt-2 px-2 py-1 rounded-full ${styles}">
-    <strong>${card.rarity}</strong>
-  </div>
-`;
+    <div class="text-xs text-center mt-2 px-2 py-1 rounded-full ${rarityStyle}">
+      <strong>${card.rarity}</strong>
+    </div>
+  `;
 
   return cardDiv;
 }
@@ -211,6 +203,11 @@ function setupHeroSlot(gameState) {
   heroSlot.addEventListener("drop", (e) => {
     e.preventDefault();
 
+    const data = localStorage.getItem("gameState");
+    if (!data) return;
+    const json = JSON.parse(data);
+    const gameState = JSON.parse(json.data);
+
     if (gameState.turnPlayerId !== localStorage.getItem("avatar_tcg_user_id")) {
       console.warn("Não é seu turno!");
       return;
@@ -231,7 +228,7 @@ function setupHeroSlot(gameState) {
 
     if (!cardData.id) return;
 
-    heroSlot.innerHTML = ""; 
+    heroSlot.innerHTML = "";
     const cardElement = document.querySelector(
       `[data-card-id="${cardData.id}"]`
     );
@@ -252,7 +249,6 @@ function activationCard(gameState, cardId) {
       matchID: gameState.matchID,
     })
   );
-
   console.log("Ativou carta:", cardId);
 }
 
@@ -260,19 +256,24 @@ function playCard() {
   const data = localStorage.getItem("gameState");
   const json = JSON.parse(data);
   const gameState = JSON.parse(json.data);
+  const userId = localStorage.getItem("avatar_tcg_user_id");
 
   const isPlayerOne = userId === gameState.playerOne.id;
   const player = isPlayerOne ? gameState.playerOne : gameState.playerTwo;
+
+  if (!player.activationCard) {
+    alert("Ative uma carta!");
+    return;
+  }
 
   socket.send(
     JSON.stringify({
       type: "playCard",
       token: localStorage.getItem("token"),
-      userID: localStorage.getItem("avatar_tcg_user_id"),
+      userID: userId,
       cardID: player.activationCard,
       matchID: gameState.matchID,
     })
   );
-
   console.log("Jogar!");
 }
