@@ -145,13 +145,18 @@
             </div>
 
             <div id="status" class="flex justify-between items-center py-3 px-2 bg-gray-50 rounded-lg my-3 border border-gray-200">
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center justify-center space-x-2">
                     <span class="text-gray-600 font-medium">Ping:</span>
                     <span id="pingValue"
                         class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-semibold">0 ms</span>
                 </div>
 
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center justify-center space-x-1">
+                    <span class="text-gray-600 font-medium">Pontos:</span>
+                    <span id="points" class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm font-semibold">0</span>
+                </div>
+
+                <div class="flex items-center justify-center space-x-2">
                     <span class="text-gray-600 font-medium">Turno:</span>
                     <span id="currentTurn" class="bg-blue-100 text-blue-800 px-3 py-1 rounded font-medium">Seu turno</span>
                 </div>
@@ -160,9 +165,6 @@
         <div id="battlefield" class="flex flex-col h-full w-full p-4">
             <div id="battle" class="flex flex-1 justify-center items-center gap-6">
                 <div id="hero" class="h-full flex-1 max-w-sm flex justify-center items-center border-2 border-dashed border-gray-300 rounded-xl p-4">
-                    
-
-
                     
                 </div>
         
@@ -192,7 +194,7 @@
     <!-- MODAL DE CARTAS -->
     <div id="cardsModal"
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden modal">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
             <div class="p-4 border-b flex justify-between items-center">
                 <h2 class="text-xl font-bold">Minhas Cartas</h2>
                 <button onclick="closeCardsModal()" class="text-gray-500 hover:text-gray-700">
@@ -209,7 +211,7 @@
                     <p>Carregando suas cartas...</p>
                 </div>
 
-                <div id="cardsContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <div id="cardsContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                     <!-- As cartas serão inseridas aqui via JavaScript -->
                 </div>
 
@@ -282,7 +284,7 @@
     <!-- MODAL DE ABRIR PACOTE -->
     <div id="packModal"
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden modal">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
             <div class="p-4 border-b flex justify-between items-center">
                 <h2 class="text-xl font-bold">Cartas do Pacote</h2>
                 <button onclick="closePackModal()" class="text-gray-500 hover:text-gray-700">
@@ -299,7 +301,7 @@
                     <p>Abrindo pacote...</p>
                 </div>
 
-                <div id="packContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <div id="packContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                     <!-- Cartas do pacote serão inseridas aqui -->
                 </div>
 
