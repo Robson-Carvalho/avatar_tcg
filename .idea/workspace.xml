@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="fix: corrige bug de usar o match antes de verificar se existe" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="fix: corrige bug de usar o match antes de verificar se existe">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -164,6 +171,11 @@
       <workItem from="1756417378399" duration="13188000" />
       <workItem from="1756438478721" duration="6034000" />
       <workItem from="1756476083715" duration="10727000" />
+      <workItem from="1756603572080" duration="507000" />
+      <workItem from="1756658020598" duration="3491000" />
+      <workItem from="1756687160110" duration="2063000" />
+      <workItem from="1756740511387" duration="3579000" />
+      <workItem from="1756758825509" duration="3091000" />
     </task>
     <task id="LOCAL-00016" summary="styles: muda nome da pasta raiz">
       <option name="closed" value="true" />

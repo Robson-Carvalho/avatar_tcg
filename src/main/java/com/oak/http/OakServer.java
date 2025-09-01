@@ -204,8 +204,9 @@ public class OakServer {
 
     private HttpRequest parseRequest(BufferedReader in) throws IOException {
         String line = in.readLine();
+
         if (line == null) {
-            throw new IOException("Empty request");
+            throw new IOException("Warning: Empty request");
         }
 
         String[] requestLine = line.split(" ");

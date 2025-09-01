@@ -1,5 +1,6 @@
 package com.oak.avatar_tcg.game;
 
+import com.oak.avatar_tcg.enums.ElementCard;
 import com.oak.avatar_tcg.model.Card;
 import com.oak.avatar_tcg.service.CardService;
 
@@ -66,21 +67,52 @@ public class Player {
         }
     }
 
-    public List<String> getCemetery() { return cemetery; }
-
     public List<Card> getCards() { return cards; }
 
-    public Boolean reduceLifeCard(int attack) {
+    public Boolean reduceLifeCard(int attack, String attackElementStr) {
         Card card = this.getActivationCard();
 
-        int damage = Math.max(attack - card.getDefense(), 0);
+        ElementCard attackElement = ElementCard.valueOf(attackElementStr.toUpperCase());
+        ElementCard defenseElement = card.getElement();
+
+        boolean hasAdvantage = false;
+
+        switch (attackElement) {
+            case WATER:
+                hasAdvantage = defenseElement == ElementCard.FIRE || defenseElement == ElementCard.LIGHTNING;
+                break;
+            case FIRE:
+                hasAdvantage = defenseElement == ElementCard.AIR || defenseElement == ElementCard.METAL;
+                break;
+            case EARTH:
+                hasAdvantage = defenseElement == ElementCard.LIGHTNING || defenseElement == ElementCard.FIRE;
+                break;
+            case AIR:
+                hasAdvantage = defenseElement == ElementCard.EARTH;
+                break;
+            case BLOOD:
+                hasAdvantage = defenseElement != ElementCard.AVATAR && defenseElement != ElementCard.BLOOD;
+                break;
+            case METAL:
+                hasAdvantage = defenseElement == ElementCard.EARTH || defenseElement == ElementCard.LIGHTNING;
+                break;
+            case LIGHTNING:
+                hasAdvantage = defenseElement == ElementCard.WATER || defenseElement == ElementCard.AIR;
+                break;
+            case AVATAR:
+                hasAdvantage = true;
+                break;
+        }
+
+        int effectiveDefense = hasAdvantage ? 0 : card.getDefense();
+        int damage = Math.max(attack - effectiveDefense, 0);
         int newLife = card.getLife() - damage;
 
-        if(newLife <= 0){
+        if (newLife <= 0) {
             card.setLife(0);
             this.cemetery.add(card.getId());
             this.activationCard = "";
-        }else{
+        } else {
             card.setLife(newLife);
         }
 
