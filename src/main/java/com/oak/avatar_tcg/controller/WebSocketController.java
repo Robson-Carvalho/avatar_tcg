@@ -20,13 +20,13 @@ public class WebSocketController {
     private final MatchManager matchManager = new MatchManager();
     private final AuthService authService = new AuthService();
 
-    private synchronized void handleJoin(WebSocket socket, String userID) {
+    private synchronized void handleJoin(WebSocket socket, String userID) throws IOException {
         try {
             if (playerSockets.containsKey(userID)) {
                 WebSocket existingSocket = playerSockets.get(userID);
 
                 if (existingSocket != null && existingSocket.isOpen()) {
-                    sendMessage(socket, new GameMessage("ERROR", "Você já está conectado em outra sessão"));
+                    socket.send(JsonParser.toJson(new GameMessage("ERROR", "Você já está conectado em outra sessão")));
                     socket.close();
                     return;
                 } else {
@@ -52,7 +52,7 @@ public class WebSocketController {
 
             if (opponentId == null) {
                 waitingQueue.add(userID);
-                sendMessage(socket, new GameMessage("IN_QUEUE", "Aguardando oponente"));
+                socket.send(JsonParser.toJson(new GameMessage("IN_QUEUE", "Aguardando oponente")));
                 System.out.println("Player: " + userID + " entrou na fila");
                 return;
             }
@@ -65,18 +65,18 @@ public class WebSocketController {
 
             System.out.println("Partida criada: " + matchID + " entre " + userID + " e " + opponentId);
 
-            sendMessage(socket, new GameStateMessage("MATCH_FOUND", matchID, matchManager.getStateMatch(matchID)));
-            sendMessage(opponentSocket, new GameStateMessage("MATCH_FOUND", matchID, matchManager.getStateMatch(matchID)));
+            socket.send(JsonParser.toJson(new GameStateMessage("MATCH_FOUND", matchID, matchManager.getStateMatch(matchID))));
+            opponentSocket.send(JsonParser.toJson(new GameStateMessage("MATCH_FOUND", matchID, matchManager.getStateMatch(matchID))));
         } catch (Exception e) {
             System.out.println("Erro ao processar join: " + e.getMessage());
-            sendMessage(socket, new GameMessage("ERROR", "Falha ao entrar na partida"));
+            socket.send(JsonParser.toJson(new GameMessage("ERROR", "Falha ao entrar na partida")));
         }
     }
 
     private synchronized void handleClose(WebSocket socket, String userID, String matchID, boolean initiatedByClient) {
         try {
             if (matchID == null) {
-                sendMessage(socket, new GameMessage("ERROR", "ID da partida é requerido"));
+                socket.send(JsonParser.toJson( new GameMessage("ERROR", "ID da partida é requerido")));
                 return;
             }
 
@@ -84,7 +84,7 @@ public class WebSocketController {
                 WebSocket socketOpponent = matchManager.getOpponentInMatch(userID, matchID);
 
                 if (socketOpponent != null && socketOpponent.isOpen()) {
-                    sendMessage(socketOpponent, new GameMessage("VICTORY_WITHDRAWAL", "Opponent disconnected"));
+                    socketOpponent.send(JsonParser.toJson(new GameMessage("VICTORY_WITHDRAWAL", "Opponent disconnected")));
 
                     if (!initiatedByClient) socketOpponent.close();
                 }
@@ -107,19 +107,19 @@ public class WebSocketController {
         }
     }
 
-    private synchronized void handleAction(WebSocket socket, String action, String cardID, String userID, String matchID) {
+    private void handleAction(WebSocket socket, String action, String cardID, String userID, String matchID) {
         try {
             Match match = matchManager.getMatch(matchID);
 
             if (match == null) {
-                sendMessage(socket, new GameMessage("ERROR", "ID da partida é requerido"));
+                socket.send(JsonParser.toJson(new GameMessage("ERROR", "Match not found")));
                 return;
             }
 
             matchManager.handleAction(action, cardID, userID, matchID);
 
             if(!match.getGameState().getPlayerWin().equals("void")) {
-                WebSocket playerOne =match.getSocketPlayerOne();
+                WebSocket playerOne = match.getSocketPlayerOne();
                 WebSocket playerTwo = match.getSocketPlayerTwo();
 
                 broadcastingGameState("VICTORY", playerOne, playerTwo, match.getId());
@@ -138,26 +138,30 @@ public class WebSocketController {
         }
     }
 
-    private void broadcastingGameState(String type, WebSocket playerOne,WebSocket playerTwo, String matchID) {
+    private void broadcastingGameState(String type, WebSocket playerOne,WebSocket playerTwo, String matchID) throws IOException {
         if(playerOne.isOpen() && playerTwo.isOpen()){
-            sendMessage(playerOne, new GameStateMessage(type, matchID, matchManager.getStateMatch(matchID)));
-            sendMessage(playerTwo, new GameStateMessage(type, matchID, matchManager.getStateMatch(matchID)));
+            String data = JsonParser.toJson(new GameStateMessage(type, matchID, matchManager.getStateMatch(matchID)));
+
+            playerOne.send(data);
+            playerTwo.send(data);
         }
     }
 
-    private void sendMessage(WebSocket socket, Object object) {
-        try {
-            if (socket != null && socket.isOpen()) {
-                socket.send(JsonParser.toJson(object));
-            }
-        } catch (Exception e) {
-            System.out.println("Error sending message: " + e.getMessage());
-        }
-    }
 
     public WebSocketHandler websocket() {
         return new WebSocketHandler() {
             private final DeckService deckService = new DeckService();
+
+            private void sendMessage(WebSocket socket, Object object) {
+                try {
+                    if (socket != null && socket.isOpen()) {
+                        socket.send(JsonParser.toJson(object));
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error sending message: " + e.getMessage());
+                }
+            }
+
 
             private boolean validateGameAction(WebSocket socket, String token, String userID, String matchID) {
                 try {
@@ -197,7 +201,6 @@ public class WebSocketController {
                     String token = (String) receive.get("token");
                     String userID = (String) receive.get("userID");
                     String matchID = (String) receive.get("matchID");
-                    String contentText = (String) receive.get("contentText");
                     String cardID = (String) receive.get("cardID");
 
                     if (type == null) {
