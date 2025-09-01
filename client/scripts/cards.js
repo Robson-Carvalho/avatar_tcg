@@ -22,7 +22,7 @@ async function loadCards() {
         document.getElementById("loadingCards").classList.add("hidden");
 
         if (cards.length > 0) {
-            renderCards(cards, "cardsContainer");
+            renderCards(cards, "cardsContainer"); 
             document.getElementById("cardsContainer").classList.remove("hidden");
         } else {
             document.getElementById("noCards").classList.remove("hidden");
@@ -35,4 +35,15 @@ async function loadCards() {
 
 function closeCardsModal() {
     document.getElementById("cardsModal").classList.add("hidden");
+}
+
+
+function renderCards(cards, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+
+    cards.forEach(card => {
+        const cardEl = createBattleCard(card, false); 
+        container.appendChild(cardEl);
+    });
 }
