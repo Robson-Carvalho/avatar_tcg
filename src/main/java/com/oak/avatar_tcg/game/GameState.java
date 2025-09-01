@@ -11,8 +11,8 @@ public class GameState {
     private final String matchID;
     private String type;
     private String message;
-    private Player playerOne;
-    private Player playerTwo;
+    private final Player playerOne;
+    private final Player playerTwo;
     private String state;
     private String turnPlayerId;
     private String playerWin;
@@ -30,25 +30,33 @@ public class GameState {
         this.playerTwo = new Player(playerTwoID);
     }
 
-    public void battle(){
+    public void battle() {
         Card cardPlayerOne = this.playerOne.getActivationCard();
         Card cardPlayerTwo = this.playerTwo.getActivationCard();
 
-        if(this.playerOne.reduceLifeCard(cardPlayerTwo.getAttack())){
-            this.playerTwo.addPoint();
-        }
-        if(this.playerTwo.reduceLifeCard(cardPlayerOne.getAttack())){
+        boolean destroyedByP2 = this.playerOne.reduceLifeCard(cardPlayerTwo.getAttack(), cardPlayerTwo.getElement().toString());
+        boolean destroyedByP1 = this.playerTwo.reduceLifeCard(cardPlayerOne.getAttack(), cardPlayerOne.getElement().toString());
+
+        if (destroyedByP1) {
             this.playerOne.addPoint();
+        }
+        if (destroyedByP2) {
+            this.playerTwo.addPoint();
         }
 
         this.playerOne.setPlayedCard(false);
         this.playerTwo.setPlayedCard(false);
 
-        if(playerOne.getPoints() >= 3){
+        int pointsP1 = playerOne.getPoints();
+        int pointsP2 = playerTwo.getPoints();
+
+        if (pointsP1 >= 3 && pointsP2 >= 3) {
+            this.state = "FINISHED";
+            this.playerWin = "DRAW";
+        } else if (pointsP1 >= 3) {
             this.state = "FINISHED";
             this.playerWin = playerOne.getId();
-        }
-        if(playerTwo.getPoints() >= 3){
+        } else if (pointsP2 >= 3) {
             this.state = "FINISHED";
             this.playerWin = playerTwo.getId();
         }
@@ -71,6 +79,7 @@ public class GameState {
     public Player getPlayerTwo() { return playerTwo; }
 
     public String getTurnPlayerId() { return turnPlayerId; }
+
     public void setTurnPlayerId(String turnPlayerId) { this.turnPlayerId = turnPlayerId; }
 
     public String getPlayerWin() { return playerWin; }
