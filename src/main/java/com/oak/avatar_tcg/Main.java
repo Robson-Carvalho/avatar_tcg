@@ -23,12 +23,17 @@ public class Main {
         // Welcome
         server.get("/", welcomeController::welcome);
 
+        server.get("/ping", ( request, response) -> {
+            response.send("pong");
+        });
+
         // Auth
         server.post("/auth/login", authController::login);
         server.post("/auth/register", authController::register);
 
         // Card
         server.get("/card", cardController::getCards);
+        server.get("/card/available", cardController::cardsAvailable);
         server.get("/card/open", cardController::openPackage);
 
         // Deck
