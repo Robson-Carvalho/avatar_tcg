@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona vantagem elementar">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona limite de cartas geradas no sistema">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/SystemCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/SystemCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/SystemCardRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/SystemCardRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V4__Create_system_cards_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V4__Create_system_cards_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V8__Seed_system_cards.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V8__Seed_system_cards.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,23 +173,8 @@
       <workItem from="1756740511387" duration="3579000" />
       <workItem from="1756758825509" duration="4077000" />
       <workItem from="1756777922616" duration="6622000" />
-      <workItem from="1756823657581" duration="83000" />
-    </task>
-    <task id="LOCAL-00020" summary="feat: suporte de envio e recebimento de json via websocket">
-      <option name="closed" value="true" />
-      <created>1755829953729</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1755829953729</updated>
-    </task>
-    <task id="LOCAL-00021" summary="feat: adiciona client">
-      <option name="closed" value="true" />
-      <created>1755833146256</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1755833146256</updated>
+      <workItem from="1756823657581" duration="5790000" />
+      <workItem from="1756848926753" duration="755000" />
     </task>
     <task id="LOCAL-00022" summary="build: ajustes de build">
       <option name="closed" value="true" />
@@ -574,7 +552,23 @@
       <option name="project" value="LOCAL" />
       <updated>1756762731937</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="feat: adiciona rota de ping/pong aberta">
+      <option name="closed" value="true" />
+      <created>1756824050569</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1756824050570</updated>
+    </task>
+    <task id="LOCAL-00070" summary="feat: adiciona limite de cartas geradas no sistema">
+      <option name="closed" value="true" />
+      <created>1756824070917</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1756824070917</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -587,8 +581,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: remove rota welcome" />
-    <MESSAGE value="test: remove arquivos de teste" />
     <MESSAGE value="test: remove dependência de teste" />
     <MESSAGE value="feat: remove método welcome" />
     <MESSAGE value="feat: adiciona verificação de partida acabou" />
@@ -612,6 +604,8 @@
     <MESSAGE value="fix: trata condição de corrida no objeto match" />
     <MESSAGE value="fix: corrige bug de bloquear lidar com ações de vários players simultâneamente" />
     <MESSAGE value="feat: adiciona vantagem elementar" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona vantagem elementar" />
+    <MESSAGE value="feat: adiciona rota de ping/pong aberta" />
+    <MESSAGE value="feat: adiciona limite de cartas geradas no sistema" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona limite de cartas geradas no sistema" />
   </component>
 </project>

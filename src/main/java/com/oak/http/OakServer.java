@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -14,33 +15,59 @@ public class OakServer {
     private final int port;
     private final HttpRouter router;
     private final List<WsRoute> webSocketRoutes;
-
-    private static class WsRoute {
-        final Pattern pattern;
-        final WebSocketHandler handler;
-        final String[] paramNames;
-
-        WsRoute(Pattern pattern, WebSocketHandler handler, String[] paramNames) {
-            this.pattern = pattern;
-            this.handler = handler;
-            this.paramNames = paramNames;
-        }
-    }
+    private final ExecutorService executor;
 
     public OakServer(int port) {
         this.port = port;
         this.router = new HttpRouter();
         this.webSocketRoutes = new ArrayList<>();
+        this.executor = new ThreadPoolExecutor(
+            10,
+            10,
+            60L,
+            TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(1000)
+        );
     }
 
     public void start() throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(port, 5000)) {
             System.out.println("Oak Server running on http://localhost:" + port);
 
             while(true) {
                 Socket clientSocket = serverSocket.accept();
-                handleConnection(clientSocket);
+                executor.submit(() -> handleConnection(clientSocket));
             }
+        }
+    }
+
+    private void handleConnection(Socket clientSocket) {
+        try {
+            clientSocket.setSoTimeout(50000); // 5 segundos
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+            HttpRequest request = parseRequest(in);
+            HttpResponse response = new HttpResponse(clientSocket.getOutputStream());
+
+            addCorsHeaders(response, request);
+
+            if (isWebSocketUpgrade(request)) {
+                handleWebSocket(request, response, clientSocket);
+            } else {
+                if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+                    handlePreflightRequest(response);
+                    clientSocket.close();
+                    return;
+                }
+
+                router.handle(request, response);
+                try { clientSocket.shutdownOutput(); } catch (IOException ignored) {}
+                try { clientSocket.close(); } catch (IOException ignored) {}
+            }
+        } catch (IOException e) {
+            System.out.println("error: " + e.getMessage());
+            try { clientSocket.close(); } catch (IOException ignored) {}
         }
     }
 
@@ -62,39 +89,6 @@ public class OakServer {
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
         response.setHeader("Access-Control-Max-Age", "3600");
-    }
-
-    private void handleConnection(Socket clientSocket) {
-        new Thread(() -> {
-            try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-                HttpRequest request = parseRequest(in);
-                HttpResponse response = new HttpResponse(clientSocket.getOutputStream());
-
-                addCorsHeaders(response, request);
-
-                if (isWebSocketUpgrade(request)) {
-                    handleWebSocket(request, response, clientSocket);
-                } else {
-                    if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-                        handlePreflightRequest(response);
-                        clientSocket.close();
-                        return;
-                    }
-
-                    router.handle(request, response);
-                    try { clientSocket.shutdownOutput(); } catch (IOException ignored) {}
-                    try { clientSocket.close(); } catch (IOException ignored) {}
-                }
-            } catch (IOException e) {
-                System.out.println("error: "+e.getMessage());
-
-                try {
-                    clientSocket.close();
-                } catch (IOException ignored) {}
-            }
-        }, "oak-conn-handler").start();
     }
 
     private boolean isWebSocketUpgrade(HttpRequest request) {
@@ -154,7 +148,7 @@ public class OakServer {
                     }
 
 
-                    new Thread(() -> listenWebSocket(ws, handler), "oak-ws-listener").start();
+                    this.executor.submit(() -> listenWebSocket(ws, handler));
                 } else {
 
                     if (response.getStatus() == 0) {
@@ -204,6 +198,8 @@ public class OakServer {
     private HttpRequest parseRequest(BufferedReader in) throws IOException {
         String line = in.readLine();
 
+        System.out.println("oi: "+ line);
+
         if (line == null) {
             throw new IOException("Warning: Empty request");
         }
@@ -212,6 +208,8 @@ public class OakServer {
         if (requestLine.length < 2) {
             throw new IOException("Invalid request line: " + line);
         }
+
+        System.out.println("oe: "+ requestLine);
         String method = requestLine[0];
         String path = requestLine[1];
 
