@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 public class OakServer {
     private final int port;
     private final HttpRouter router;
+    private final List<WsRoute> webSocketRoutes;
 
     private static class WsRoute {
         final Pattern pattern;
@@ -25,8 +26,6 @@ public class OakServer {
             this.paramNames = paramNames;
         }
     }
-
-    private final List<WsRoute> webSocketRoutes;
 
     public OakServer(int port) {
         this.port = port;

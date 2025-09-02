@@ -40,6 +40,23 @@ public class CardController {
         }
     }
 
+    public void cardsAvailable(HttpRequest request, HttpResponse response) throws IOException {
+        try {
+            int num = cardService.getCardsAvailable();
+
+            response.json(Map.of(
+                    "cards_available", num
+            ));
+
+        } catch (IllegalArgumentException e) {
+            response.setStatus(400);
+            response.json(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            response.setStatus(403);
+            response.json(Map.of("error", e.getMessage()));
+        }
+    }
+
     public void openPackage(HttpRequest request, HttpResponse response) throws IOException {
         try {
             String token = request.getBearerToken();
@@ -60,6 +77,4 @@ public class CardController {
             response.json(Map.of("error", e.getMessage()));
         }
     }
-
-
 }

@@ -7,6 +7,7 @@ import com.oak.avatar_tcg.enums.RarityCard;
 import java.util.Map;
 
 public class SystemCard {
+    private String id;
     private String name;
     private ElementCard element;
     private PhaseCard phase;
@@ -15,10 +16,11 @@ public class SystemCard {
     private int defense;
     private RarityCard rarity;
     private String description;
+    private int quantity;
 
     public SystemCard() {}
 
-    public SystemCard(String name, ElementCard element, PhaseCard phase, int attack, int life, int defense, RarityCard rarity, String description) {
+    public SystemCard(String name, ElementCard element, PhaseCard phase, int attack, int life, int defense, RarityCard rarity, String description, int quantity) {
         this.name = name;
         this.element = element;
         this.phase = phase;
@@ -27,6 +29,15 @@ public class SystemCard {
         this.defense = defense;
         this.rarity = rarity;
         this.description = description;
+        this.quantity = quantity;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -93,6 +104,13 @@ public class SystemCard {
         this.description = description;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public Map<String, Object> toJson() {
         return Map.of(
@@ -103,7 +121,8 @@ public class SystemCard {
                 "life", this.life,
                 "defense", this.defense,
                 "rarity", this.rarity,
-                "description", this.description
+                "description", this.description,
+                "quantity", this.quantity
         );
     }
 }

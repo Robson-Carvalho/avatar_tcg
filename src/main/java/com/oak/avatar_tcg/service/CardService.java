@@ -37,6 +37,9 @@ public class CardService {
         return cards;
     }
 
+    public int getCardsAvailable() {
+        return 5350 - cardRepository.findAll().size();
+    }
 
     public List<Card> findDeckByUserId(String userId) {
         Deck deck = deckService.findByUserId(userId);
@@ -84,19 +87,27 @@ public class CardService {
         systemCards = systemCardRepository.findAllSystemCards();
 
         for (SystemCard systemCard : systemCards) {
-            if(systemCard.getRarity().equals(RarityCard.COMMON)) {
-                systemCardsCommon.add(systemCard);
-            }
-            else if(systemCard.getRarity().equals(RarityCard.RARE)) {
-                systemCardsRare.add(systemCard);
-            }
-            else if(systemCard.getRarity().equals(RarityCard.EPIC)) {
-                systemCardsEpic.add(systemCard);
-            }
-            else{
-                systemCardsLegendary.add(systemCard);
+            if(systemCard.getQuantity() > 0){
+                if(systemCard.getRarity().equals(RarityCard.COMMON)) {
+                    systemCardsCommon.add(systemCard);
+                }
+                else if(systemCard.getRarity().equals(RarityCard.RARE)) {
+                    systemCardsRare.add(systemCard);
+                }
+                else if(systemCard.getRarity().equals(RarityCard.EPIC)) {
+                    systemCardsEpic.add(systemCard);
+                }
+                else{
+                    systemCardsLegendary.add(systemCard);
+                }
             }
         }
+
+        if (systemCardsCommon.isEmpty() && systemCardsRare.isEmpty() && systemCardsEpic.isEmpty() && systemCardsLegendary.isEmpty()) {
+            return packageCards;
+        }
+
+
 
         for(int i = 0; i < 5; i++){
             RarityCard rarity = chooseRarity();
@@ -131,6 +142,8 @@ public class CardService {
             card.setLife(chosenCard.getLife());
 
             cardRepository.save(card);
+            chosenCard.setQuantity(chosenCard.getQuantity() - 1);
+            systemCardRepository.save(chosenCard);
             packageCards.add(card);
         }
 

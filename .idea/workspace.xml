@@ -4,13 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="fix: corrige bug de usar o match antes de verificar se existe">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona vantagem elementar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/GameState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/SystemCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/model/SystemCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/SystemCardRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/SystemCardRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V4__Create_system_cards_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V4__Create_system_cards_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V8__Seed_system_cards.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V8__Seed_system_cards.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,39 +178,9 @@
       <workItem from="1756658020598" duration="3491000" />
       <workItem from="1756687160110" duration="2063000" />
       <workItem from="1756740511387" duration="3579000" />
-      <workItem from="1756758825509" duration="3091000" />
-    </task>
-    <task id="LOCAL-00016" summary="styles: muda nome da pasta raiz">
-      <option name="closed" value="true" />
-      <created>1755790909187</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1755790909187</updated>
-    </task>
-    <task id="LOCAL-00017" summary="docs: update readme.md">
-      <option name="closed" value="true" />
-      <created>1755791996112</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1755791996112</updated>
-    </task>
-    <task id="LOCAL-00018" summary="docs: update readme.md">
-      <option name="closed" value="true" />
-      <created>1755792439286</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1755792439286</updated>
-    </task>
-    <task id="LOCAL-00019" summary="docs: update readme.md">
-      <option name="closed" value="true" />
-      <created>1755792492936</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1755792492936</updated>
+      <workItem from="1756758825509" duration="4077000" />
+      <workItem from="1756777922616" duration="6622000" />
+      <workItem from="1756823657581" duration="83000" />
     </task>
     <task id="LOCAL-00020" summary="feat: suporte de envio e recebimento de json via websocket">
       <option name="closed" value="true" />
@@ -569,7 +542,39 @@
       <option name="project" value="LOCAL" />
       <updated>1756493538333</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="fix: corrige bug pontuação">
+      <option name="closed" value="true" />
+      <created>1756762588151</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1756762588151</updated>
+    </task>
+    <task id="LOCAL-00066" summary="fix: trata condição de corrida no objeto match">
+      <option name="closed" value="true" />
+      <created>1756762616618</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1756762616618</updated>
+    </task>
+    <task id="LOCAL-00067" summary="fix: corrige bug de bloquear lidar com ações de vários players simultâneamente">
+      <option name="closed" value="true" />
+      <created>1756762705521</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1756762705521</updated>
+    </task>
+    <task id="LOCAL-00068" summary="feat: adiciona vantagem elementar">
+      <option name="closed" value="true" />
+      <created>1756762731937</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1756762731937</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -582,10 +587,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: adiciona forma de lidar com desconexão inesperada" />
-    <MESSAGE value="feat: adiciona envio do estado do jogo" />
-    <MESSAGE value="test: adiciona arquivos de teste" />
-    <MESSAGE value="feat: adiciona forma de lidar com ações durante a partida" />
     <MESSAGE value="feat: remove rota welcome" />
     <MESSAGE value="test: remove arquivos de teste" />
     <MESSAGE value="test: remove dependência de teste" />
@@ -607,6 +608,10 @@
     <MESSAGE value="fix: resolve bug de desconexão após uma ação" />
     <MESSAGE value="feat: adiciona id da partida no estado do jogo" />
     <MESSAGE value="fix: corrige bug de usar o match antes de verificar se existe" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: corrige bug de usar o match antes de verificar se existe" />
+    <MESSAGE value="fix: corrige bug pontuação" />
+    <MESSAGE value="fix: trata condição de corrida no objeto match" />
+    <MESSAGE value="fix: corrige bug de bloquear lidar com ações de vários players simultâneamente" />
+    <MESSAGE value="feat: adiciona vantagem elementar" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona vantagem elementar" />
   </component>
 </project>
