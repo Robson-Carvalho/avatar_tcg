@@ -4,32 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona refatoração">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRealTime.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRoutes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/util/JSON.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/util/OakData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/DeckController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/DeckController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/MatchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/MatchController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WelcomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WelcomeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRouter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRouter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocketHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WsRoute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/WsRoute.java" afterDir="false" />
-    </list>
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: transição para protocolo próprio OAK_PROTOCOL" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -196,15 +171,7 @@
       <workItem from="1756758825509" duration="4077000" />
       <workItem from="1756777922616" duration="6622000" />
       <workItem from="1756823657581" duration="5790000" />
-      <workItem from="1756848926753" duration="22416000" />
-    </task>
-    <task id="LOCAL-00023" summary="feat: adiciona interface do cliente">
-      <option name="closed" value="true" />
-      <created>1755837526888</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1755837526888</updated>
+      <workItem from="1756848926753" duration="22996000" />
     </task>
     <task id="LOCAL-00024" summary="feat: adiciona gerenciamento de deck no cliente">
       <option name="closed" value="true" />
@@ -590,7 +557,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756849866592</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="feat: transição para protocolo próprio OAK_PROTOCOL">
+      <option name="closed" value="true" />
+      <created>1756875084246</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1756875084246</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -603,7 +578,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: remove método welcome" />
     <MESSAGE value="feat: adiciona verificação de partida acabou" />
     <MESSAGE value="feat: adiciona ajustes para implementação do jogo" />
     <MESSAGE value="feat: adiciona lógica de quando ocorrer uma vitória" />
@@ -628,6 +602,7 @@
     <MESSAGE value="feat: adiciona rota de ping/pong aberta" />
     <MESSAGE value="feat: adiciona limite de cartas geradas no sistema" />
     <MESSAGE value="feat: adiciona refatoração" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona refatoração" />
+    <MESSAGE value="feat: transição para protocolo próprio OAK_PROTOCOL" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: transição para protocolo próprio OAK_PROTOCOL" />
   </component>
 </project>

@@ -11,16 +11,20 @@ async function openPack() {
         const res = await fetch(`${API_URL}/card/open`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
-        if (!res.ok) throw new Error();
+        
+        if (!res.ok) {
+            document.getElementById("packError").classList.remove("hidden");
+            throw new Error()
+        };
 
         const { cards } = await res.json();
         document.getElementById("loadingPack").classList.add("hidden");
-
+        
         if (cards.length > 0) {
             renderPackCards(cards, "packContainer"); 
             document.getElementById("packContainer").classList.remove("hidden");
         } else {
-            document.getElementById("packError").classList.remove("hidden");
+            document.getElementById("packVoid").classList.remove("hidden");
         }
     } catch {
         document.getElementById("loadingPack").classList.add("hidden");

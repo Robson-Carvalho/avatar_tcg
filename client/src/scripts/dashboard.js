@@ -17,7 +17,6 @@ function showMatches() {
 
 async function loadMatches() {
     const token = localStorage.getItem("token");
-
     if (!token) {
         return;
     }
@@ -25,17 +24,18 @@ async function loadMatches() {
     showLoadingState();
 
     try {
-        const res = await fetch("http://localhost:8080/match", {
-            headers: { "Authorization": `Bearer ${token}` }
+        const res = await fetch(`${API_URL}/match`, {
+            method: "GET", 
+            headers: { "Authorization": `Bearer ${token}` },
         });
+
 
         if (!res.ok) throw new Error("Erro ao carregar partidas");
 
         const json = await res.json();
-        const data = json;
-        const matchs = data.matchs.slice().reverse();
+        const matchs = (json.matchs || []).slice().reverse();
 
-        if (matchs && matchs.length > 0) {
+        if (matchs.length > 0) {
             renderMatches(matchs);
         } else {
             showNoMatches();
@@ -45,6 +45,7 @@ async function loadMatches() {
         showNoMatches();
     }
 }
+
 
 function renderMatches(matches) {
     const matchesContainer = document.getElementById("matchs");

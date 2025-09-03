@@ -122,7 +122,7 @@ async function saveDeck() {
     const deckSlots = document.querySelectorAll("#deckSlots .deck-slot");
 
     const body = { 
-        id: localStorage.getItem("avatar_tcg_deck_id"), 
+        deckID: localStorage.getItem("avatar_tcg_deck_id"), 
         userId: localStorage.getItem("avatar_tcg_user_id") 
     }; 
 
