@@ -3,8 +3,8 @@ package com.oak.avatar_tcg.controller;
 import com.oak.avatar_tcg.model.Match;
 import com.oak.avatar_tcg.service.AuthService;
 import com.oak.avatar_tcg.service.MatchService;
-import com.oak.http.HttpRequest;
-import com.oak.http.HttpResponse;
+import com.oak.oak_protocol.OakRequest;
+import com.oak.oak_protocol.OakResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,24 +19,23 @@ public class MatchController {
         this.matchService = new MatchService();
     }
 
-    public void getMatchs(HttpRequest request, HttpResponse response) throws IOException {
+    public void getMatchs(OakRequest request, OakResponse response) throws IOException {
         try {
-            String token = request.getBearerToken();
+            String token = request.getData("token");
 
             String user_id = authService.validateToken(token);
 
             List<Match> matchs = matchService.findAllByUserID(user_id);
 
-            response.json(Map.of(
+            response.sendJson(Map.of(
+                    "status", "success",
                     "matchs", matchs
             ));
-
-        } catch (IllegalArgumentException e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            response.setStatus(403);
-            response.json(Map.of("error", e.getMessage()));
+            response.sendJson(Map.of(
+                    "status", "error",
+                    "message", e.getMessage()
+            ));
         }
     }
 }

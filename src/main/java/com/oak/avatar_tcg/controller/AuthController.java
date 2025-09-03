@@ -1,12 +1,12 @@
 package com.oak.avatar_tcg.controller;
 
-import com.oak.http.HttpRequest;
-import com.oak.http.HttpResponse;
 import com.oak.avatar_tcg.model.User;
 import com.oak.avatar_tcg.service.AuthService;
 import com.oak.avatar_tcg.service.UserService;
+import com.oak.oak_protocol.OakRequest;
+import com.oak.oak_protocol.OakResponse;
+
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Map;
 
 public class AuthController {
@@ -18,16 +18,16 @@ public class AuthController {
         this.userService = new UserService();
     }
 
-    public void login(HttpRequest request, HttpResponse response) throws IOException {
+    public void login(OakRequest request, OakResponse response) throws IOException {
         try {
-            Map<String, Object> body = request.getJsonBodyAsMap();
-
-            String email = (String) body.get("email");
-            String password = (String) body.get("password");
+            String email = request.getData("email");
+            String password = request.getData("password");
 
             if (email == null || password == null) {
-                response.setStatus(400);
-                response.json(Map.of("error", "Email e senha são requeridos"));
+                response.sendJson(Map.of(
+                        "status", "error",
+                        "message", "Email e senha são requeridos"
+                ));
                 return;
             }
 
@@ -36,33 +36,37 @@ public class AuthController {
 
             Map<String, Object> userWithoutPassword = user.toJsonWithoutPassword();
 
-            response.json(Map.of(
+            response.sendJson(Map.of(
                     "token", token,
                     "user", userWithoutPassword
             ));
 
-        } catch (IllegalArgumentException e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            response.setStatus(400);
-            response.json(Map.of("error", "E-mail ou senha inválidos"));
+            response.sendJson(Map.of(
+                    "status", "error",
+                    "message", e.getMessage()
+            ));
         }
     }
 
-    public void register(HttpRequest request, HttpResponse response) throws IOException {
+    public void register(OakRequest request, OakResponse response) throws IOException {
         try {
-            Map<String, Object> body = request.getJsonBodyAsMap();
+            String name = request.getData("name");
+            String nickname = request.getData("nickname");
+            String email = request.getData("email");
+            String password = request.getData("password");
 
             User user = new User();
-            user.setName((String) body.get("name"));
-            user.setNickname((String) body.get("nickname"));
-            user.setEmail((String) body.get("email"));
-            user.setPassword((String) body.get("password"));
+            user.setName(name);
+            user.setNickname(nickname);
+            user.setEmail(email);
+            user.setPassword(password);
 
             if(user.getEmail() == null || user.getNickname() == null || user.getPassword() == null){
-                response.setStatus(400);
-                response.json(Map.of("error", "Name, Email, Password and nickname are required"));
+                response.sendJson(Map.of(
+                        "status", "error",
+                        "message", "Nome, Email, Senha e nickname são precisos!"
+                ));
                 return;
             }
 
@@ -71,18 +75,15 @@ public class AuthController {
 
             Map<String, Object> userWithoutPassword = user.toJsonWithoutPassword();
 
-            response.json(Map.of(
+            response.sendJson(Map.of(
                     "token", token,
                     "user", userWithoutPassword
             ));
-        } catch (SQLException e) {
-            response.setStatus(500);
-            response.json(Map.of("error", "Database error"));
-        } catch (IllegalArgumentException e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            response.sendJson(Map.of(
+                    "status", "error",
+                    "message", e.getMessage()
+            ));
         }
     }
 }

@@ -45,7 +45,7 @@ public class HttpRouter {
         return paramNames.toArray(new String[0]);
     }
 
-    public void handle(HttpRequest request, HttpResponse response) throws IOException {
+    public void handle(OakRequest request, OakResponse response) throws IOException {
         String method = request.getMethod();
         String path = request.getPath();
 

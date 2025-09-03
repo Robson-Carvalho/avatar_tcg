@@ -10,7 +10,6 @@ import java.util.concurrent.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-
 public class OakServer {
     private final int port;
     private final HttpRouter router;
@@ -22,11 +21,11 @@ public class OakServer {
         this.router = new HttpRouter();
         this.webSocketRoutes = new ArrayList<>();
         this.executor = new ThreadPoolExecutor(
-            10,
-            10,
-            60L,
-            TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(1000)
+                10,
+                10,
+                60L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(1000)
         );
     }
 
@@ -36,6 +35,9 @@ public class OakServer {
 
             while(true) {
                 Socket clientSocket = serverSocket.accept();
+                clientSocket.getOutputStream().write("OI".getBytes());
+                clientSocket.getOutputStream().flush();
+
                 executor.submit(() -> handleConnection(clientSocket));
             }
         }
@@ -47,8 +49,9 @@ public class OakServer {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            HttpRequest request = parseRequest(in);
-            HttpResponse response = new HttpResponse(clientSocket.getOutputStream());
+            OakRequest request = parseRequest(in);
+            OakResponse response = new OakResponse(clientSocket.getOutputStream());
+
 
             addCorsHeaders(response, request);
 
@@ -71,12 +74,12 @@ public class OakServer {
         }
     }
 
-    private void handlePreflightRequest(HttpResponse response) throws IOException {
+    private void handlePreflightRequest(OakResponse response) throws IOException {
         response.setStatus(200);
         response.send("");
     }
 
-    private void addCorsHeaders(HttpResponse response, HttpRequest request) {
+    private void addCorsHeaders(OakResponse response, OakRequest request) {
         String origin = request.getHeader("Origin");
 
         if (origin == null) {
@@ -91,7 +94,7 @@ public class OakServer {
         response.setHeader("Access-Control-Max-Age", "3600");
     }
 
-    private boolean isWebSocketUpgrade(HttpRequest request) {
+    private boolean isWebSocketUpgrade(OakRequest request) {
         String upgrade = request.getHeader("upgrade");
 
         if (!"websocket".equalsIgnoreCase(upgrade)) {
@@ -108,37 +111,17 @@ public class OakServer {
         return false;
     }
 
-    private void handleWebSocket(HttpRequest request, HttpResponse response, Socket socket) throws IOException {
+    private void handleWebSocket(OakRequest request, OakResponse response, Socket socket) throws IOException {
         String path = request.getPath();
 
         for (WsRoute route : webSocketRoutes) {
             Matcher matcher = route.pattern.matcher(path);
             if (matcher.matches()) {
-                // Preenche parâmetros capturados
-                for (int i = 1; i <= matcher.groupCount(); i++) {
-                    String value = matcher.group(i);
-
-
-                    request.addParam("param" + i, value);
-
-                    // Param nomeado (se existir)
-                    if (route.paramNames != null && (i - 1) < route.paramNames.length) {
-                        String name = route.paramNames[i - 1];
-                        if (name != null && !name.isEmpty()) {
-                            request.addParam(name, value);
-                        }
-                    }
-                }
-
                 WebSocketHandler handler = route.handler;
-
-
                 handler.handleHandshake(request, response);
-
 
                 if (response.getStatus() == 101) {
                     WebSocket ws = new WebSocket(socket, request);
-
 
                     try {
                         handler.onOpen(ws);
@@ -147,10 +130,8 @@ public class OakServer {
                         throw openEx;
                     }
 
-
                     this.executor.submit(() -> listenWebSocket(ws, handler));
                 } else {
-
                     if (response.getStatus() == 0) {
                         response.setStatus(400);
                     }
@@ -195,10 +176,8 @@ public class OakServer {
         }
     }
 
-    private HttpRequest parseRequest(BufferedReader in) throws IOException {
+    private OakRequest parseRequest(BufferedReader in) throws IOException {
         String line = in.readLine();
-
-        System.out.println("oi: "+ line);
 
         if (line == null) {
             throw new IOException("Warning: Empty request");
@@ -209,7 +188,6 @@ public class OakServer {
             throw new IOException("Invalid request line: " + line);
         }
 
-        System.out.println("oe: "+ requestLine);
         String method = requestLine[0];
         String path = requestLine[1];
 
@@ -244,7 +222,8 @@ public class OakServer {
         }
 
         String body = new String(bodyChars);
-        return new HttpRequest(method, path, body, headers);
+
+        return new OakRequest(method, path, body, headers);
     }
 
     public void get(String path, HttpHandler handler) {
@@ -264,20 +243,8 @@ public class OakServer {
     }
 
     public void websocket(String path, WebSocketHandler handler) {
-        String[] paramNames = extractParamNames(path);
-
-        String regex = path.replaceAll("\\{(.*?)\\}", "([^/]+)");
-        Pattern pattern = Pattern.compile("^" + regex + "$");
-
-        webSocketRoutes.add(new WsRoute(pattern, handler, paramNames));
-    }
-
-    private String[] extractParamNames(String path) {
-        List<String> names = new ArrayList<>();
-        Matcher m = Pattern.compile("\\{(.*?)\\}").matcher(path);
-        while (m.find()) {
-            names.add(m.group(1));
-        }
-        return names.toArray(new String[0]);
+        // Simplificado: usar pattern que só casa com o path exato
+        Pattern pattern = Pattern.compile("^" + Pattern.quote(path) + "$");
+        webSocketRoutes.add(new WsRoute(pattern, handler));
     }
 }

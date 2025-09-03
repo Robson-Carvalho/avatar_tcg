@@ -1,13 +1,13 @@
 package com.oak.avatar_tcg.controller;
 
-import com.oak.http.HttpRequest;
-import com.oak.http.HttpResponse;
+
 import com.oak.avatar_tcg.model.Deck;
 import com.oak.avatar_tcg.service.AuthService;
 import com.oak.avatar_tcg.service.DeckService;
+import com.oak.oak_protocol.OakRequest;
+import com.oak.oak_protocol.OakResponse;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class DeckController {
@@ -19,59 +19,60 @@ public class DeckController {
         this.deckService = new DeckService();
     }
 
-    public void getDeck(HttpRequest request, HttpResponse response) throws IOException {
+    public void getDeck(OakRequest request, OakResponse response) throws IOException {
         try {
-            String token = request.getBearerToken();
+            String token = request.getData("token");
+
 
             String user_id = authService.validateToken(token);
 
             Deck deck = deckService.findByUserId(user_id);
 
             if(deck == null){
-                response.setStatus(404);
-                response.json(Map.of(
-                        "deck", new ArrayList<Deck>() {
-                        }
+                response.sendJson(Map.of(
+                        "status", "error",
+                        "message", "Deck não encontrado!"
                 ));
                 return;
             }
 
-            response.json(Map.of(
+            response.sendJson(Map.of(
+                    "status", "success",
                     "deck", deck
             ));
-        } catch (IllegalArgumentException e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
+
         } catch (Exception e) {
-            response.setStatus(403);
-            response.json(Map.of("error", e.getMessage()));
+            response.sendJson(Map.of(
+                    "status", "error",
+                    "message", e.getMessage()
+            ));
         }
     }
 
-    public void updateDeck(HttpRequest request, HttpResponse response) throws IOException {
+    public void updateDeck(OakRequest request, OakResponse response) throws IOException {
         try {
-            String token = request.getBearerToken();
+            String token = request.getData("token");
 
             authService.validateToken(token);
 
-            Map<String, Object> body = request.getJsonBodyAsMap();
-
-            String id = (String) body.get("id");
-            String userID = (String) body.get("userId");
+            String id = request.getData("deckID");
+            String userID = request.getData("userID");
 
             if(id == null || userID == null){
-                response.setStatus(400);
-                response.json(Map.of("error", "Deck ID ou User ID estão inválidos"));
+                response.sendJson(Map.of(
+                        "status", "error",
+                        "message","Deck ID ou User ID estão inválidos"
+                ));
                 return;
             }
 
             Deck deck = deckService.findByUserId(userID);
 
-            String card1Id = (String) body.get("card1Id");
-            String card2Id = (String) body.get("card2Id");
-            String card3Id = (String) body.get("card3Id");
-            String card4Id = (String) body.get("card4Id");
-            String card5Id = (String) body.get("card5Id");
+            String card1Id = request.getData("card1Id");
+            String card2Id = request.getData("card2Id");
+            String card3Id = request.getData("card3Id");
+            String card4Id = request.getData("card4Id");
+            String card5Id = request.getData("card5Id");
 
             List<String> cards = new ArrayList<>();
 
@@ -85,8 +86,10 @@ public class DeckController {
             Set<String> uniqueCards = new HashSet<>(nonNullCards);
 
             if (uniqueCards.size() != nonNullCards.size()) {
-                response.setStatus(400);
-                response.json(Map.of("error", "Não pode repetir cartas no deck"));
+                response.sendJson(Map.of(
+                        "status", "error",
+                        "message","Não pode repetir cartas no deck"
+                ));
                 return;
             }
 
@@ -98,13 +101,16 @@ public class DeckController {
 
             Deck updatedDeck = deckService.updateDeck(deck);
 
-            response.json(Map.of(
+            response.sendJson(Map.of(
+                    "status", "success",
                     "deck", updatedDeck
             ));
 
         } catch (Exception e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
+            response.sendJson(Map.of(
+                    "status", "error",
+                    "message", e.getMessage()
+            ));
         }
     }
 }

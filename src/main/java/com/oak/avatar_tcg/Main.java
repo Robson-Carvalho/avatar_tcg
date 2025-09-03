@@ -1,17 +1,15 @@
 package com.oak.avatar_tcg;
 
-import com.oak.http.OakServer;
 import com.oak.avatar_tcg.controller.*;
 import com.oak.avatar_tcg.database.Migrations;
+import com.oak.oak_protocol.OakServer;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws IOException, SQLException {
-        OakServer server = new OakServer(8080);
-
-        Migrations.runMigrations();
 
         AuthController authController = new AuthController();
         CardController cardController = new CardController();
@@ -20,32 +18,39 @@ public class Main {
         WelcomeController welcomeController = new WelcomeController();
         WebSocketController webSocketController = new WebSocketController();
 
-        // Welcome
-        server.get("/", welcomeController::welcome);
+        OakServer oakServer = new OakServer(8080);
 
-        server.get("/ping", ( request, response) -> {
-            response.send("pong");
+        Migrations.runMigrations();
+
+        // Welcome
+        oakServer.get("/", welcomeController::welcome);
+
+        oakServer.get("/ping", ( request, response) -> {
+            response.sendJson(Map.of(
+                    "status", "success",
+                    "message", "pong!"
+            ));
         });
 
         // Auth
-        server.post("/auth/login", authController::login);
-        server.post("/auth/register", authController::register);
+        oakServer.post("/auth/login", authController::login);
+        oakServer.post("/auth/register", authController::register);
 
         // Card
-        server.get("/card", cardController::getCards);
-        server.get("/card/available", cardController::cardsAvailable);
-        server.get("/card/open", cardController::openPackage);
+        oakServer.get("/card", cardController::getCards);
+        oakServer.get("/card/available", cardController::cardsAvailable);
+        oakServer.get("/card/open", cardController::openPackage);
 
         // Deck
-        server.put("/deck", deckController::updateDeck);
-        server.get("/deck", deckController::getDeck);
+        oakServer.put("/deck", deckController::updateDeck);
+        oakServer.get("/deck", deckController::getDeck);
 
         // Match
-        server.get("/match", matchController::getMatchs);
+        oakServer.get("/match", matchController::getMatchs);
 
-        // WebSocket
-        server.websocket("/game", webSocketController.websocket());
+//        // WebSocket
+//        oakServer.websocket("/game", webSocketController.websocket());
 
-        server.start();
+        oakServer.start();
     }
 }

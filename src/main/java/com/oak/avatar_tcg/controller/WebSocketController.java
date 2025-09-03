@@ -147,7 +147,6 @@ public class WebSocketController {
         }
     }
 
-
     public WebSocketHandler websocket() {
         return new WebSocketHandler() {
             private final DeckService deckService = new DeckService();

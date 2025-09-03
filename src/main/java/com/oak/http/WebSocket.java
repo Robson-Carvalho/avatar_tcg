@@ -5,56 +5,20 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.security.MessageDigest;
 import java.util.Base64;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class WebSocket {
     private final Socket socket;
     private final InputStream input;
     private final OutputStream output;
     private final String requestPath;
-    private long lastPongTime;
-    private final ScheduledExecutorService pingScheduler;
-    private static final long PING_INTERVAL = 30000; // 30 segundos
-    private static final long PONG_TIMEOUT = 45000; // 45 segundos
 
-    public WebSocket(Socket socket, HttpRequest request) throws IOException {
+    public WebSocket(Socket socket, OakRequest request) throws IOException {
         this.socket = socket;
         this.input = socket.getInputStream();
         this.output = socket.getOutputStream();
         this.requestPath = request.getPath();
-        this.lastPongTime = System.currentTimeMillis();
-        this.pingScheduler = Executors.newSingleThreadScheduledExecutor();
-
-        //startPingService();
     }
 
-    private void startPingService() {
-        pingScheduler.scheduleAtFixedRate(() -> {
-            try {
-                if (isOpen()) {
-                    // Verifica timeout
-                    if (System.currentTimeMillis() - lastPongTime > PONG_TIMEOUT) {
-                        System.out.println("WebSocket timeout, closing connection");
-                        close();
-                        return;
-                    }
-
-                    // Envia ping
-                    sendPing();
-                } else {
-                    pingScheduler.shutdown();
-                }
-            } catch (IOException e) {
-                System.err.println("Error in ping service: " + e.getMessage());
-                try {
-                    close();
-                } catch (IOException ignored) {}
-                pingScheduler.shutdown();
-            }
-        }, PING_INTERVAL, PING_INTERVAL, TimeUnit.MILLISECONDS);
-    }
 
     public String getParam() {
         return requestPath;
@@ -106,14 +70,6 @@ public class WebSocket {
                 case 0x8: // Close frame
                     close();
                     return null;
-
-                case 0x9: // Ping frame
-                    handlePing();
-                    return receive(); // Continua lendo após responder
-
-                case 0xA: // Pong frame
-                    handlePong();
-                    return receive(); // Continua lendo após processar pong
 
                 case 0x1: // Text frame
                 case 0x2: // Binary frame
@@ -176,32 +132,6 @@ public class WebSocket {
         return new String(payload, "UTF-8");
     }
 
-    private void handlePing() throws IOException {
-        // Responde automaticamente com pong
-        sendPong();
-    }
-
-    private void handlePong() {
-        // Atualiza o último tempo de pong recebido
-        lastPongTime = System.currentTimeMillis();
-    }
-
-    private void sendPing() throws IOException {
-        ByteArrayOutputStream frame = new ByteArrayOutputStream();
-        frame.write(0x89); // FIN + ping frame (0x89 = 10001001)
-        frame.write(0x00); // payload length 0
-        output.write(frame.toByteArray());
-        output.flush();
-    }
-
-    private void sendPong() throws IOException {
-        ByteArrayOutputStream frame = new ByteArrayOutputStream();
-        frame.write(0x8A); // FIN + pong frame (0x8A = 10001010)
-        frame.write(0x00); // payload length 0
-        output.write(frame.toByteArray());
-        output.flush();
-    }
-
     private void skipFrame() throws IOException {
         // Lê o segundo byte para obter o length
         int b = input.read();
@@ -235,14 +165,14 @@ public class WebSocket {
     }
 
     public void close() throws IOException {
-        pingScheduler.shutdown();
+
 
         if (!socket.isClosed()) {
             socket.close();
         }
     }
 
-    public static void doHandshake(HttpRequest request, HttpResponse response) throws IOException {
+    public static void doHandshake(OakRequest request, OakResponse response) throws IOException {
         String key = request.getHeader("Sec-WebSocket-Key");
 
         if (key == null) {

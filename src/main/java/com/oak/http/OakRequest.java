@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class HttpRequest {
+public class OakRequest {
     private final String method;
     private final String path;
     private final String body;
@@ -15,7 +15,7 @@ public class HttpRequest {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public HttpRequest(String method, String path, String body, Map<String, String> headers) {
+    public OakRequest(String method, String path, String body, Map<String, String> headers) {
         this.method = method;
         this.path = path;
         this.body = body;

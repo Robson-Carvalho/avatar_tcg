@@ -9,13 +9,13 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class HttpResponse {
+public class OakResponse {
     private final OutputStream outputStream;
     private int status = 200;
     private final Map<String, String> headers = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public HttpResponse(OutputStream outputStream) {
+    public OakResponse(OutputStream outputStream) {
         this.outputStream = outputStream;
         this.headers.put("Content-Type", "text/plain");
     }

@@ -6,7 +6,7 @@ import java.util.Map;
 public interface WebSocketHandler {
 
     // Handshake padrão
-    default void handleHandshake(HttpRequest request, HttpResponse response) throws IOException {
+    default void handleHandshake(OakRequest request, OakResponse response) throws IOException {
         WebSocket.doHandshake(request, response);
     }
 

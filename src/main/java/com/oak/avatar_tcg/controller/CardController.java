@@ -1,10 +1,10 @@
 package com.oak.avatar_tcg.controller;
 
-import com.oak.http.HttpRequest;
-import com.oak.http.HttpResponse;
 import com.oak.avatar_tcg.model.Card;
 import com.oak.avatar_tcg.service.AuthService;
 import com.oak.avatar_tcg.service.CardService;
+import com.oak.oak_protocol.OakRequest;
+import com.oak.oak_protocol.OakResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,62 +19,59 @@ public class CardController {
         this.authService = new AuthService();
     }
 
-    public void getCards(HttpRequest request, HttpResponse response) throws IOException {
+    public void getCards(com.oak.oak_protocol.OakRequest request, com.oak.oak_protocol.OakResponse response) throws IOException {
         try {
-            String token = request.getBearerToken();
+            String token = request.getData("token");
 
             String user_id = authService.validateToken(token);
 
             List<Card> cards = cardService.findByUserId(user_id);
 
-            response.json(Map.of(
+            response.sendJson(Map.of(
+                    "status", "success",
                     "cards", cards
             ));
-
-        } catch (IllegalArgumentException e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            response.setStatus(403);
-            response.json(Map.of("error", e.getMessage()));
+            response.sendJson(Map.of(
+                    "status", "error",
+                    "message", e.getMessage()
+            ));
         }
     }
 
-    public void cardsAvailable(HttpRequest request, HttpResponse response) throws IOException {
+    public void cardsAvailable(OakRequest request, OakResponse response) throws IOException {
         try {
             int num = cardService.getCardsAvailable();
 
-            response.json(Map.of(
+            response.sendJson(Map.of(
+                    "status", "success",
                     "cards_available", num
             ));
-
-        } catch (IllegalArgumentException e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            response.setStatus(403);
-            response.json(Map.of("error", e.getMessage()));
+           response.sendJson(Map.of(
+                   "status", "error",
+                   "message", e.getMessage()
+           ));
         }
     }
 
-    public void openPackage(HttpRequest request, HttpResponse response) throws IOException {
+    public void openPackage(OakRequest request, OakResponse response) throws IOException {
         try {
-            String token = request.getBearerToken();
+            String token = request.getData("token");
 
             String user_id = authService.validateToken(token);
 
             List<Card> cards = cardService.openPackage(user_id);
 
-            response.json(Map.of(
+            response.sendJson(Map.of(
+                    "status", "success",
                     "cards", cards
             ));
-
-        } catch (IllegalArgumentException e) {
-            response.setStatus(400);
-            response.json(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            response.setStatus(403);
-            response.json(Map.of("error", e.getMessage()));
+            response.sendJson(Map.of(
+                    "status", "error",
+                    "message", e.getMessage()
+            ));
         }
     }
 }
