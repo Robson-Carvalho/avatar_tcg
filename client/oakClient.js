@@ -12,35 +12,68 @@ function buildRequest(method, route, data) {
   return `OAK_PROTOCOL\n${method}\n${route}\n${payload}\n\n`;
 }
 
-function parseFrames(buffer) {
-  // Split messages by double newline. Preserve remainder (last partial)
-  const text = buffer.toString('utf8');
-  const parts = text.split('\n\n');
-  // If buffer ends with \n\n, last part is empty remainder
-  const complete = parts.slice(0, -1);
-  const remainder = parts[parts.length - 1];
-  return { complete, remainder };
-}
-
+// Na função parseMessage, corrija o parsing do JSON:
 function parseMessage(frame) {
-  // Expect 4 lines: proto, method, route, json
+  console.log('🔄 Parseando frame:', frame);
+  
   const lines = frame.split('\n');
   if (lines.length < 4) {
     throw new Error('Invalid AOK frame (not enough lines)');
   }
+  
   const proto = lines[0].trim();
   const method = lines[1].trim();
   const route = lines[2].trim();
-  const jsonStr = lines.slice(3).join('\n'); // in case JSON has newlines
+  const jsonStr = lines.slice(3).join('\n').trim(); 
+  
+  console.log('📋 Proto:', proto, 'Method:', method, 'Route:', route);
+  console.log('📦 JSON String:', jsonStr);
+  
   if (proto !== 'OAK_PROTOCOL') {
     throw new Error('Invalid protocol header');
   }
+  
   let body = null;
   try {
     body = jsonStr ? JSON.parse(jsonStr) : null;
+    console.log('✅ JSON parseado com sucesso:', body);
   } catch (e) {
+    console.log('❌ Erro ao parsear JSON:', e.message);
     body = { raw: jsonStr };
   }
+  
+  return { method, route, body, raw: frame };
+}
+
+function parseMessage(frame) {
+  console.log('🔄 Parseando frame:', frame);
+  
+  const lines = frame.split('\n');
+  if (lines.length < 4) {
+    throw new Error('Invalid AOK frame (not enough lines)');
+  }
+  
+  const proto = lines[0].trim();
+  const method = lines[1].trim();
+  const route = lines[2].trim();
+  const jsonStr = lines.slice(3).join('\n').trim(); // ⚠️ CORRIGIDO
+  
+  console.log('📋 Proto:', proto, 'Method:', method, 'Route:', route);
+  console.log('📦 JSON String:', jsonStr);
+  
+  if (proto !== 'OAK_PROTOCOL') {
+    throw new Error('Invalid protocol header');
+  }
+  
+  let body = null;
+  try {
+    body = jsonStr ? JSON.parse(jsonStr) : null;
+    console.log('✅ JSON parseado com sucesso:', body);
+  } catch (e) {
+    console.log('❌ Erro ao parsear JSON:', e.message);
+    body = { raw: jsonStr };
+  }
+  
   return { method, route, body, raw: frame };
 }
 
@@ -121,7 +154,7 @@ class FullDuplexSession extends EventEmitter {
     });
   }
 
-  send(payload, { method = 'POST', route = '/game' } = {}) {
+  send(payload, { method = 'REALTIME', route = '/game' } = {}) {
     if (!this.socket || !this._connected) {
       throw new Error('FullDuplex socket not connected');
     }

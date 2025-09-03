@@ -131,7 +131,7 @@ async function saveDeck() {
     });
 
     try {
-        const res = await fetch(`${API_URL}/deck`, {
+        const res = await fetch(`${API_URL}/deck/update`, {
             method: "PUT",
             headers: { 
                 "Content-Type": "application/json",

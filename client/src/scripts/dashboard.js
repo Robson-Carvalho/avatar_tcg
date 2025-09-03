@@ -10,6 +10,10 @@ function showLoadingState() {
 }
 
 function showMatches() {
+    if (localStorage.getItem("avatar_tcg_user_nickname")) {
+        document.getElementById("userName").innerText = localStorage.getItem("avatar_tcg_user_nickname").split(" ")[0];
+    }
+
     const matchesContainer = document.getElementById("matchs");
     matchesContainer.classList.remove("hidden");
     loadMatches();
@@ -33,6 +37,7 @@ async function loadMatches() {
         if (!res.ok) throw new Error("Erro ao carregar partidas");
 
         const json = await res.json();
+        
         const matchs = (json.matchs || []).slice().reverse();
 
         if (matchs.length > 0) {

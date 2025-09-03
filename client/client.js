@@ -1,23 +1,15 @@
-// client.js (proxy + static server)
-// Replaces the original mock logic and proxies requests to the Java server via AOK_PROTOCOL.
-// Also serves static files from ./src and exposes a minimal SSE stream for realtime game messages.
-
+// client.js - Versão completa corrigida
 const net = require('net');
 const fs = require('fs');
 const path = require('path');
-const url = require('url');
-const crypto = require('crypto');
 const { request, FullDuplexSession } = require('./oakClient');
 
-// ==== Config ====
-const PORT_CLIENT = 3000; 
+const PORT_CLIENT = 3000;
 const JAVA_HOST = 'localhost';
 const JAVA_PORT = 8080;
 
-// Map token -> FullDuplexSession
 const sessions = new Map();
 
-// Simple helpers
 function sendResponse(socket, statusCode, contentType, data) {
   socket.write(`HTTP/1.1 ${statusCode}\r\n`);
   socket.write(`Content-Type: ${contentType}; charset=utf-8\r\n`);
@@ -25,6 +17,7 @@ function sendResponse(socket, statusCode, contentType, data) {
   socket.write('Access-Control-Allow-Origin: *\r\n');
   socket.write('Access-Control-Allow-Headers: Content-Type, Authorization\r\n');
   socket.write('Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS\r\n');
+  socket.write('Connection: close\r\n');
   socket.write('\r\n');
   socket.write(data);
   socket.end();
@@ -35,266 +28,222 @@ function sendJson(socket, statusCode, obj) {
 }
 
 function serveStaticFile(socket, pathName) {
-  let filePath = './src/index.html';
-  if (pathName !== '/') {
-    // Keep compatibility with existing structure
-    if (pathName.startsWith('/scripts/')) {
-      filePath = './src' + pathName;
-    } else if (pathName.startsWith('/assets/')) {
-      filePath = './src' + pathName;
-    } else if (pathName.startsWith('/styles/')) {
-      filePath = './src' + pathName;
-    } else {
-      filePath = '.' + decodeURIComponent(pathName);
-    }
-  }
-
+  let filePath = './src' + (pathName === '/' ? '/index.html' : pathName);
+  
   fs.access(filePath, fs.constants.F_OK, (err) => {
     if (err) {
-      sendResponse(socket, 404, 'text/html', `<h1>404</h1><p>${filePath} not found</p>`);
+      sendResponse(socket, 404, 'text/html', `<h1>404 - ${filePath} not found</h1>`);
       return;
     }
+    
     const ext = path.extname(filePath).toLowerCase();
-    const ct = ext === '.js' ? 'application/javascript'
-      : ext === '.css' ? 'text/css'
-      : ext === '.html' ? 'text/html'
-      : ext === '.png' ? 'image/png'
-      : ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg'
-      : ext === '.gif' ? 'image/gif'
-      : ext === '.svg' ? 'image/svg+xml'
-      : 'application/octet-stream';
+    const contentTypes = {
+      '.js': 'application/javascript',
+      '.css': 'text/css',
+      '.html': 'text/html',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.gif': 'image/gif',
+      '.svg': 'image/svg+xml'
+    };
+    
+    const contentType = contentTypes[ext] || 'application/octet-stream';
+    
     fs.readFile(filePath, (err, data) => {
-      if (err) return sendResponse(socket, 500, 'text/plain', 'Internal error');
-      sendResponse(socket, 200, ct, data);
+      if (err) {
+        sendResponse(socket, 500, 'text/plain', 'Internal server error');
+        return;
+      }
+      sendResponse(socket, 200, contentType, data);
     });
   });
 }
 
-function readJsonBody(rawRequest) {
-  try {
-    const parts = rawRequest.split('\r\n\r\n');
-    const body = parts[1] || '';
-    return JSON.parse(body || '{}');
-  } catch {
-    return {};
+function parseRequest(rawRequest) {
+  const lines = rawRequest.split('\r\n');
+  const [method, path] = lines[0].split(' ');
+  const headers = {};
+  
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (line === '') break;
+    
+    const colonIndex = line.indexOf(':');
+    if (colonIndex > -1) {
+      const key = line.slice(0, colonIndex).trim().toLowerCase();
+      const value = line.slice(colonIndex + 1).trim();
+      headers[key] = value;
+    }
   }
+  
+  const body = rawRequest.split('\r\n\r\n')[1] || '';
+  
+  return { method, path, headers, body };
 }
 
-function getAuthToken(headers) {
-  const auth = headers.find(h => h.toLowerCase().startsWith('authorization:'));
-  if (!auth) return null;
-  const value = auth.split(':')[1].trim();
-  if (value.toLowerCase().startsWith('bearer ')) {
-    return value.slice(7).trim();
+function getToken(headers) {
+  const authHeader = headers['authorization'];
+  if (!authHeader) return null;
+  
+  if (authHeader.startsWith('Bearer ')) {
+    return authHeader.slice(7);
   }
-  return value;
+  return authHeader;
 }
 
-function parseHeaders(headerLines) {
-  const headers = [];
-  for (let i = 1; i < headerLines.length; i++) {
-    const line = headerLines[i];
-    if (!line) continue;
-    headers.push(line);
-  }
-  return headers;
-}
-
-// SSE support
 function startSSE(socket) {
-  // Note: net raw socket is used to speak HTTP response for SSE
   socket.write('HTTP/1.1 200 OK\r\n');
   socket.write('Content-Type: text/event-stream\r\n');
   socket.write('Cache-Control: no-cache\r\n');
-  socket.write('Connection: keep-alive\r\n');
   socket.write('Access-Control-Allow-Origin: *\r\n');
+  socket.write('Access-Control-Allow-Headers: Content-Type, Authorization\r\n');
+  socket.write('Connection: keep-alive\r\n');
   socket.write('\r\n');
+  
   return {
-    send: (event, data) => {
-      if (event) socket.write(`event: ${event}\n`);
+    send: (data) => {
       socket.write(`data: ${JSON.stringify(data)}\n\n`);
     },
-    end: () => socket.end()
+    close: () => socket.end()
   };
 }
 
-// Routes proxying to AOK server
-async function handleApi(socket, method, pathName, headers, rawReq) {
-  // CORS preflight
-  if (method === 'OPTIONS') {
-    sendResponse(socket, 204, 'text/plain', '');
-    return;
-  }
-
-  const token = getAuthToken(headers);
-  const body = readJsonBody(rawReq);
-
+async function handleApiRequest(socket, method, path, headers, body) {
+  const token = getToken(headers);
+  
   try {
-    // Auth
-    if (pathName === '/auth/login' && method === 'POST') {
-      const resp = await request({
-        host: JAVA_HOST, port: JAVA_PORT, method: 'POST', route: '/auth/login',
-        data: { ...body }
-      });
-      return sendJson(socket, 200, resp);
-    }
-    if (pathName === '/auth/register' && method === 'POST') {
-      const resp = await request({
-        host: JAVA_HOST, port: JAVA_PORT, method: 'POST', route: '/auth/register',
-        data: { ...body }
-      });
-      return sendJson(socket, 201, resp);
+    // CORS preflight
+    if (method === 'OPTIONS') {
+      sendResponse(socket, 204, 'text/plain', '');
+      return;
     }
 
-    // Cards / Deck / Packs / Matches — straight proxy with token
-    if (pathName === '/card' && method === 'GET') {
-      const resp = await request({
-        host: JAVA_HOST, port: JAVA_PORT, method: 'GET', route: '/card',
-        data: { token }
-      });
-      return sendJson(socket, 200, resp);
-    }
+    // Rota de streaming para realtime
+    if (path === '/game/stream' && method === 'GET') {
+      if (!token) {
+        sendJson(socket, 401, { error: 'Token required' });
+        return;
+      }
 
-    if (pathName === '/card/open' && method === 'GET') {
-      const resp = await request({
-        host: JAVA_HOST, port: JAVA_PORT, method: 'GET', route: '/card/open',
-        data: { token }
-      });
-      return sendJson(socket, 200, resp);
-    }
-
-    if (pathName === '/deck' && method === 'GET') {
-      const resp = await request({
-        host: JAVA_HOST, port: JAVA_PORT, method: 'GET', route: '/deck',
-        data: { token }
-      });
-      return sendJson(socket, 200, resp);
-    }
-
-    if (pathName === '/deck' && method === 'PUT') {
-      const resp = await request({
-        host: JAVA_HOST, port: JAVA_PORT, method: 'PUT', route: '/deck',
-        data: { token, ...body }
-      });
-      return sendJson(socket, 200, resp);
-    }
-
-    if (pathName === '/match' && method === 'GET') {
-      const resp = await request({
-        host: JAVA_HOST, port: JAVA_PORT, method: 'GET', route: '/match',
-        data: { token }
-      });
-      return sendJson(socket, 200, resp);
-    }
-
-    // === Real-time game via SSE + FullDuplexSession ===
-    if (pathName === '/game/stream' && method === 'GET') {
-      if (!token) return sendJson(socket, 401, { error: 'Missing token' });
-      // Start SSE
+      console.log('Starting SSE connection for token:', token);
       const sse = startSSE(socket);
-      // Reuse or create FullDuplex session
-      let sess = sessions.get(token);
-      if (!sess) {
-        sess = new FullDuplexSession({
+
+      let session = sessions.get(token);
+      if (!session) {
+        session = new FullDuplexSession({
           host: JAVA_HOST,
           port: JAVA_PORT,
           auth: { token }
         });
-        sessions.set(token, sess);
-        // Auto-clean on close
-        sess.on('close', () => sessions.delete(token));
-        sess.on('error', (e) => {
-          try { sse.send('error', { message: e.message }); } catch {}
+
+        sessions.set(token, session);
+
+        session.on('message', (msg) => {
+          console.log('Received message from Java:', msg);
+          sse.send(msg.body || msg);
         });
-        sess.on('message', (msg) => {
-          // Relay any body/type to SSE
-          if (msg && msg.body) {
-            const ev = msg.body.type || 'message';
-            sse.send(ev, msg.body);
-          } else {
-            sse.send('message', { raw: msg.raw || '' });
-          }
+
+        session.on('error', (err) => {
+          console.error('Session error:', err);
+          sse.send({ error: err.message });
         });
-        // Connect and send initial joinQueue by default (can be customized via /game/send)
-        sess.connect({ type: 'joinQueue' }).catch(err => {
-          try { sse.send('error', { message: err.message }); } catch {}
+
+        session.on('close', () => {
+          console.log('Session closed for token:', token);
+          sessions.delete(token);
+          sse.send({ type: 'SESSION_CLOSED' });
         });
-      } else {
-        // If already connected, just attach — new client will receive stream
+
+        console.log("oi")
+
+        // Connect to Java server
+        await session.connect({ type: 'joinQueue' });
       }
-      // Keep alive comments
+
+      // Keep connection alive
       const keepAlive = setInterval(() => {
-        try { socket.write(': keep-alive\n\n'); } catch {}
-      }, 15000);
+        try {
+          socket.write(': keepalive\n\n');
+        } catch (e) {
+          clearInterval(keepAlive);
+        }
+      }, 30000);
 
       socket.on('close', () => {
         clearInterval(keepAlive);
-        // Do not close the session here — allow multiple clients
+        console.log('SSE connection closed');
       });
 
       return;
     }
 
-    if (pathName === '/game/send' && method === 'POST') {
-      if (!token) return sendJson(socket, 401, { error: 'Missing token' });
-      let sess = sessions.get(token);
-      if (!sess) {
-        sess = new FullDuplexSession({
-          host: JAVA_HOST,
-          port: JAVA_PORT,
-          auth: { token }
-        });
-        sessions.set(token, sess);
-        await sess.connect(); // connect without sending join
-      }
-      // Forward arbitrary game command
-      sess.send(body, { method: 'POST', route: '/game' });
-      return sendJson(socket, 200, { ok: true });
+    const apiRoutes = {
+      '/auth/login': { method: 'POST', route: '/auth/login' },
+      '/auth/register': { method: 'POST', route: '/auth/register' },
+      '/card': { method: 'GET', route: '/card' },
+      '/card/open': { method: 'GET', route: '/card/open' },
+      '/deck': { method: 'GET', route: '/deck' },
+      '/deck/update': { method: 'PUT', route: '/deck' },
+      '/match': { method: 'GET', route: '/match' },
+      '/game/send': { method: 'POST', route: '/game' }
+    };
+
+    if (apiRoutes[path] && method === apiRoutes[path].method) {
+      const requestData = body ? JSON.parse(body) : {};
+      if (token) requestData.token = token;
+
+      const result = await request({
+        host: JAVA_HOST,
+        port: JAVA_PORT,
+        method: apiRoutes[path].method,
+        route: apiRoutes[path].route,
+        data: requestData
+      });
+
+      sendJson(socket, 200, result);
+      return;
     }
 
-    if (pathName === '/game/close' && method === 'POST') {
-      if (!token) return sendJson(socket, 401, { error: 'Missing token' });
-      const sess = sessions.get(token);
-      if (sess) {
-        try { sess.close(); } catch {}
-        sessions.delete(token);
-      }
-      return sendJson(socket, 200, { ok: true });
-    }
+    // Se não for uma rota API, serve arquivo estático
+    serveStaticFile(socket, path);
 
-    // Fallback — static
-    return serveStaticFile(socket, pathName);
-  } catch (err) {
-    console.error('Proxy error:', err);
-    return sendJson(socket, 500, { error: err.message || 'Internal error' });
+  } catch (error) {
+    console.error('API error:', error);
+    sendJson(socket, 500, { error: error.message });
   }
 }
 
-// TCP HTTP server
+// Servidor principal
 const server = net.createServer((socket) => {
-  let req = '';
-  socket.on('data', (chunk) => {
-    req += chunk.toString('utf8');
-    if (req.includes('\r\n\r\n')) {
-      const lines = req.split('\r\n');
-      const [method, pathName] = lines[0].split(' ');
-      const headers = parseHeaders(lines);
-      // API paths we handle
+  let buffer = '';
+
+  socket.on('data', (data) => {
+    buffer += data.toString();
+
+    if (buffer.includes('\r\n\r\n')) {
+      const request = parseRequest(buffer);
+      
+      // Verifica se é uma rota API
       const apiPaths = [
-        '/auth/login','/auth/register','/card','/card/open','/deck','/match',
-        '/game/stream','/game/send','/game/close'
+        '/auth/login', '/auth/register', '/card', '/card/open', 
+        '/deck', '/match', '/game/stream', '/game/send', "/deck/update"
       ];
-      if (apiPaths.includes(pathName)) {
-        handleApi(socket, method, pathName, headers, req);
+
+      if (apiPaths.includes(request.path)) {
+        handleApiRequest(socket, request.method, request.path, request.headers, request.body);
       } else {
-        serveStaticFile(socket, pathName);
+        serveStaticFile(socket, request.path);
       }
     }
   });
-  socket.on('error', () => {});
+
+  socket.on('error', (err) => {
+    console.error('Socket error:', err);
+  });
 });
 
 server.listen(PORT_CLIENT, () => {
-  console.log(`[client-proxy] Listening on http://localhost:${PORT_CLIENT}`);
-  console.log(`[client-proxy] Proxying to AOK ${JAVA_HOST}:${JAVA_PORT}`);
+  console.log(`Proxy server running on http://localhost:${PORT_CLIENT}`);
+  console.log(`Proxying to Java server at ${JAVA_HOST}:${JAVA_PORT}`);
 });

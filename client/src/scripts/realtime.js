@@ -14,12 +14,12 @@ function startPingLoop() {
     lastPingTime = performance.now();
     // ask proxy to send ping to AOK fullduplex
     fetch(`${API_URL}/game/send`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ type: 'ping' })
+      body: JSON.stringify({ type: "ping" }),
     }).catch(() => {});
   }, 1000);
 }
@@ -46,59 +46,72 @@ function updatePing() {
 
 function connectToGame() {
   const token = localStorage.getItem("token");
+
   if (!token) return alert("Você precisa estar logado!");
 
   // Start SSE stream
   if (sse) {
-    try { sse.close(); } catch {}
+    try {
+      sse.close();
+    } catch {}
     sse = null;
   }
 
   sse = new EventSource(`${API_URL}/game/stream?token=${encodeURIComponent(token)}`);
 
-  sse.addEventListener('open', () => {
-    console.log('SSE connected.');
+  sse.addEventListener("open", () => {
     // Tell proxy to send joinQueue
     fetch(`${API_URL}/game/send`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         type: "joinQueue",
         userID: userId,
-      })
+      }),
     }).catch(() => {});
   });
 
-  sse.addEventListener('message', (ev) => {
+  sse.addEventListener("message", (ev) => {
     try {
       const receive = JSON.parse(ev.data);
       handleIncoming(receive);
     } catch (e) {
-      console.warn('Bad SSE message', e);
+      console.warn("Bad SSE message", e);
     }
   });
 
-  // Relay typed events too
-  ['IN_QUEUE','MATCH_FOUND','VICTORY_WITHDRAWAL','VICTORY','MATCH_FINISHED','UPDATE_GAME','PONG','ERROR','WARNING','pong'].forEach(evt => {
-    sse.addEventListener(evt, (ev) => {
-      try {
-        const receive = JSON.parse(ev.data);
-        handleIncoming(receive);
-      } catch {}
-    });
+  sse.addEventListener("message", (ev) => {
+    try {
+      console.log("SSE RAW DATA:", ev.data);
+      const receive = JSON.parse(ev.data);
+      console.log("Dados recebidos:", receive);
+      handleIncoming(receive);
+    } catch (e) {
+      console.warn("Bad SSE message", e, ev.data);
+    }
   });
 
-  sse.addEventListener('error', (ev) => {
-    console.error('SSE error', ev);
-    // Auto-close
+  sse.addEventListener("error", (ev) => {
+    console.log("SSE error", ev.target);  
+    console.log("Conexão SSE fechada, tentando reconectar...");
     endGame();
   });
 }
 
 function handleIncoming(receive) {
+  console.log("✅ handleIncoming chamado com:", receive);
+
+  if (!receive) {
+    console.log("❌ receive é null/undefined");
+    return;
+  }
+
+  console.log("Tipo da mensagem:", receive.type);
+  console.log("Conteúdo:", receive);
+
   if (!receive) return;
 
   if (receive.message === "pong" || receive.type === "PONG") {
@@ -153,7 +166,7 @@ function hideVictoryModal() {
 }
 
 function handleVictory(json) {
-  const data = typeof json === 'string' ? JSON.parse(json) : json;
+  const data = typeof json === "string" ? JSON.parse(json) : json;
   const game = document.getElementById("game");
   if (game) game.classList.add("hidden");
   if (localStorage.getItem("avatar_tcg_user_id") == data.playerWin) {
@@ -203,16 +216,16 @@ function handleServerMessage(receive) {
 
 function surrender() {
   fetch(`${API_URL}/game/send`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify({
       type: "exit",
       matchID: matchId,
       userID: userId,
-    })
+    }),
   }).catch(() => {});
   endGame();
 }
@@ -221,15 +234,18 @@ function endGame() {
   document.getElementById("gameContainer").classList.add("hidden");
   document.getElementById("waitingQueue").classList.add("hidden");
   document.getElementById("game").classList.add("hidden");
-  if (sse) try { sse.close(); } catch {}
+  if (sse)
+    try {
+      sse.close();
+    } catch {}
   sse = null;
   matchId = null;
   myTurn = false;
   stopPingLoop();
   // tell proxy to close session (optional)
   fetch(`${API_URL}/game/close`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    method: "POST",
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   }).catch(() => {});
   showMatches();
 }

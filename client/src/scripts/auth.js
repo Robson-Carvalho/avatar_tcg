@@ -61,6 +61,7 @@ async function handleAuth() {
   }
 
   try {
+    console.log(endpoint)
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -69,8 +70,8 @@ async function handleAuth() {
 
     const data = await response.json();
 
-    if (!response.ok) {
-      showError(data.error || "Erro desconhecido");
+    if (data.status == "error") {
+      showError(data.message || "Erro desconhecido");
       return;
     }
 
@@ -104,9 +105,6 @@ window.onload = () => {
   const token = localStorage.getItem("token");
 
   if (token) {
-    document.getElementById("userName").innerText = localStorage
-      .getItem("avatar_tcg_user_name")
-      .split(" ")[0];
     document.getElementById("auth").classList.add("hidden");
     document.getElementById("dashboard").classList.remove("hidden");
   }

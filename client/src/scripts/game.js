@@ -240,20 +240,27 @@ function setupHeroSlot(gameState) {
 }
 
 function activationCard(gameState, cardId) {
-  socket.send(
-    JSON.stringify({
+  fetch(`${API_URL}/game/send`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: JSON.stringify({
       type: "activateCard",
       token: localStorage.getItem("token"),
       cardID: cardId,
       userID: localStorage.getItem("avatar_tcg_user_id"),
       matchID: gameState.matchID,
-    })
-  );
+    }),
+  }).catch(() => {});
+
   console.log("Ativou carta:", cardId);
 }
 
 function playCard() {
   const data = localStorage.getItem("gameState");
+  if (!data) return;
   const json = JSON.parse(data);
   const gameState = JSON.parse(json.data);
   const userId = localStorage.getItem("avatar_tcg_user_id");
@@ -266,14 +273,20 @@ function playCard() {
     return;
   }
 
-  socket.send(
-    JSON.stringify({
+  fetch(`${API_URL}/game/send`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
+    body: JSON.stringify({
       type: "playCard",
       token: localStorage.getItem("token"),
       userID: userId,
       cardID: player.activationCard,
       matchID: gameState.matchID,
-    })
-  );
+    }),
+  }).catch(() => {});
+
   console.log("Jogar!");
 }

@@ -1,5 +1,9 @@
 const API_URL = "http://localhost:3000";
 
+function testAlert() {
+    alert("test")
+}
+
 function showError(message) {
     const errorDiv = document.getElementById("errorMsg");
     if (!errorDiv) return;
