@@ -27,5 +27,4 @@ public class OakResponse {
         output.write("\r\n");
         output.flush();
     }
-
 }

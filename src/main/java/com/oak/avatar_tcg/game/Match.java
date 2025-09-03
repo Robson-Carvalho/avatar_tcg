@@ -1,6 +1,7 @@
 package com.oak.avatar_tcg.game;
 
 import com.oak.http.WebSocket;
+import com.oak.oak_protocol.OakRealTime;
 
 import java.util.UUID;
 
@@ -8,11 +9,11 @@ public class Match {
     private final String id;
     private final String PlayerOneID;
     private final String PlayerTwoID;
-    private final WebSocket SocketPlayerOne;
-    private final WebSocket SocketPlayerTwo;
+    private final OakRealTime SocketPlayerOne;
+    private final OakRealTime SocketPlayerTwo;
     private final GameState gameState;
 
-    public Match(String PlayerOneID, WebSocket SocketPlayerOne, String PlayerTwoID, WebSocket SocketPlayerTwo) throws Exception {
+    public Match(String PlayerOneID, OakRealTime SocketPlayerOne, String PlayerTwoID, OakRealTime SocketPlayerTwo) throws Exception {
         this.id = UUID.randomUUID().toString();
         this.PlayerOneID = PlayerOneID;
         this.PlayerTwoID = PlayerTwoID;
@@ -46,11 +47,11 @@ public class Match {
         return this.PlayerTwoID;
     }
 
-    public WebSocket getSocketPlayerOne() {
+    public OakRealTime getSocketPlayerOne() {
         return this.SocketPlayerOne;
     }
 
-    public WebSocket getSocketPlayerTwo() {
+    public OakRealTime getSocketPlayerTwo() {
         return this.SocketPlayerTwo;
     }
 }

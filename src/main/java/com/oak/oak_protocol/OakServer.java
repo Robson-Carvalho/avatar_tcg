@@ -1,5 +1,6 @@
 package com.oak.oak_protocol;
 
+import com.oak.avatar_tcg.util.JsonParser;
 import com.oak.oak_protocol.util.JSON;
 import com.oak.oak_protocol.util.OakData;
 
@@ -7,11 +8,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.concurrent.*;
 
 public class OakServer {
     private final int port;
     private final OakRoutes routes;
+
     private final ExecutorService executor;
 
     public OakServer(int port) {
@@ -46,18 +49,53 @@ public class OakServer {
         } catch (IOException ignored) { }
     }
 
-    private void handleConectionHalfduplex(OakRequest request, OakResponse response) throws IOException {
+    private void handleConectionHalfduplex(OakRequest request, OakResponse response, Socket socket) throws IOException {
         routes.handle(request, response);
+        this.closeSocket(socket);
     }
 
-    private void handleConectionFullduplex(OakRequest request, OakResponse response) {
-        // lidar com conexões de partida
+    private void handleConectionFullduplex(OakRequest request, OakResponse response, Socket socket) throws IOException {
+        OakRealTimeHandler handler = routes.handleRealTime(request.getPath());
+
+        if(handler!=null){
+            OakRealTime oak = new OakRealTime(socket, request.input, response.output);
+
+            handler.onOpen(oak);
+            this.executor.submit(() -> realTime(oak, handler));
+        }
+    }
+
+    public void realTime(OakRealTime oakRealTime, OakRealTimeHandler handler) {
+        try{
+            while (oakRealTime.isOpen()){
+                String message = oakRealTime.receive();
+
+                if (message == null) {
+                    break;
+                }
+
+                // adiciona depois, se não tiver OAK_PROTOCOL fecha a conexão
+                //handler.onClose(oakRealTime);
+
+                Map<String, Object> receive = JsonParser.parseJsonToMap(message);
+                handler.onMessage(oakRealTime, receive);
+            }
+        }catch (IOException e) {
+            System.out.println("error: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                handler.onClose(oakRealTime);
+            } catch (Exception ignored) {}
+            try {
+                oakRealTime.close();
+            } catch (IOException ignored) {}
+        }
     }
 
     private void handleConnection(Socket clientSocket) {
         try {
-            clientSocket.setSoTimeout(5000); // 5 segundos
-
             BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), StandardCharsets.UTF_8));
             BufferedWriter output = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), StandardCharsets.UTF_8));
 
@@ -130,25 +168,27 @@ public class OakServer {
             }
 
             OakResponse response = new OakResponse(output);
-            OakRequest request = new OakRequest(command, path, data);
+            OakRequest request = new OakRequest(command, path, data, input);
 
             if ("halfduplex".equals(data.connection)) {
-                handleConectionHalfduplex(request, response);
+                handleConectionHalfduplex(request, response, clientSocket);
             } else if ("fullduplex".equals(data.connection)) {
-                handleConectionFullduplex(request, response);
+                handleConectionFullduplex(request, response, clientSocket);
             } else {
                 output.write("OAK_PROTOCOL\r\n");
                 output.write("Invalid connection type\r\n");
                 output.flush();
                 this.closeSocket(clientSocket);
-                return;
             }
-
-            this.closeSocket(clientSocket);
         } catch (IOException e) {
             System.out.println("Erro: " + e.getMessage());
             this.closeSocket(clientSocket);
         }
+    }
+
+
+    public void realtime(String path, OakRealTimeHandler oakRealTimeHandler ) {
+        routes.addRoute("REALTIME", path, oakRealTimeHandler);
     }
 
     public void get(String path, OakHandler handler) {

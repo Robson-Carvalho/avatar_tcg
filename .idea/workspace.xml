@@ -4,7 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: transição para protocolo próprio OAK_PROTOCOL" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: transição para protocolo próprio OAK_PROTOCOL">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/OakRealTimeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRealTimeHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRealTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRealTime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRoutes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakRoutes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/oak_protocol/OakServer.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -171,7 +184,8 @@
       <workItem from="1756758825509" duration="4077000" />
       <workItem from="1756777922616" duration="6622000" />
       <workItem from="1756823657581" duration="5790000" />
-      <workItem from="1756848926753" duration="22996000" />
+      <workItem from="1756848926753" duration="23138000" />
+      <workItem from="1756901089301" duration="17941000" />
     </task>
     <task id="LOCAL-00024" summary="feat: adiciona gerenciamento de deck no cliente">
       <option name="closed" value="true" />

@@ -16,7 +16,8 @@ public class Main {
         DeckController deckController = new DeckController();
         MatchController matchController = new MatchController();
         WelcomeController welcomeController = new WelcomeController();
-        WebSocketController webSocketController = new WebSocketController();
+        OakRealTimeController oakRealTimeController = new OakRealTimeController();
+
 
         OakServer oakServer = new OakServer(8080);
 
@@ -48,8 +49,8 @@ public class Main {
         // Match
         oakServer.get("/match", matchController::getMatchs);
 
-//        // WebSocket
-//        oakServer.websocket("/game", webSocketController.websocket());
+        // real-time
+        oakServer.realtime("/game", oakRealTimeController.realTime());
 
         oakServer.start();
     }

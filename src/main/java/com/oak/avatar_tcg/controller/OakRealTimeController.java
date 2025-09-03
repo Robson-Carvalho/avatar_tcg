@@ -1,29 +1,32 @@
 package com.oak.avatar_tcg.controller;
 
-import com.oak.avatar_tcg.game.*;
+import com.oak.avatar_tcg.game.GameMessage;
+import com.oak.avatar_tcg.game.GameStateMessage;
+import com.oak.avatar_tcg.game.Match;
+import com.oak.avatar_tcg.game.MatchManager;
 import com.oak.avatar_tcg.service.AuthService;
 import com.oak.avatar_tcg.service.DeckService;
 import com.oak.avatar_tcg.util.JsonParser;
-import com.oak.http.WebSocket;
-import com.oak.http.WebSocketHandler;
+
+import com.oak.oak_protocol.OakRealTime;
+import com.oak.oak_protocol.OakRealTimeHandler;
 
 import java.io.IOException;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class WebSocketController {
+public class OakRealTimeController {
     private final ConcurrentLinkedQueue<String> waitingQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentHashMap<String, WebSocket> playerSockets = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, OakRealTime> playerSockets = new ConcurrentHashMap<>();
 
     private final MatchManager matchManager = new MatchManager();
     private final AuthService authService = new AuthService();
 
-    private synchronized void handleJoin(WebSocket socket, String userID) throws IOException {
+    private synchronized void handleJoin(OakRealTime socket, String userID) throws IOException {
         try {
             if (playerSockets.containsKey(userID)) {
-                WebSocket existingSocket = playerSockets.get(userID);
+                OakRealTime existingSocket = playerSockets.get(userID);
 
                 if (existingSocket != null && existingSocket.isOpen()) {
                     socket.send(JsonParser.toJson(new GameMessage("ERROR", "Você já está conectado em outra sessão")));
@@ -40,7 +43,7 @@ public class WebSocketController {
             String opponentId = null;
             while (!waitingQueue.isEmpty()) {
                 String firstId = waitingQueue.poll();
-                WebSocket opponentSocket = playerSockets.get(firstId);
+                OakRealTime opponentSocket = playerSockets.get(firstId);
 
                 if (opponentSocket != null && opponentSocket.isOpen()) {
                     opponentId = firstId;
@@ -57,7 +60,7 @@ public class WebSocketController {
                 return;
             }
 
-            WebSocket opponentSocket = playerSockets.get(opponentId);
+            OakRealTime opponentSocket = playerSockets.get(opponentId);
             String matchID = matchManager.createMatch(socket, userID, opponentSocket, opponentId);
 
             playerSockets.remove(userID);
@@ -73,7 +76,7 @@ public class WebSocketController {
         }
     }
 
-    private synchronized void handleClose(WebSocket socket, String userID, String matchID, boolean initiatedByClient) {
+    private synchronized void handleClose(OakRealTime socket, String userID, String matchID, boolean initiatedByClient) {
         try {
             if (matchID == null) {
                 socket.send(JsonParser.toJson( new GameMessage("ERROR", "ID da partida é requerido")));
@@ -81,7 +84,7 @@ public class WebSocketController {
             }
 
             if (!matchID.isEmpty()) {
-                WebSocket socketOpponent = matchManager.getOpponentInMatch(userID, matchID);
+                OakRealTime socketOpponent = matchManager.getOpponentInMatch(userID, matchID);
 
                 if (socketOpponent != null && socketOpponent.isOpen()) {
                     socketOpponent.send(JsonParser.toJson(new GameMessage("VICTORY_WITHDRAWAL", "Opponent disconnected")));
@@ -107,7 +110,7 @@ public class WebSocketController {
         }
     }
 
-    private void handleAction(WebSocket socket, String action, String cardID, String userID, String matchID) {
+    private void handleAction(OakRealTime socket, String action, String cardID, String userID, String matchID) {
         try {
             Match match = matchManager.getMatch(matchID);
 
@@ -119,8 +122,8 @@ public class WebSocketController {
             matchManager.handleAction(action, cardID, userID, matchID);
 
             if(!match.getGameState().getPlayerWin().equals("void")) {
-                WebSocket playerOne = match.getSocketPlayerOne();
-                WebSocket playerTwo = match.getSocketPlayerTwo();
+                OakRealTime playerOne = match.getSocketPlayerOne();
+                OakRealTime playerTwo = match.getSocketPlayerTwo();
 
                 broadcastingGameState("VICTORY", playerOne, playerTwo, match.getId());
 
@@ -138,7 +141,7 @@ public class WebSocketController {
         }
     }
 
-    private void broadcastingGameState(String type, WebSocket playerOne,WebSocket playerTwo, String matchID) throws IOException {
+    private void broadcastingGameState(String type, OakRealTime playerOne,OakRealTime playerTwo, String matchID) throws IOException {
         if(playerOne.isOpen() && playerTwo.isOpen()){
             String data = JsonParser.toJson(new GameStateMessage(type, matchID, matchManager.getStateMatch(matchID)));
 
@@ -147,11 +150,11 @@ public class WebSocketController {
         }
     }
 
-    public WebSocketHandler websocket() {
-        return new WebSocketHandler() {
+    public OakRealTimeHandler realTime() {
+        return new OakRealTimeHandler() {
             private final DeckService deckService = new DeckService();
 
-            private void sendMessage(WebSocket socket, Object object) {
+            private void sendMessage(OakRealTime socket, Object object) {
                 try {
                     if (socket != null && socket.isOpen()) {
                         socket.send(JsonParser.toJson(object));
@@ -162,7 +165,7 @@ public class WebSocketController {
             }
 
 
-            private boolean validateGameAction(WebSocket socket, String token, String userID, String matchID) {
+            private boolean validateGameAction(OakRealTime socket, String token, String userID, String matchID) {
                 try {
                     String authenticatedUserID = authService.validateToken(token);
 
@@ -183,18 +186,19 @@ public class WebSocketController {
                 }
             }
 
-            private void handleUnknownType(WebSocket socket) {
+            private void handleUnknownType(OakRealTime socket) {
                 sendMessage(socket, new GameMessage("ERROR", "Comando desconhecido"));
             }
 
             @Override
-            public void onOpen(WebSocket socket) {
+            public void onOpen(OakRealTime socket) throws IOException {
                 int port = socket.getSocket().getPort();
+                socket.sendJson(new GameMessage("MESSAGE", "dd"));
                 System.out.println("Player connected: " + port);
             }
 
             @Override
-            public void onMessage(WebSocket socket, Map<String, Object> receive) {
+            public void onMessage(OakRealTime socket, Map<String, Object> receive) {
                 try {
                     String type = (String) receive.get("type");
                     String token = (String) receive.get("token");
@@ -214,6 +218,7 @@ public class WebSocketController {
 
                                 if (deckService.findByUserId(authenticatedUserID).getCards().size() < 5) {
                                     sendMessage(socket, new GameMessage("WARNING", "Deck incompleto"));
+                                    socket.close();
                                     return;
                                 }
 
@@ -246,7 +251,7 @@ public class WebSocketController {
             }
 
             @Override
-            public void onClose(WebSocket socket) {
+            public void onClose(OakRealTime socket) {
                 String userID = matchManager.getUserIDBySocket(socket);
                 String matchID = matchManager.getMatchIDBySocket(socket);
 

@@ -6,6 +6,21 @@ import java.util.Map;
 
 public class OakRoutes {
     private final Map<String, Map<String, OakHandler>> routes = new HashMap<>();
+    private final Map<String, OakRealTimeHandler> realTimeRoutes = new HashMap<>();
+
+    public void addRoute(String method, String path, OakRealTimeHandler oakRealTimeHandler ) {
+        if(method.equals("REALTIME")){
+            realTimeRoutes.put(path, oakRealTimeHandler);
+        }
+    }
+
+    public OakRealTimeHandler handleRealTime(String path){
+        if (realTimeRoutes.containsKey(path)) {
+            return realTimeRoutes.get(path);
+        }
+
+        return null;
+    }
 
     public void addRoute(String method, String path, OakHandler handler) {
         routes.computeIfAbsent(method.toUpperCase(), k -> new HashMap<>()).put(path, handler);
