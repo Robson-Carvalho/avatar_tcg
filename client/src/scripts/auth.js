@@ -90,7 +90,6 @@ window.onload = () => {
     const token = localStorage.getItem("token");
 
     if (token) {
-        document.getElementById("userName").innerText = localStorage.getItem("avatar_tcg_user_name").split(" ")[0];
         document.getElementById("auth").classList.add("hidden");
         document.getElementById("dashboard").classList.remove("hidden");
     }

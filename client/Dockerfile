@@ -1,18 +1,14 @@
-
-# Usa a imagem oficial do Node.js
+# Usa Node.js leve
 FROM node:18-alpine
 
-# Define o diretório de trabalho dentro do container
+# Define diretório de trabalho
 WORKDIR /usr/src/app
 
-# Copia package.json (se houver) e instala dependências
-COPY package*.json ./
-RUN npm install || true
-
-# Copia todo o restante do código (incluindo src)
+# Copia todo o código para dentro do container
 COPY . .
 
+# Expõe a porta (se necessário)
 EXPOSE 3000
 
-# Comando para executar o script principal
+# Comando para rodar o script
 CMD ["node", "server.js"]
