@@ -4,7 +4,6 @@ const path = require('path');
 
 const PORT = 3000;
 
-// Função para pegar conteúdo de arquivo e tipo
 function getFile(filePath) {
   const ext = path.extname(filePath);
   let contentType = 'text/plain';
@@ -27,8 +26,6 @@ const server = net.createServer((socket) => {
     const request = chunk.toString();
     const [requestLine] = request.split('\r\n');
     const [, url] = requestLine.split(' ');
-
-    console.log(`Request for: ${url}`);
 
     let filePath = '';
     if (url === '/' || url === '/index.html') {
@@ -59,6 +56,7 @@ const server = net.createServer((socket) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`TCP server serving src/ at port ${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`TCP server serving src/ at port ${PORT} | http://0.0.0.0:${PORT}`);
 });
+
