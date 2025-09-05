@@ -1,6 +1,6 @@
-docker stop postgres-avatar
-docker rm postgres-avatar
-docker volume rm postgres_data
+docker stop postgres-avatar &&
+docker rm postgres-avatar &&
+docker volume rm postgres_data &&
 docker run -d  --name postgres-avatar -p 5432:5432 -e POSTGRES_DB=avatar_tcg -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -v postgres_data:/var/lib/postgresql/data postgres:15
 
 docker stop avatar-server &&
