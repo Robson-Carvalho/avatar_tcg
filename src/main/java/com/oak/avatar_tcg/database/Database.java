@@ -1,5 +1,7 @@
 package com.oak.avatar_tcg.database;
 
+import com.oak.avatar_tcg.util.IPv4;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,9 +16,12 @@ public class Database {
     }
 
     public static Connection getConnection() throws SQLException {
-        String url = System.getenv("DB_URL");
-        String user = System.getenv("DB_USER");
-        String password = System.getenv("DB_PASSWORD");
+        String ip = IPv4.getLocalIPv4();
+
+        System.out.println("Connecting to database...: "+ ip);
+        String url = "jdbc:postgresql://"+ip+":5432/avatar_tcg";
+        String user = "postgres";
+        String password = "postgres";
 
         return DriverManager.getConnection(url, user, password);
     }

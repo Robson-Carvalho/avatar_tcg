@@ -1,5 +1,6 @@
 package com.oak.http;
 
+import com.oak.avatar_tcg.util.IPv4;
 import com.oak.avatar_tcg.util.JsonParser;
 
 import java.io.*;
@@ -36,9 +37,11 @@ public class OakServer {
 
     public void start() throws IOException {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Oak Server running on http://localhost:" + port);
+            String ip = IPv4.getLocalIPv4();
 
-            while(true) {
+            System.out.println("Oak Server running on http://"+ip+":"+port);
+
+            for(;;) {
                 Socket clientSocket = serverSocket.accept();
                 handleConnection(clientSocket);
             }

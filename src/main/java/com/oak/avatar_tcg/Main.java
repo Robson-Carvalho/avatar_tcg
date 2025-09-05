@@ -10,7 +10,6 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) throws IOException, SQLException {
         OakServer server = new OakServer(8080);
-
         Migrations.runMigrations();
 
         AuthController authController = new AuthController();
