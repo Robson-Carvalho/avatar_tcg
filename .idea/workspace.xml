@@ -7,6 +7,7 @@
     <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona leitura de IPv4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EXECUTE.md" beforeDir="false" afterPath="$PROJECT_DIR$/EXECUTE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WelcomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WelcomeController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,29 +44,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.com.oak.avatar_tcg.Main.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.All in avatar_tcg.executor&quot;: &quot;Run&quot;,
-    &quot;JavaScript Debug.index.html.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.avatar_tcg [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.avatar_tcg [install].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/robso/OneDrive/Área de Trabalho/github/avatar_tcg&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Application.com.oak.avatar_tcg.Main.executor": "Run",
+    "JUnit.All in avatar_tcg.executor": "Run",
+    "JavaScript Debug.index.html.executor": "Run",
+    "Maven.avatar_tcg [clean].executor": "Run",
+    "Maven.avatar_tcg [install].executor": "Run",
+    "Node.js.server.js.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/robso/Desktop/github/avatar_tcg",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\robso\OneDrive\Área de Trabalho\github\legends-of-three\src\main\java\oak\http" />
@@ -100,14 +102,19 @@
     <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/avatar_tcg/client/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
+    <configuration name="server.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/client/server.js" working-dir="$PROJECT_DIR$/client">
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.Main" />
-      <item itemvalue="JUnit.All in avatar_tcg" />
       <item itemvalue="JavaScript Debug.index.html" />
+      <item itemvalue="JUnit.All in avatar_tcg" />
+      <item itemvalue="Node.js.server.js" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Node.js.server.js" />
         <item itemvalue="JUnit.All in avatar_tcg" />
         <item itemvalue="JavaScript Debug.index.html" />
       </list>

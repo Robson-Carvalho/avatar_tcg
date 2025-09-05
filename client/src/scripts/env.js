@@ -1,0 +1,1 @@
+const IP_SERVER = "10.0.0.198"

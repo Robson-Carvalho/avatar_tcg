@@ -37,7 +37,7 @@ function connectToGame() {
 
   if (!token) return alert("Você precisa estar logado!");
 
-  socket = new WebSocket(`ws://${IP_SEVER}:8080/game`);
+  socket = new WebSocket(`ws://${IP_SERVER}:8080/game`);
 
   socket.onopen = () => {
     console.log("Conexão estabelecida.");

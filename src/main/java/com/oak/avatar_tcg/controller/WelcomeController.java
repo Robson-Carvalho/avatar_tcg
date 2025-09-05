@@ -11,7 +11,7 @@ public class WelcomeController {
     public void welcome(HttpRequest request, HttpResponse response) throws IOException {
         try {
             response.json(Map.of(
-                "message", "Welcome to Oak Server!"
+                "message", "Welcome to OAK Server!"
             ));
         } catch (IllegalArgumentException e) {
             response.setStatus(400);
