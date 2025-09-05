@@ -8,6 +8,7 @@ docker rm -f avatar-server &&
 docker build -t avatar-tcg-server . &&
 docker run -d --name avatar-server -p 8080:8080 -e JWT_SECRET=4ab47e54c2f73ad4c0eb3974709721cd -e HOST_SERVER=10.0.0.151 avatar-tcg-server 
 
+
 docker stop avatar-client &&
 docker rm -f avatar-client &&
 docker build --pull --no-cache -t avatar-tcg-client . &&

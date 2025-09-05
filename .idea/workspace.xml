@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="fix: corrige bug de usar o match antes de verificar se existe">
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona leitura de IPv4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EXECUTE.md" beforeDir="false" afterPath="$PROJECT_DIR$/EXECUTE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/database/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/util/IPv4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/util/IPv4.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,8 +102,8 @@
     </configuration>
     <list>
       <item itemvalue="Application.Main" />
-      <item itemvalue="JavaScript Debug.index.html" />
       <item itemvalue="JUnit.All in avatar_tcg" />
+      <item itemvalue="JavaScript Debug.index.html" />
     </list>
     <recent_temporary>
       <list>
@@ -179,15 +174,7 @@
       <workItem from="1756941795308" duration="1074000" />
       <workItem from="1756949907203" duration="3737000" />
       <workItem from="1757091989913" duration="1036000" />
-      <workItem from="1757095898345" duration="4821000" />
-    </task>
-    <task id="LOCAL-00016" summary="styles: muda nome da pasta raiz">
-      <option name="closed" value="true" />
-      <created>1755790909187</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1755790909187</updated>
+      <workItem from="1757095898345" duration="5993000" />
     </task>
     <task id="LOCAL-00017" summary="docs: update readme.md">
       <option name="closed" value="true" />
@@ -573,7 +560,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756493538333</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="feat: adiciona leitura de IPv4">
+      <option name="closed" value="true" />
+      <created>1757101024421</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1757101024421</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -586,7 +581,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: adiciona forma de lidar com desconexão inesperada" />
     <MESSAGE value="feat: adiciona envio do estado do jogo" />
     <MESSAGE value="test: adiciona arquivos de teste" />
     <MESSAGE value="feat: adiciona forma de lidar com ações durante a partida" />
@@ -611,6 +605,7 @@
     <MESSAGE value="fix: resolve bug de desconexão após uma ação" />
     <MESSAGE value="feat: adiciona id da partida no estado do jogo" />
     <MESSAGE value="fix: corrige bug de usar o match antes de verificar se existe" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: corrige bug de usar o match antes de verificar se existe" />
+    <MESSAGE value="feat: adiciona leitura de IPv4" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona leitura de IPv4" />
   </component>
 </project>
