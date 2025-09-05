@@ -1,4 +1,4 @@
-const API_URL = "http://10.0.0.151:8080";
+const API_URL = `http://${IP_SEVER}:8080`;
 
 function showError(message) {
     const errorDiv = document.getElementById("errorMsg");

@@ -57,6 +57,6 @@ const server = net.createServer((socket) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`TCP server serving src/ at port ${PORT} | http://0.0.0.0:${PORT}`);
+    console.log(`TCP server serving src/ at port ${PORT} | http://localhost:${PORT}`);
 });
 
