@@ -4,8 +4,8 @@ import com.oak.avatar_tcg.game.*;
 import com.oak.avatar_tcg.service.AuthService;
 import com.oak.avatar_tcg.service.DeckService;
 import com.oak.avatar_tcg.util.JsonParser;
-import com.oak.http.WebSocket;
-import com.oak.http.WebSocketHandler;
+import com.oak.http.websocket.WebSocket;
+import com.oak.http.interfaces.WebSocketHandler;
 
 import java.io.IOException;
 
@@ -16,8 +16,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class WebSocketController {
     private final ConcurrentLinkedQueue<String> waitingQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<String, WebSocket> playerSockets = new ConcurrentHashMap<>();
-
     private final MatchManager matchManager = new MatchManager();
+
     private final AuthService authService = new AuthService();
 
     private synchronized void handleJoin(WebSocket socket, String userID) throws IOException {
@@ -53,7 +53,6 @@ public class WebSocketController {
             if (opponentId == null) {
                 waitingQueue.add(userID);
                 socket.send(JsonParser.toJson(new GameMessage("IN_QUEUE", "Aguardando oponente")));
-                System.out.println("Player: " + userID + " entrou na fila");
                 return;
             }
 
@@ -86,7 +85,7 @@ public class WebSocketController {
                 if (socketOpponent != null && socketOpponent.isOpen()) {
                     socketOpponent.send(JsonParser.toJson(new GameMessage("VICTORY_WITHDRAWAL", "Opponent disconnected")));
 
-                    if (!initiatedByClient) socketOpponent.close();
+                    if (!initiatedByClient) socketOpponent.send(JsonParser.toJson(new GameMessage("SERVER_CLOSING", "Fechamento limpo")));;
                 }
 
                 matchManager.endMatch(matchID, userID);
@@ -124,8 +123,11 @@ public class WebSocketController {
 
                 broadcastingGameState("VICTORY", playerOne, playerTwo, match.getId());
 
-                playerOne.close();
-                playerTwo.close();
+                playerOne.closeCleanly();
+                playerTwo.closeCleanly();
+
+                playerOne.send(JsonParser.toJson(new GameMessage("SERVER_CLOSING", "Fechamento limpo")));
+                playerTwo.send(JsonParser.toJson(new GameMessage("SERVER_CLOSING", "Fechamento limpo")));
 
                 matchManager.endMatch(matchID);
 
@@ -147,7 +149,6 @@ public class WebSocketController {
         }
     }
 
-
     public WebSocketHandler websocket() {
         return new WebSocketHandler() {
             private final DeckService deckService = new DeckService();
@@ -161,7 +162,6 @@ public class WebSocketController {
                     System.out.println("Error sending message: " + e.getMessage());
                 }
             }
-
 
             private boolean validateGameAction(WebSocket socket, String token, String userID, String matchID) {
                 try {

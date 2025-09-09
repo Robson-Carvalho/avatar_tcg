@@ -18,7 +18,6 @@ public class Database {
     public static Connection getConnection() throws SQLException {
         String ip = IPv4.getLocalIPv4();
 
-        System.out.println("Connecting to database...: "+ ip);
         String url = "jdbc:postgresql://"+ip+":5432/avatar_tcg";
         String user = "postgres";
         String password = "postgres";

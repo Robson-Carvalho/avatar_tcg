@@ -23,21 +23,11 @@ public class HttpRequest {
     }
 
     public void addParam(String name, String value) {params.put(name, value);}
-    public String getParam(String name) {return params.get(name);}
     public String getMethod() { return method; }
     public String getPath() { return path; }
-    public String getBody() { return body; }
 
     public String getHeader(String name) {
         return headers.getOrDefault(name.toLowerCase(), null);
-    }
-
-    public Map<String, String> getParams() {
-        return Collections.unmodifiableMap(params);
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
     }
 
     public String getBearerToken() {

@@ -1,4 +1,7 @@
-package com.oak.http;
+package com.oak.http.interfaces;
+
+import com.oak.http.HttpRequest;
+import com.oak.http.HttpResponse;
 
 import java.io.IOException;
 

@@ -1,7 +1,7 @@
 package com.oak.avatar_tcg.game;
 
 import com.oak.avatar_tcg.service.MatchService;
-import com.oak.http.WebSocket;
+import com.oak.http.websocket.WebSocket;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

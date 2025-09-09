@@ -1,4 +1,9 @@
-package com.oak.http;
+package com.oak.http.interfaces;
+
+import com.oak.http.HttpRequest;
+import com.oak.http.HttpResponse;
+import com.oak.http.websocket.WebSocket;
+import com.oak.http.websocket.WebSocketHandshake;
 
 import java.io.IOException;
 import java.util.Map;
@@ -7,7 +12,7 @@ public interface WebSocketHandler {
 
     // Handshake padrão
     default void handleHandshake(HttpRequest request, HttpResponse response) throws IOException {
-        WebSocket.doHandshake(request, response);
+        WebSocketHandshake.doHandshake(request, response);
     }
 
     // Chamado quando a conexão abre
