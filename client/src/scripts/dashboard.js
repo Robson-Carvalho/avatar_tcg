@@ -26,7 +26,7 @@ async function loadMatches() {
     showLoadingState();
 
     try {
-        const res = await fetch("http://localhost:8080/match", {
+        const res = await fetch(`http://${IP_SERVER}:8080/match`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 

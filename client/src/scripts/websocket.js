@@ -67,7 +67,6 @@ function connectToGame() {
   socket.onclose = () => {
     clearInterval(pingInterval);
 
-    console.log("Conexão encerrada.");
 
     if (!document.getElementById("victoryModal").classList.contains("hidden")) {
       return;
@@ -131,7 +130,7 @@ function hideVictoryModal() {
 
 function handleVictory(json) {
   const data = JSON.parse(json);
-  
+
   console.log("quem ganhou", data.playerWin, "ATENÇÃO!");
 
   const game = document.getElementById("game");
@@ -144,7 +143,7 @@ function handleVictory(json) {
     if (gameContainer) gameContainer.classList.remove("hidden");
     if (victoryModal) victoryModal.classList.remove("hidden");
   } else {
-      console.log("Perdeu")
+    console.log("Perdeu");
   }
 }
 

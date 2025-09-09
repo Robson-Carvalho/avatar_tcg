@@ -4,21 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona leitura de IPv4">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/config/Config.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/websocket/WebSocketHandshake.java" afterDir="false" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="refactor: remove código desnecessário e corrige bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/database/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/Match.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/DeckService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/interfaces/HttpHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRouter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRouter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/websocket/WebSocket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/WebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/interfaces/WebSocketHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/websocket/WebSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/websocket/WebSocket.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,15 +183,7 @@
       <workItem from="1756949907203" duration="3737000" />
       <workItem from="1757091989913" duration="1036000" />
       <workItem from="1757095898345" duration="5993000" />
-      <workItem from="1757450431447" duration="8206000" />
-    </task>
-    <task id="LOCAL-00017" summary="docs: update readme.md">
-      <option name="closed" value="true" />
-      <created>1755791996112</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1755791996112</updated>
+      <workItem from="1757450431447" duration="8703000" />
     </task>
     <task id="LOCAL-00018" summary="docs: update readme.md">
       <option name="closed" value="true" />
@@ -587,7 +569,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757101024421</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="refactor: remove código desnecessário e corrige bugs">
+      <option name="closed" value="true" />
+      <created>1757459027190</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1757459027191</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -600,7 +590,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: adiciona envio do estado do jogo" />
     <MESSAGE value="test: adiciona arquivos de teste" />
     <MESSAGE value="feat: adiciona forma de lidar com ações durante a partida" />
     <MESSAGE value="feat: remove rota welcome" />
@@ -625,6 +614,7 @@
     <MESSAGE value="feat: adiciona id da partida no estado do jogo" />
     <MESSAGE value="fix: corrige bug de usar o match antes de verificar se existe" />
     <MESSAGE value="feat: adiciona leitura de IPv4" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona leitura de IPv4" />
+    <MESSAGE value="refactor: remove código desnecessário e corrige bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: remove código desnecessário e corrige bugs" />
   </component>
 </project>

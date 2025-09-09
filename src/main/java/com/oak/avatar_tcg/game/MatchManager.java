@@ -96,7 +96,9 @@ public class MatchManager {
                 match.getGameState().setPlayerWin(match.getPlayerOneID());
             }
 
+            // persistence
             com.oak.avatar_tcg.model.Match newMatch = new com.oak.avatar_tcg.model.Match();
+
             newMatch.setPlayerOneID(match.getPlayerOneID());
             newMatch.setPlayerTwoID(match.getPlayerTwoID());
             newMatch.setPlayerWin(match.getGameState().getPlayerWin());
@@ -118,7 +120,9 @@ public class MatchManager {
                 playerToMatch.remove(match.getPlayerTwoID());
             }
 
+            // persistence
             com.oak.avatar_tcg.model.Match newMatch = new com.oak.avatar_tcg.model.Match();
+
             newMatch.setPlayerOneID(match.getPlayerOneID());
             newMatch.setPlayerTwoID(match.getPlayerTwoID());
             newMatch.setPlayerWin(match.getGameState().getPlayerWin());

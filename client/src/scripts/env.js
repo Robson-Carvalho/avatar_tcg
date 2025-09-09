@@ -1,1 +1,1 @@
-const IP_SERVER = "10.0.0.198"
+const IP_SERVER = "10.0.0.151"

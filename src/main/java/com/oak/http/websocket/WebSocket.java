@@ -154,24 +154,6 @@ public class WebSocket {
         return !socket.isClosed() && socket.isConnected();
     }
 
-    public void closeCleanly() {
-        try {
-            if (!socket.isClosed()) {
-                // Avisa ao cliente que não vamos mais enviar dados
-                socket.shutdownOutput();
-
-                // Opcional: fecha a leitura também
-                socket.shutdownInput();
-
-                // Por fim, fecha o socket
-                socket.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public void close() throws IOException {
         if (!socket.isClosed()) {
             socket.close();

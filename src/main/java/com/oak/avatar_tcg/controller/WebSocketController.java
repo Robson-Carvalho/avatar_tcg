@@ -123,11 +123,8 @@ public class WebSocketController {
 
                 broadcastingGameState("VICTORY", playerOne, playerTwo, match.getId());
 
-                playerOne.closeCleanly();
-                playerTwo.closeCleanly();
-
-                playerOne.send(JsonParser.toJson(new GameMessage("SERVER_CLOSING", "Fechamento limpo")));
-                playerTwo.send(JsonParser.toJson(new GameMessage("SERVER_CLOSING", "Fechamento limpo")));
+                playerOne.close();
+                playerTwo.close();
 
                 matchManager.endMatch(matchID);
 
