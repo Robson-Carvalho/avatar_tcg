@@ -17,14 +17,16 @@ public class MatchService {
     }
 
     public List<Match> findAllByUserID(String id) {
-        List<Match> matches = new ArrayList<>();
+        synchronized (matchRepository) {
+            List<Match> matches = new ArrayList<>();
 
-        for (Match m : matchRepository.findAll()) {
-            if (m.getPlayerOneID().equals(id) || m.getPlayerTwoID().equals(id)) {
-                matches.add(m);
+            for (Match m : matchRepository.findAll()) {
+                if (m.getPlayerOneID().equals(id) || m.getPlayerTwoID().equals(id)) {
+                    matches.add(m);
+                }
             }
-        }
 
-        return matches;
+            return matches;
+        }
     }
 }

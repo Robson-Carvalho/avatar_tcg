@@ -27,30 +27,34 @@ public class CardService {
     }
 
     public List<Card> findByUserId(String userId) {
-        List<Card> cards = new ArrayList<>();
+        synchronized (cardRepository) {
+            List<Card> cards = new ArrayList<>();
 
-        for (Card card : cardRepository.findAll()) {
-            if (userId.equals(card.getUserId())) {
-                cards.add(card);
+            for (Card card : cardRepository.findAll()) {
+                if (userId.equals(card.getUserId())) {
+                    cards.add(card);
+                }
             }
+            return cards;
         }
-        return cards;
     }
 
 
     public List<Card> findDeckByUserId(String userId) {
-        Deck deck = deckService.findByUserId(userId);
-        List<Card> inventory = findByUserId(userId);
+        synchronized (cardRepository) {
+            Deck deck = deckService.findByUserId(userId);
+            List<Card> inventory = findByUserId(userId);
 
-        List<Card> cards = new ArrayList<>();
+            List<Card> cards = new ArrayList<>();
 
-        for (Card card : inventory) {
-            if (deck.getCards().contains(card.getId())) {
-                cards.add(card);
+            for (Card card : inventory) {
+                if (deck.getCards().contains(card.getId())) {
+                    cards.add(card);
+                }
             }
-        }
 
-        return cards;
+            return cards;
+        }
     }
 
 

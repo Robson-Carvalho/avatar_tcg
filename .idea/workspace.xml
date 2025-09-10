@@ -6,9 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="refactor: remove código desnecessário e corrige bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/WebSocketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/game/MatchManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/websocket/WebSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/websocket/WebSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EXECUTE.md" beforeDir="false" afterPath="$PROJECT_DIR$/EXECUTE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/MatchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/MatchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +185,7 @@
       <workItem from="1756949907203" duration="3737000" />
       <workItem from="1757091989913" duration="1036000" />
       <workItem from="1757095898345" duration="5993000" />
-      <workItem from="1757450431447" duration="8703000" />
+      <workItem from="1757450431447" duration="16245000" />
     </task>
     <task id="LOCAL-00018" summary="docs: update readme.md">
       <option name="closed" value="true" />

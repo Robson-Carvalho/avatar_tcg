@@ -14,18 +14,3 @@ docker build --pull --no-cache -t avatar-tcg-client ./client &&
 docker run -d --name avatar-client -p 3000:3000 avatar-tcg-client
 
 
-### Limpar tudo
-# Remove container se existir
-docker rm -f avatar-tcg-client 2>/dev/null || true
-
-# Remove imagem se existir
-docker rmi -f avatar-tcg-client 2>/dev/null || true
-
-# Limpa cache de build
-docker builder prune -f
-
-# Build fresco
-docker build --pull --no-cache -t avatar-tcg-client .
-
-# Verifica a imagem
-docker images | grep avatar-tcg-client
