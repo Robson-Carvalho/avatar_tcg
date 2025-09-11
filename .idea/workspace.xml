@@ -4,20 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="refactor: adiciona forma de evitar vários acessos ao banco simultâneamente">
-      <change afterPath="$PROJECT_DIR$/stress/main.py" afterDir="false" />
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="refactor: adiciona melhoria no uso de mutex e adiciona rota de exclusão de jogadores.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OakServer.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/CardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/DeckController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/DeckController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/migrations/V3__Create_decks_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/migrations/V3__Create_decks_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,23 +185,7 @@
       <workItem from="1757091989913" duration="1036000" />
       <workItem from="1757095898345" duration="5993000" />
       <workItem from="1757450431447" duration="16309000" />
-      <workItem from="1757543228683" duration="6695000" />
-    </task>
-    <task id="LOCAL-00019" summary="docs: update readme.md">
-      <option name="closed" value="true" />
-      <created>1755792492936</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1755792492936</updated>
-    </task>
-    <task id="LOCAL-00020" summary="feat: suporte de envio e recebimento de json via websocket">
-      <option name="closed" value="true" />
-      <created>1755829953729</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1755829953729</updated>
+      <workItem from="1757543228683" duration="7815000" />
     </task>
     <task id="LOCAL-00021" summary="feat: adiciona client">
       <option name="closed" value="true" />
@@ -590,7 +563,23 @@
       <option name="project" value="LOCAL" />
       <updated>1757469171658</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="feat: adiciona script de teste de carga">
+      <option name="closed" value="true" />
+      <created>1757550091535</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1757550091535</updated>
+    </task>
+    <task id="LOCAL-00069" summary="refactor: adiciona melhoria no uso de mutex e adiciona rota de exclusão de jogadores.">
+      <option name="closed" value="true" />
+      <created>1757550140796</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1757550140797</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -603,8 +592,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: adiciona forma de lidar com ações durante a partida" />
-    <MESSAGE value="feat: remove rota welcome" />
     <MESSAGE value="test: remove arquivos de teste" />
     <MESSAGE value="test: remove dependência de teste" />
     <MESSAGE value="feat: remove método welcome" />
@@ -628,6 +615,8 @@
     <MESSAGE value="feat: adiciona leitura de IPv4" />
     <MESSAGE value="refactor: remove código desnecessário e corrige bugs" />
     <MESSAGE value="refactor: adiciona forma de evitar vários acessos ao banco simultâneamente" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: adiciona forma de evitar vários acessos ao banco simultâneamente" />
+    <MESSAGE value="feat: adiciona script de teste de carga" />
+    <MESSAGE value="refactor: adiciona melhoria no uso de mutex e adiciona rota de exclusão de jogadores." />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: adiciona melhoria no uso de mutex e adiciona rota de exclusão de jogadores." />
   </component>
 </project>
