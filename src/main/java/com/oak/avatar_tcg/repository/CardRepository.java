@@ -50,27 +50,34 @@ public class CardRepository {
         return card;
     }
 
-    public void save(Card card) {
+    public void saveAll(List<Card> cards) {
         String sql = "INSERT INTO cards (id, user_id, name, element, phase, attack, life, defense, rarity, description) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, card.getId());
-            stmt.setString(2, card.getUserId());
-            stmt.setString(3, card.getName());
-            stmt.setString(4, card.getElement().name());
-            stmt.setString(5, card.getPhase().name());
-            stmt.setInt(6, card.getAttack());
-            stmt.setInt(7, card.getLife());
-            stmt.setInt(8, card.getDefense());
-            stmt.setString(9, card.getRarity().name());
-            stmt.setString(10, card.getDescription());
+            conn.setAutoCommit(false);
 
-            stmt.executeUpdate();
+            for (Card card : cards) {
+                stmt.setString(1, card.getId());
+                stmt.setString(2, card.getUserId());
+                stmt.setString(3, card.getName());
+                stmt.setString(4, card.getElement().name());
+                stmt.setString(5, card.getPhase().name());
+                stmt.setInt(6, card.getAttack());
+                stmt.setInt(7, card.getLife());
+                stmt.setInt(8, card.getDefense());
+                stmt.setString(9, card.getRarity().name());
+                stmt.setString(10, card.getDescription());
+                stmt.addBatch();
+            }
+
+            stmt.executeBatch();
+            conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 }

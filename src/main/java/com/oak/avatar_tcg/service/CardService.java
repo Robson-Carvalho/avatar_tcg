@@ -132,10 +132,10 @@ public class CardService {
             card.setLife(chosenCard.getLife());
 
             packageCards.add(card);
+        }
 
-            synchronized(cardRepository){
-                cardRepository.save(card);
-            }
+        synchronized(cardRepository){
+            cardRepository.saveAll(packageCards);
         }
 
         return packageCards;

@@ -18,7 +18,7 @@ DECK_ENDPOINT = f"{BASE_URL}/deck"  # endpoint para colocar cartas no deck
 WS_URL = "ws://10.0.0.151:8080/game"  # endpoint WebSocket
 
 BUSRT = False   # True = todas threads esperam para começar juntas
-NUM_THREADS = 50  # Ajuste para 50, 100, 200, 500, etc.
+NUM_THREADS = 100  # Ajuste para 50, 100, 200, 500, etc.
 
 created_users = []  # IDs para limpar depois
 
@@ -101,37 +101,41 @@ def test_user_flow(i, barrier=None):
 
         # 3 - Abrir pacote
         headers = {"Authorization": f"Bearer {token}"}
-        r = requests.get(OPEN_CARD_ENDPOINT, headers=headers)
-        if r.status_code != 200:
-            report["error"] = f"Open card failed ({r.status_code})"
-            return report
-        data_cards = r.json()
-        report["open_card"] = True
+        for _ in range(20):
+            r = requests.get(OPEN_CARD_ENDPOINT, headers=headers)
+            if r.status_code != 200:
+                report["error"] = f"Open card failed ({r.status_code})"
+                return report
+            data_cards = r.json()
+            report["open_card"] = True
 
-        # 4 - Colocar cartas no deck
         cards = data_cards.get("cards", [])
-        card_ids = [card.get("id") for card in cards[:5]]
-        while len(card_ids) < 5:
-            card_ids.append(None)
-        deck_payload = {
-            "id": user_id,
-            "userId": user_id,
-            "card1Id": card_ids[0],
-            "card2Id": card_ids[1],
-            "card3Id": card_ids[2],
-            "card4Id": card_ids[3],
-            "card5Id": card_ids[4]
-        }
-        r = requests.put(DECK_ENDPOINT, json=deck_payload, headers=headers)
-        if r.status_code not in (200, 201):
-            report["error"] = f"Deck placement failed ({r.status_code})"
-            return report
-        report["deck"] = True
 
-        # 5 - WebSocket: entrar na fila e desistir
-        ws_simulation(token, user_id, stay_in_queue=random.randint(1, 4))
-        report["ws_join"] = True
-        report["ws_exit"] = True
+        if len(cards) > 0:
+            # 4 - Colocar cartas no deck
+            cards = data_cards.get("cards", [])
+            card_ids = [card.get("id") for card in cards[:5]]
+            while len(card_ids) < 5:
+                card_ids.append(None)
+            deck_payload = {
+                "id": user_id,
+                "userId": user_id,
+                "card1Id": card_ids[0],
+                "card2Id": card_ids[1],
+                "card3Id": card_ids[2],
+                "card4Id": card_ids[3],
+                "card5Id": card_ids[4]
+            }
+            r = requests.put(DECK_ENDPOINT, json=deck_payload, headers=headers)
+            if r.status_code not in (200, 201):
+                report["error"] = f"Deck placement failed ({r.status_code})"
+                return report
+            report["deck"] = True
+
+            # 5 - WebSocket: entrar na fila e desistir
+            ws_simulation(token, user_id, stay_in_queue=random.randint(1, 4))
+            report["ws_join"] = True
+            report["ws_exit"] = True
 
     except Exception as e:
         report["error"] = str(e)

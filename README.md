@@ -100,7 +100,7 @@ cd avatar_tcg/stress
 
 ```bash
 python3 -m venv venv
-source venv/bin/activate
+source venv/Scripts/activate
 ```
 
 3. Instale as dependências necessárias:
@@ -111,11 +111,13 @@ pip install requests websocket-client
 
 4. Configure o IP do servidor no arquivo `stress/main.py` para corresponder ao IP da máquina que está executando o servidor backend (definido em `HOST_SERVER`).
 5. Execute os testes de carga:
+
 ```bash
 python main.py
 ```
-> _**Atenção**: Certifique-se de que o IP do servidor esteja corretamente configurado no arquivo `main.py` antes de executar os testes._
-6. Para sair do ambiente venv execute:
+
+> _**Atenção**: Certifique-se de que o IP do servidor esteja corretamente configurado no arquivo `main.py` antes de executar os testes._ 6. Para sair do ambiente venv execute:
+
 ```bash
 deactivate
 ```
