@@ -25,6 +25,7 @@ public class Main {
         // Auth
         server.post("/auth/login", authController::login);
         server.post("/auth/register", authController::register);
+        server.delete("/auth", authController::delete);
 
         // Card
         server.get("/card", cardController::getCards);

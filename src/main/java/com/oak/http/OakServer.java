@@ -22,10 +22,9 @@ public class OakServer {
         this.port = port;
         this.router = new HttpRouter();
 
-        // Configura ThreadPool com base no sistema
         int cores = Runtime.getRuntime().availableProcessors();
-        int corePoolSize = cores * 2;     // threads sempre ativas
-        int maxPoolSize = cores * 4;      // máximo de threads
+        int corePoolSize = cores * 4;     // threads sempre ativas
+        int maxPoolSize = cores * 8;      // máximo de threads
         long keepAlive = 60L;              // segundos
 
         BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(500); // fila de conexões

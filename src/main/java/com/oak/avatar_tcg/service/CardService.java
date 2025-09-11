@@ -41,22 +41,19 @@ public class CardService {
 
 
     public List<Card> findDeckByUserId(String userId) {
-        synchronized (cardRepository) {
-            Deck deck = deckService.findByUserId(userId);
-            List<Card> inventory = findByUserId(userId);
+        List<Card> inventory = findByUserId(userId);
+        Deck deck = deckService.findByUserId(userId);
 
-            List<Card> cards = new ArrayList<>();
+        List<Card> cards = new ArrayList<>();
 
-            for (Card card : inventory) {
-                if (deck.getCards().contains(card.getId())) {
-                    cards.add(card);
-                }
+        for (Card card : inventory) {
+            if (deck.getCards().contains(card.getId())) {
+                cards.add(card);
             }
-
-            return cards;
         }
-    }
 
+        return cards;
+    }
 
     private RarityCard chooseRarity() {
         int rand = (int) (Math.random() * 100);
@@ -70,7 +67,7 @@ public class CardService {
         return RarityCard.LEGENDARY; // 1%
     }
 
-    public synchronized List<Card> openPackage(String userId) throws Exception {
+    public List<Card> openPackage(String userId) throws Exception {
         User user = userService.findById(userId);
 
         if(user==null){
@@ -134,8 +131,11 @@ public class CardService {
             card.setPhase(chosenCard.getPhase());
             card.setLife(chosenCard.getLife());
 
-            cardRepository.save(card);
             packageCards.add(card);
+
+            synchronized(cardRepository){
+                cardRepository.save(card);
+            }
         }
 
         return packageCards;

@@ -51,7 +51,7 @@ public class CardController {
             response.json(Map.of(
                     "cards", cards
             ));
-
+            System.out.println("Package opened");
         } catch (IllegalArgumentException e) {
             response.setStatus(400);
             response.json(Map.of("error", e.getMessage()));

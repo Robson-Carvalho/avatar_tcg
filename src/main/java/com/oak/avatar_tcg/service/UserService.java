@@ -16,56 +16,67 @@ public class UserService {
         this.deckRepository = new DeckRepository();
     }
 
-    public User register(User user) throws SQLException, IllegalArgumentException {
-        synchronized (userRepository) {
-            List<User> users = userRepository.findAll();
+    public void delete(String id){
+        List<User> users = userRepository.findAll();
 
-            for (User u : users) {
-                if (u.getEmail().equals(user.getEmail()) || u.getNickname().equals(user.getNickname())) {
-                    throw new IllegalArgumentException("Username already exists");
-                }
+        for (User u : users) {
+            if (u.getId().equals(id)) {
+
+                userRepository.delete(id);
+
+                return;
             }
-
-            userRepository.save(user);
-
-            Deck deck = new Deck();
-            deck.setUserId(user.getId());
-            deck.setCard1Id(null);
-            deck.setCard2Id(null);
-            deck.setCard3Id(null);
-            deck.setCard4Id(null);
-            deck.setCard5Id(null);
-
-            deckRepository.save(deck);
-
-            return user;
         }
+
+        throw new IllegalArgumentException("User not found");
+    }
+
+    public User register(User user) throws SQLException, IllegalArgumentException {
+        List<User> users = userRepository.findAll();
+
+        for (User u : users) {
+            if (u.getEmail().equals(user.getEmail()) || u.getNickname().equals(user.getNickname())) {
+                throw new IllegalArgumentException("Username already exists");
+            }
+        }
+
+        userRepository.save(user);
+
+        Deck deck = new Deck();
+        deck.setUserId(user.getId());
+        deck.setCard1Id(null);
+        deck.setCard2Id(null);
+        deck.setCard3Id(null);
+        deck.setCard4Id(null);
+        deck.setCard5Id(null);
+
+        synchronized (userRepository) {
+            deckRepository.save(deck);
+        }
+
+        return user;
     }
 
     public User findByEmail(String email) {
-        synchronized (userRepository) {
-            List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAll();
 
-            for (User u : users) {
-                if (u.getEmail().equals(email)) {
-                    return u;
-                }
+        for (User u : users) {
+            if (u.getEmail().equals(email)) {
+                return u;
             }
-
-            return null;
         }
+
+        return null;
     }
 
     public User findById(String id) {
-        synchronized (userRepository) {
-            List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAll();
 
-            for (User u : users) {
-                if (u.getId().equals(id)) {
-                    return u;
-                }
+        for (User u : users) {
+            if (u.getId().equals(id)) {
+                return u;
             }
-
-            return null;}
+        }
+        return null;
     }
 }

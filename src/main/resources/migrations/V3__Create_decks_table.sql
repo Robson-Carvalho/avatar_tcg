@@ -6,12 +6,12 @@ CREATE TABLE decks (
    card3_id VARCHAR(36) NULL,
    card4_id VARCHAR(36) NULL,
    card5_id VARCHAR(36) NULL,
-   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-   FOREIGN KEY (card1_id) REFERENCES cards(id),
-   FOREIGN KEY (card2_id) REFERENCES cards(id),
-   FOREIGN KEY (card3_id) REFERENCES cards(id),
-   FOREIGN KEY (card4_id) REFERENCES cards(id),
-   FOREIGN KEY (card5_id) REFERENCES cards(id)
+   FOREIGN KEY (user_id)  REFERENCES users(id) ON DELETE CASCADE,
+   FOREIGN KEY (card1_id) REFERENCES cards(id) ON DELETE CASCADE,
+   FOREIGN KEY (card2_id) REFERENCES cards(id) ON DELETE CASCADE,
+   FOREIGN KEY (card3_id) REFERENCES cards(id) ON DELETE CASCADE,
+   FOREIGN KEY (card4_id) REFERENCES cards(id) ON DELETE CASCADE,
+   FOREIGN KEY (card5_id) REFERENCES cards(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_decks_user_id ON decks(user_id);

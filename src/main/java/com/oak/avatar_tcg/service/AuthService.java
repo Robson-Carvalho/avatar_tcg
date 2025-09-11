@@ -26,6 +26,10 @@ public class AuthService {
                 .compact();
     }
 
+    public void delete(String id) throws Exception {
+        userService.delete(id);
+    }
+
     public String validateToken(String token) throws Exception {
         try {
             return Jwts.parserBuilder()

@@ -40,13 +40,40 @@ public class AuthController {
                     "token", token,
                     "user", userWithoutPassword
             ));
-
+            System.out.println("User logged in");
         } catch (IllegalArgumentException e) {
             response.setStatus(400);
             response.json(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             response.setStatus(400);
             response.json(Map.of("error", "E-mail ou senha inválidos"));
+        }
+    }
+
+    public void delete(HttpRequest request, HttpResponse response) throws IOException {
+        try {
+            Map<String, Object> body = request.getJsonBodyAsMap();
+
+            String id = (String) body.get("id");
+
+            if (id == null) {
+                response.setStatus(400);
+                response.json(Map.of("error", "ID é requerido"));
+                return;
+            }
+
+            authService.delete(id);
+
+            response.json(Map.of(
+                    "message", "Player apagado com sucesso"
+            ));
+            System.out.println("User deleted");
+        } catch (IllegalArgumentException e) {
+            response.setStatus(400);
+            response.json(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            response.setStatus(400);
+            response.json(Map.of("error", "ID inválido"));
         }
     }
 
@@ -75,6 +102,8 @@ public class AuthController {
                     "token", token,
                     "user", userWithoutPassword
             ));
+
+            System.out.println("User registered");
         } catch (SQLException e) {
             response.setStatus(500);
             response.json(Map.of("error", "Database error"));

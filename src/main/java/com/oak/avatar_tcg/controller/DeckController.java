@@ -101,7 +101,7 @@ public class DeckController {
             response.json(Map.of(
                     "deck", updatedDeck
             ));
-
+            System.out.println("Deck updated");
         } catch (Exception e) {
             response.setStatus(400);
             response.json(Map.of("error", e.getMessage()));
