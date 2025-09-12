@@ -8,7 +8,7 @@ import websocket
 import json
 
 # ================= CONFIGURAÇÃO =================
-IP_HOST = "10.0.0.151"
+IP_HOST = "10.0.0.151" # alterar para o IPv4 do host que o servidor está rodando
 BASE_URL = f"http://{IP_HOST}:8080"
 REGISTER_ENDPOINT = f"{BASE_URL}/auth/register"
 LOGIN_ENDPOINT = f"{BASE_URL}/auth/login"
@@ -18,7 +18,8 @@ DECK_ENDPOINT = f"{BASE_URL}/deck"  # endpoint para colocar cartas no deck
 WS_URL = "ws://10.0.0.151:8080/game"  # endpoint WebSocket
 
 BUSRT = False   # True = todas threads esperam para começar juntas
-NUM_THREADS = 100  # Ajuste para 50, 100, 200, 500, etc.
+NUM_THREADS = 500  # Número de Threads
+NUM_OPEN_CARDS = 5  # Controle de quantas cartas abrir por usuário
 
 created_users = []  # IDs para limpar depois
 
@@ -27,7 +28,7 @@ def random_email():
     """Gera email aleatório único"""
     return ''.join(random.choices(string.ascii_lowercase, k=6)) + "@gmail.com"
 
-def ws_simulation(token, user_id, stay_in_queue=2):
+def ws_simulation(token, user_id, stay_in_queue):
     """Simula entrar na fila e depois desistir"""
     try:
         ws = websocket.WebSocket()
@@ -101,7 +102,7 @@ def test_user_flow(i, barrier=None):
 
         # 3 - Abrir pacote
         headers = {"Authorization": f"Bearer {token}"}
-        for _ in range(20):
+        for _ in range(NUM_OPEN_CARDS):
             r = requests.get(OPEN_CARD_ENDPOINT, headers=headers)
             if r.status_code != 200:
                 report["error"] = f"Open card failed ({r.status_code})"
@@ -133,7 +134,7 @@ def test_user_flow(i, barrier=None):
             report["deck"] = True
 
             # 5 - WebSocket: entrar na fila e desistir
-            ws_simulation(token, user_id, stay_in_queue=random.randint(1, 4))
+            ws_simulation(token, user_id, 1)
             report["ws_join"] = True
             report["ws_exit"] = True
 
@@ -144,17 +145,19 @@ def test_user_flow(i, barrier=None):
 
 def cleanup_users():
     """Apaga todos os usuários criados durante o teste"""
-    print("\n=== Limpando usuários criados ===")
+    print(f"\n{'='*60}")
+    print("🗑️ Limpando usuários criados")
+    print(f"{'='*60}")
     for uid in created_users:
         try:
             payload = {"id": uid}
             r = requests.delete(DELETE_USER_ENDPOINT, json=payload)
-            if r.status_code == 200:
-                print(f"Usuário {uid} deletado com sucesso.")
-            else:
+            if r.status_code != 200:
                 print(f"Falha ao deletar {uid}: {r.status_code} - {r.text}")
         except Exception as e:
             print(f"Erro ao deletar {uid}: {e}")
+
+    print(f"   • Usuários de teste excluídos com sucesso.")
 
 def stress_test(num_threads=50, BUSRT=True):
     start = time.time()
@@ -168,8 +171,9 @@ def stress_test(num_threads=50, BUSRT=True):
             results.append(future.result())
 
     end = time.time()
+    total_time = end - start
 
-    # Relatório
+    # Cálculos estatísticos
     total = len(results)
     reg_ok = sum(1 for r in results if r["register"])
     log_ok = sum(1 for r in results if r["login"])
@@ -178,17 +182,54 @@ def stress_test(num_threads=50, BUSRT=True):
     ws_ok = sum(1 for r in results if r.get("ws_join") and r.get("ws_exit"))
     errors = [r for r in results if r["error"]]
 
-    modo = "BUSRT" if BUSRT else "INDEPENDENTE"
-    print(f"\n=== RELATÓRIO DE TESTE ({num_threads} threads, {modo}) ===")
-    print(f"Tempo total: {end - start:.2f}s")
-    print(f"Registro OK: {reg_ok}/{total}")
-    print(f"Login OK: {log_ok}/{total}")
-    print(f"Abrir carta OK: {open_ok}/{total}")
-    print(f"Deck OK: {deck_ok}/{total}")
-    print(f"WebSocket fila/desistência OK: {ws_ok}/{total}")
-    print(f"Erros: {len(errors)}")
-    for e in errors[:5]:
-        print(f" - Thread {e['thread']}: {e['error']}")
+    # Cálculo de percentuais
+    reg_percent = (reg_ok / total) * 100 if total > 0 else 0
+    log_percent = (log_ok / total) * 100 if total > 0 else 0
+    open_percent = (open_ok / total) * 100 if total > 0 else 0
+    deck_percent = (deck_ok / total) * 100 if total > 0 else 0
+    ws_percent = (ws_ok / total) * 100 if total > 0 else 0
+    error_percent = (len(errors) / total) * 100 if total > 0 else 0
+
+    # Contagem de requisições totais (AGORA COM VARIÁVEL NUM_OPEN_CARDS)
+    total_requests = (reg_ok * 1) + (log_ok * 1) + (open_ok * NUM_OPEN_CARDS) + (deck_ok * 1) + (ws_ok * 3)
+    requests_per_second = total_requests / total_time if total_time > 0 else 0
+
+    modo = "BURST 🚀" if BUSRT else "INDEPENDENTE ⏱️"
+
+    print(f"\n{'='*60}")
+    print(f"📊 RELATÓRIO DE TESTE - {num_threads} THREADS - MODO: {modo}")
+    print(f"{'='*60}")
+    print(f"⏰ Tempo total: {total_time:.2f}s")
+    print(f"📈 Throughput: {requests_per_second:.1f} req/s")
+    print(f"🔁 Total de requisições: {total_requests}")
+    print(f"🎴 Cartas por usuário: {NUM_OPEN_CARDS}")
+    print(f"{'='*60}")
+    print("✅ ETAPAS DO FLUXO:")
+    print(f"   • Registro: {reg_ok}/{total} ({reg_percent:.1f}%) {'🎯' if reg_percent == 100 else '⚠️'}")
+    print(f"   • Login: {log_ok}/{total} ({log_percent:.1f}%) {'🎯' if log_percent == 100 else '⚠️'}")
+    print(f"   • Abrir cartas: {open_ok}/{total} ({open_percent:.1f}%) - {NUM_OPEN_CARDS} por usuário")
+    print(f"   • Configurar deck: {deck_ok}/{total} ({deck_percent:.1f}%) {'🎯' if deck_percent == 100 else '⚠️'}")
+    print(f"   • WebSocket (fila/desistência): {ws_ok}/{total} ({ws_percent:.1f}%) {'🎯' if ws_percent == 100 else '⚠️'}")
+    print(f"{'='*60}")
+    print(f"❌ Erros: {len(errors)}/{total} ({error_percent:.1f}%)")
+
+    if errors:
+        print(f"🔍 Top 5 erros:")
+        for i, e in enumerate(errors[:5], 1):
+            print(f"   {i}. Thread {e['thread']}: {e['error']}")
+    else:
+        print("🎉 Todos os fluxos completados com sucesso!")
+
+    print(f"{'='*60}")
+
+    # Detalhamento das requisições por etapa
+    print("📋 DETALHAMENTO DE REQUISIÇÕES:")
+    print(f"   • Registro: {reg_ok} req")
+    print(f"   • Login: {log_ok} req")
+    print(f"   • Abrir cartas: {open_ok * NUM_OPEN_CARDS} req ({open_ok} usuários × {NUM_OPEN_CARDS})")
+    print(f"   • Deck: {deck_ok} req")
+    print(f"   • WebSocket: {ws_ok * 3} req ({ws_ok} conexões × 3 mensagens)")
+    print(f"{'='*60}")
 
     return results
 
