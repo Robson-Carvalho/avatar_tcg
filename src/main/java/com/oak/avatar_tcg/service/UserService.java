@@ -22,7 +22,9 @@ public class UserService {
         for (User u : users) {
             if (u.getId().equals(id)) {
 
-                userRepository.delete(id);
+                synchronized (userRepository) {
+                    userRepository.delete(id);
+                }
 
                 return;
             }
