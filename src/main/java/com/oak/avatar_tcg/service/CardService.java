@@ -7,10 +7,14 @@ import com.oak.avatar_tcg.model.SystemCard;
 import com.oak.avatar_tcg.model.User;
 import com.oak.avatar_tcg.repository.CardRepository;
 import com.oak.avatar_tcg.repository.SystemCardRepository;
+
+import java.util.Map;
 import java.util.Random;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class CardService {
     private final Random random = new Random();
@@ -55,89 +59,64 @@ public class CardService {
         return cards;
     }
 
-    private RarityCard chooseRarity() {
-        int rand = (int) (Math.random() * 100);
-        int chanceCommon = 80;
-        int chanceRare = 15;
-        int chanceEpic = 4;
-
-        if (rand < chanceCommon) return RarityCard.COMMON; // 80%
-        if (rand < chanceCommon + chanceRare) return RarityCard.RARE; // 15%
-        if (rand < chanceCommon + chanceRare + chanceEpic) return RarityCard.EPIC; // 4%
-        return RarityCard.LEGENDARY; // 1%
-    }
-
     public List<Card> openPackage(String userId) throws Exception {
         User user = userService.findById(userId);
-
-        if(user==null){
+        if (user == null) {
             throw new Exception("User not found");
-        };
-
-        List<SystemCard> systemCards;
-        List<Card> packageCards = new ArrayList<>();
-
-        List<SystemCard> systemCardsCommon = new ArrayList<>();
-        List<SystemCard> systemCardsRare = new ArrayList<>();
-        List<SystemCard> systemCardsEpic = new ArrayList<>();
-        List<SystemCard> systemCardsLegendary = new ArrayList<>();
-
-        systemCards = systemCardRepository.findAllSystemCards();
-
-        for (SystemCard systemCard : systemCards) {
-            if(systemCard.getRarity().equals(RarityCard.COMMON)) {
-                systemCardsCommon.add(systemCard);
-            }
-            else if(systemCard.getRarity().equals(RarityCard.RARE)) {
-                systemCardsRare.add(systemCard);
-            }
-            else if(systemCard.getRarity().equals(RarityCard.EPIC)) {
-                systemCardsEpic.add(systemCard);
-            }
-            else{
-                systemCardsLegendary.add(systemCard);
-            }
         }
 
-        for(int i = 0; i < 5; i++){
-            RarityCard rarity = chooseRarity();
-            SystemCard chosenCard;
+        // Pré-processar as cartas do sistema por raridade uma única vez
+        Map<RarityCard, List<SystemCard>> systemCardsByRarity = systemCardRepository.findAllSystemCards()
+                .stream()
+                .collect(Collectors.groupingBy(SystemCard::getRarity));
 
-            if(rarity.equals(RarityCard.COMMON)){
-                int index = random.nextInt(systemCardsCommon.size());
-                chosenCard =  systemCardsCommon.get(index);
-            }
-            else if(rarity.equals(RarityCard.RARE)){
-                int index = random.nextInt(systemCardsRare.size());
-                chosenCard =  systemCardsRare.get(index);
-            }
-            else if(rarity.equals(RarityCard.EPIC)){
-                int index = random.nextInt(systemCardsEpic.size());
-                chosenCard =  systemCardsEpic.get(index);
-            }
-            else{
-                int index = random.nextInt(systemCardsLegendary.size());
-                chosenCard =  systemCardsLegendary.get(index);
-            }
+        // Gerar 5 cartas aleatórias
+        List<Card> packageCards = IntStream.range(0, 5)
+                .mapToObj(i -> generateRandomCard(userId, systemCardsByRarity))
+                .collect(Collectors.toList());
 
-            Card card = new Card();
-            card.setUserId(userId);
-            card.setName(chosenCard.getName());
-            card.setRarity(chosenCard.getRarity());
-            card.setDescription(chosenCard.getDescription());
-            card.setElement(chosenCard.getElement());
-            card.setAttack(chosenCard.getAttack());
-            card.setDefense(chosenCard.getDefense());
-            card.setPhase(chosenCard.getPhase());
-            card.setLife(chosenCard.getLife());
-
-            packageCards.add(card);
-        }
-
-        synchronized(cardRepository){
+        // Salvar todas as cartas de uma vez (já está otimizado)
+        synchronized (cardRepository) {
             cardRepository.saveAll(packageCards);
         }
 
         return packageCards;
+    }
+
+    private RarityCard chooseRarity() {
+        int rand = random.nextInt(100);
+
+        if (rand < 80) return RarityCard.COMMON;        // 80%
+        if (rand < 95) return RarityCard.RARE;          // 15% (80-95)
+        if (rand < 99) return RarityCard.EPIC;          // 4% (95-99)
+        return RarityCard.LEGENDARY;                    // 1% (99-100)
+    }
+
+    private Card generateRandomCard(String userId, Map<RarityCard, List<SystemCard>> systemCardsByRarity) {
+        RarityCard rarity = chooseRarity();
+        List<SystemCard> cardsOfRarity = systemCardsByRarity.get(rarity);
+
+        if (cardsOfRarity == null || cardsOfRarity.isEmpty()) {
+            throw new IllegalStateException("No system cards found for rarity: " + rarity);
+        }
+
+        SystemCard chosenCard = cardsOfRarity.get(random.nextInt(cardsOfRarity.size()));
+
+        return createCardFromSystemCard(userId, chosenCard);
+    }
+
+    private Card createCardFromSystemCard(String userId, SystemCard systemCard) {
+        Card card = new Card();
+        card.setUserId(userId);
+        card.setName(systemCard.getName());
+        card.setRarity(systemCard.getRarity());
+        card.setDescription(systemCard.getDescription());
+        card.setElement(systemCard.getElement());
+        card.setAttack(systemCard.getAttack());
+        card.setDefense(systemCard.getDefense());
+        card.setPhase(systemCard.getPhase());
+        card.setLife(systemCard.getLife());
+
+        return card;
     }
 }
