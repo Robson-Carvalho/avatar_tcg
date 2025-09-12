@@ -25,9 +25,9 @@ public class OakServer {
         int cores = Runtime.getRuntime().availableProcessors();
         int corePoolSize = cores * 4;     // threads sempre ativas
         int maxPoolSize = cores * 8;      // máximo de threads
-        long keepAlive = 60L;              // segundos
+        long keepAlive = 240L;              // segundos
 
-        BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(500); // fila de conexões
+        BlockingQueue<Runnable> queue = new SynchronousQueue<>(); // fila de conexões
 
         this.threadPool = new ThreadPoolExecutor(
                 corePoolSize,
@@ -67,7 +67,10 @@ public class OakServer {
     private void handleConnection(Socket clientSocket) {
         threadPool.submit(() -> {
             try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                InputStream inputStream = clientSocket.getInputStream();
+                BufferedInputStream bufferedInput = new BufferedInputStream(inputStream, 8192);
+                BufferedReader in = new BufferedReader(new InputStreamReader(bufferedInput));
+
                 HttpRequest request = new Config().parseRequest(in);
                 HttpResponse response = new HttpResponse(clientSocket.getOutputStream());
                 new Config().addCorsHeaders(response, request);
