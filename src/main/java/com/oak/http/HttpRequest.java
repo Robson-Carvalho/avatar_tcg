@@ -11,7 +11,6 @@ public class HttpRequest {
     private final String path;
     private final String body;
     private final Map<String, String> headers;
-    private final Map<String, String> params = new HashMap<>();
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -22,7 +21,6 @@ public class HttpRequest {
         this.headers = headers != null ? headers : new HashMap<>();
     }
 
-    public void addParam(String name, String value) {params.put(name, value);}
     public String getMethod() { return method; }
     public String getPath() { return path; }
 
