@@ -29,6 +29,11 @@ async function loadMatches() {
         const res = await fetch(`http://${IP_SERVER}:8080/match`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
+console.log("Oi", res)
+        if (res.status === 403) {
+            alert("Acesso negado");
+            logout();
+        };
 
         if (!res.ok) throw new Error("Erro ao carregar partidas");
 

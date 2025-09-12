@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: adiciona otimização ao salvar cartas no banco de dados">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/MatchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/controller/MatchController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/CardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/avatar_tcg/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/HttpRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/oak/http/OakServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stress/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/stress/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="a830f271-bab9-40f3-9e2f-b203763a9a52" name="Changes" comment="feat: remove atributo desnecessário" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -193,55 +185,7 @@
       <workItem from="1757543228683" duration="8664000" />
       <workItem from="1757559557087" duration="1669000" />
       <workItem from="1757602372956" duration="3480000" />
-      <workItem from="1757697957195" duration="6881000" />
-    </task>
-    <task id="LOCAL-00023" summary="feat: adiciona interface do cliente">
-      <option name="closed" value="true" />
-      <created>1755837526888</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1755837526888</updated>
-    </task>
-    <task id="LOCAL-00024" summary="feat: adiciona gerenciamento de deck no cliente">
-      <option name="closed" value="true" />
-      <created>1755883798013</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1755883798013</updated>
-    </task>
-    <task id="LOCAL-00025" summary="fix: resolve problemas de deck duplicado e cartas duplicadas no deck">
-      <option name="closed" value="true" />
-      <created>1755883840671</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1755883840671</updated>
-    </task>
-    <task id="LOCAL-00026" summary="feat: adiciona scripts do client">
-      <option name="closed" value="true" />
-      <created>1755884894785</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1755884894785</updated>
-    </task>
-    <task id="LOCAL-00027" summary="feat: ajustes para desenvolvimento do jogo">
-      <option name="closed" value="true" />
-      <created>1755887367784</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1755887367784</updated>
-    </task>
-    <task id="LOCAL-00028" summary="feat: adiciona broadcasting">
-      <option name="closed" value="true" />
-      <created>1755962846724</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1755962846724</updated>
+      <workItem from="1757697957195" duration="7354000" />
     </task>
     <task id="LOCAL-00029" summary="feat: adiciona classe da partida">
       <option name="closed" value="true" />
@@ -587,7 +531,55 @@
       <option name="project" value="LOCAL" />
       <updated>1757561229531</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="test: atualiza código de teste de carga">
+      <option name="closed" value="true" />
+      <created>1757705682946</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1757705682946</updated>
+    </task>
+    <task id="LOCAL-00073" summary="feat: verifica se o user existe quando requisitar partidas">
+      <option name="closed" value="true" />
+      <created>1757705705899</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1757705705899</updated>
+    </task>
+    <task id="LOCAL-00074" summary="refactor: adiciona melhorias de desempenho">
+      <option name="closed" value="true" />
+      <created>1757705732964</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1757705732964</updated>
+    </task>
+    <task id="LOCAL-00075" summary="feat: adiciona tratamento de concorrência na rota de exclusão de jogador">
+      <option name="closed" value="true" />
+      <created>1757705792169</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1757705792169</updated>
+    </task>
+    <task id="LOCAL-00076" summary="refactor: adiciona otimização para abrir pacotes">
+      <option name="closed" value="true" />
+      <created>1757705818487</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1757705818488</updated>
+    </task>
+    <task id="LOCAL-00077" summary="feat: remove atributo desnecessário">
+      <option name="closed" value="true" />
+      <created>1757705838613</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1757705838613</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -600,12 +592,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../.." />
     </ignored-roots>
-    <MESSAGE value="feat: remove método welcome" />
-    <MESSAGE value="feat: adiciona verificação de partida acabou" />
-    <MESSAGE value="feat: adiciona ajustes para implementação do jogo" />
-    <MESSAGE value="feat: adiciona lógica de quando ocorrer uma vitória" />
-    <MESSAGE value="feat: adiciona alternância de turno" />
-    <MESSAGE value="feat: adiciona chamada de método de batalha" />
     <MESSAGE value="feat: adiciona lógica de batalha" />
     <MESSAGE value="feat: adiciona as atualizações de estado dentro de cada player" />
     <MESSAGE value="feat: altera nome do comando de jogar" />
@@ -625,6 +611,12 @@
     <MESSAGE value="refactor: adiciona melhoria no uso de mutex e adiciona rota de exclusão de jogadores." />
     <MESSAGE value="docs: update README.m" />
     <MESSAGE value="feat: adiciona otimização ao salvar cartas no banco de dados" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: adiciona otimização ao salvar cartas no banco de dados" />
+    <MESSAGE value="test: atualiza código de teste de carga" />
+    <MESSAGE value="feat: verifica se o user existe quando requisitar partidas" />
+    <MESSAGE value="refactor: adiciona melhorias de desempenho" />
+    <MESSAGE value="feat: adiciona tratamento de concorrência na rota de exclusão de jogador" />
+    <MESSAGE value="refactor: adiciona otimização para abrir pacotes" />
+    <MESSAGE value="feat: remove atributo desnecessário" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: remove atributo desnecessário" />
   </component>
 </project>

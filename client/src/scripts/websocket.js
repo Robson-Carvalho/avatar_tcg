@@ -12,7 +12,7 @@ function startPingLoop() {
       lastPingTime = performance.now();
       socket.send(JSON.stringify({ type: "ping" }));
     }
-  }, 1000);
+  }, 500);
 }
 
 function updatePing() {
@@ -130,8 +130,6 @@ function hideVictoryModal() {
 
 function handleVictory(json) {
   const data = JSON.parse(json);
-
-  console.log("quem ganhou", data.playerWin, "ATENÇÃO!");
 
   const game = document.getElementById("game");
   if (game) game.classList.add("hidden");
