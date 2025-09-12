@@ -83,7 +83,6 @@ public class OakServer {
                         clientSocket.close();
                         return;
                     }
-
                     router.handle(request, response);
 
                     try {
