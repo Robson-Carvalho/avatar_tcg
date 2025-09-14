@@ -8,25 +8,55 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserRepository {
-    public List<User> findAll()  {
-        String sql = "SELECT * FROM users";
-
-        List<User> users = new ArrayList<>();
-
-        try (Connection conn = Database.getConnection()){
-            PreparedStatement stmt = conn.prepareStatement(sql);
+    public User findById(String id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                users.add(mapResultSetToUser(rs));
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
             }
-
-            return users;
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return users;
+        return null;
+    }
+
+    public User findByNickname(String nick) {
+        String sql = "SELECT * FROM users WHERE nickname = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nick);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; // Retorna null se não encontrar o usuário
     }
 
     public void delete(String id) {

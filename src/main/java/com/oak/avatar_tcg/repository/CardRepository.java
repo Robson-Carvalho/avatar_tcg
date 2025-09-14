@@ -12,25 +12,25 @@ import java.util.List;
 
 public class CardRepository {
 
-    public List<Card> findAll()  {
-        String sql = "SELECT * FROM cards";
-
+    public List<Card> findByUserId(String userId) {
+        String sql = "SELECT * FROM cards WHERE user_id = ?";
         List<Card> cards = new ArrayList<>();
 
-        try (Connection conn = Database.getConnection()){
-            PreparedStatement stmt = conn.prepareStatement(sql);
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, userId); // Corrigido para 1, pois só tem 1 parâmetro
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 cards.add(mapResultSetToCard(rs));
             }
 
-            return cards;
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return cards;
+        return cards; // Retorna lista vazia se não houver cartas
     }
 
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {

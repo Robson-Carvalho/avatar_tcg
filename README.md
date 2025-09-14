@@ -100,7 +100,10 @@ cd avatar_tcg/stress
 
 ```bash
 python3 -m venv venv
-source venv/Scripts/activate
+
+source venv/Scripts/activate 
+# ou para linux
+source venv/bin/activate
 ```
 
 3. Instale as dependências necessárias:

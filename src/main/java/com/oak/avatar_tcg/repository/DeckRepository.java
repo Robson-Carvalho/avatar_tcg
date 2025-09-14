@@ -2,6 +2,7 @@ package com.oak.avatar_tcg.repository;
 
 import com.oak.avatar_tcg.database.Database;
 import com.oak.avatar_tcg.model.Deck;
+import com.oak.avatar_tcg.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,28 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class DeckRepository {
-
-    public List<Deck> findAll() {
-        String sql = "SELECT * FROM decks";
-
-        List<Deck> decks = new ArrayList<>();
-
-        try (Connection conn = Database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                decks.add(mapResultSetToDeck(rs));
-            }
-
-            return decks;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return decks;
-    }
-
     private Deck mapResultSetToDeck(ResultSet rs) throws SQLException {
         Deck deck = new Deck();
         deck.setId(rs.getString("id"));
@@ -45,6 +24,40 @@ public class DeckRepository {
         deck.setCard5Id(rs.getString("card5_id") == null ? "" : rs.getString( "card5_id"));
 
         return deck;
+    }
+
+    public Deck findByUserId(String id) {
+        String sql = "SELECT * FROM decks WHERE user_id = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToDeck(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; // Retorna null se não encontrar o usuário
+    }
+
+    public Deck findById(String id) {
+        String sql = "SELECT * FROM decks WHERE id = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToDeck(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; // Retorna null se não encontrar o usuário
     }
 
     public Deck update(Deck deck) throws SQLException {

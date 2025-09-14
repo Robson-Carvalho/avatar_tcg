@@ -17,30 +17,30 @@ public class UserService {
     }
 
     public void delete(String id){
-        List<User> users = userRepository.findAll();
+        User user;
 
-        for (User u : users) {
-            if (u.getId().equals(id)) {
+        synchronized (userRepository){
+             user = userRepository.findById(id);
+        }
 
-                synchronized (userRepository) {
-                    userRepository.delete(id);
-                }
-
-                return;
+        if(user != null) {
+            synchronized (userRepository){
+                userRepository.delete(id);
             }
+
+            return;
         }
 
         throw new IllegalArgumentException("User not found");
     }
 
     public User register(User user) throws SQLException, IllegalArgumentException {
-        List<User> users = userRepository.findAll();
-
-        for (User u : users) {
-            if (u.getEmail().equals(user.getEmail()) || u.getNickname().equals(user.getNickname())) {
+        if (userRepository.findByNickname(user.getNickname()) != null) {
+            if(userRepository.findByEmail(user.getEmail()) != null){
                 throw new IllegalArgumentException("Username already exists");
             }
         }
+
 
         userRepository.save(user);
 
@@ -60,25 +60,22 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        List<User> users = userRepository.findAll();
+        User user;
 
-        for (User u : users) {
-            if (u.getEmail().equals(email)) {
-                return u;
-            }
+        synchronized (userRepository) {
+            user = userRepository.findByEmail(email);
         }
 
-        return null;
+        return user;
     }
 
     public User findById(String id) {
-        List<User> users = userRepository.findAll();
+        User user;
 
-        for (User u : users) {
-            if (u.getId().equals(id)) {
-                return u;
-            }
+        synchronized (userRepository){
+            user = userRepository.findById(id);
         }
-        return null;
+
+        return user;
     }
 }

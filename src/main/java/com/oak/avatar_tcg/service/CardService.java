@@ -32,14 +32,7 @@ public class CardService {
 
     public List<Card> findByUserId(String userId) {
         synchronized (cardRepository) {
-            List<Card> cards = new ArrayList<>();
-
-            for (Card card : cardRepository.findAll()) {
-                if (userId.equals(card.getUserId())) {
-                    cards.add(card);
-                }
-            }
-            return cards;
+           return cardRepository.findByUserId(userId);
         }
     }
 

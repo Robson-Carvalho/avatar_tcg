@@ -14,36 +14,20 @@ public class DeckService {
 
     public Deck findByUserId(String id)  {
         synchronized (deckRepository) {
-            List<Deck> decks = deckRepository.findAll();
-
-            for (Deck deck : decks) {
-                if (deck.getUserId().equals(id)) {
-                    return deck;
-                }
-            }
-
-            return null;
-
+            return deckRepository.findByUserId(id);
         }
     }
 
     public Deck findById(String id)  {
         synchronized (deckRepository) {
-            List<Deck> decks = deckRepository.findAll();
-
-            for (Deck deck : decks) {
-                if (deck.getId().equals(id)) {
-                    return deck;
-                }
-            }
-
-            return null;
+            return deckRepository.findById(id);
         }
     }
 
     public Deck updateDeck(Deck deck) throws Exception {
         synchronized (deckRepository) {
             deckRepository.update(deck);
+
             return this.findById(deck.getId());
         }
     }

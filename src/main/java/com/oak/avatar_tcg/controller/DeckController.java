@@ -67,6 +67,12 @@ public class DeckController {
 
             Deck deck = deckService.findByUserId(userID);
 
+            if(deck == null){
+                response.setStatus(400);
+                response.json(Map.of("error", "Deck não encontrado"));
+                return;
+            }
+
             String card1Id = (String) body.get("card1Id");
             String card2Id = (String) body.get("card2Id");
             String card3Id = (String) body.get("card3Id");
