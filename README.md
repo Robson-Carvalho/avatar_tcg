@@ -50,7 +50,7 @@ docker run -d --name postgres-avatar -p 5432:5432 \
 
 **2. Servidor Backend**
 
-Construa e execute o contêiner para o servidor backend:
+Construa e execute o contêiner para o servidor backend na mesma máquina do container do banco de dados:
 
 ```bash
 docker build -t avatar-tcg-server .
@@ -65,6 +65,12 @@ docker run -d --name avatar-server -p 8080:8080 \
 **3. Cliente Frontend**
 
 Construa e execute o contêiner para o cliente frontend:
+
+> _"**Nota**: No arquivo ./client/src/scripts/env.js, substitua o **`IP_SERVER`** atual pelo IP da máquina que está executando o servidor, se necessário."_
+
+```js
+const IP_SERVER = "10.0.0.151" # altere para o IP da máquina que está executando o servidor
+```
 
 ```bash
 docker build -t avatar-tcg-client ./client
