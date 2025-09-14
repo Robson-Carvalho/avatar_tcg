@@ -15,11 +15,11 @@ LOGIN_ENDPOINT = f"{BASE_URL}/auth/login"
 DELETE_USER_ENDPOINT = f"{BASE_URL}/auth"
 OPEN_CARD_ENDPOINT = f"{BASE_URL}/card/open"
 DECK_ENDPOINT = f"{BASE_URL}/deck"  # endpoint para colocar cartas no deck
-WS_URL = "ws://10.0.0.151:8080/game"  # endpoint WebSocket
+WS_URL = f"ws://{IP_HOST}:8080/game"  # endpoint WebSocket
 
 BUSRT = False   # True = todas threads esperam para começar juntas
-NUM_THREADS = 500  # Número de Threads
-NUM_OPEN_CARDS = 5  # Controle de quantas cartas abrir por usuário
+NUM_THREADS = 400  # Número de Threads
+NUM_OPEN_CARDS = 1  # Controle de quantas cartas abrir por usuário
 
 created_users = []  # IDs para limpar depois
 
@@ -28,8 +28,7 @@ def random_email():
     """Gera email aleatório único"""
     return ''.join(random.choices(string.ascii_lowercase, k=6)) + "@gmail.com"
 
-def ws_simulation(token, user_id, stay_in_queue):
-    """Simula entrar na fila e depois desistir"""
+def ws_simulation(token, user_id, stay_in_queue, report):
     try:
         ws = websocket.WebSocket()
         ws.connect(WS_URL)
@@ -59,7 +58,7 @@ def ws_simulation(token, user_id, stay_in_queue):
 
         ws.close()
     except Exception as e:
-        print(f"[{user_id}] Erro WebSocket: {e}")
+        report["error"] = f"WebSocket error: {e}"
 
 def test_user_flow(i, barrier=None):
     """Fluxo completo: registro -> login -> abrir cartas -> deck -> WS fila"""
@@ -129,14 +128,17 @@ def test_user_flow(i, barrier=None):
             }
             r = requests.put(DECK_ENDPOINT, json=deck_payload, headers=headers)
             if r.status_code not in (200, 201):
+                print(f'Deck failed ({r.text})')
                 report["error"] = f"Deck placement failed ({r.status_code})"
                 return report
             report["deck"] = True
 
             # 5 - WebSocket: entrar na fila e desistir
-            ws_simulation(token, user_id, 1)
-            report["ws_join"] = True
-            report["ws_exit"] = True
+            ws_simulation(token, user_id, 1, report)
+            if not report["error"]:
+                report["ws_join"] = True
+                report["ws_exit"] = True
+
 
     except Exception as e:
         report["error"] = str(e)
@@ -202,7 +204,8 @@ def stress_test(num_threads=50, BUSRT=True):
     print(f"⏰ Tempo total: {total_time:.2f}s")
     print(f"📈 Throughput: {requests_per_second:.1f} req/s")
     print(f"🔁 Total de requisições: {total_requests}")
-    print(f"🎴 Cartas por usuário: {NUM_OPEN_CARDS}")
+    print(f"🎴 Pacotes de cartas abertos: {NUM_OPEN_CARDS*num_threads}")
+    print(f"🎴 Cartas criadas: {NUM_OPEN_CARDS*5*num_threads}")
     print(f"{'='*60}")
     print("✅ ETAPAS DO FLUXO:")
     print(f"   • Registro: {reg_ok}/{total} ({reg_percent:.1f}%) {'🎯' if reg_percent == 100 else '⚠️'}")
