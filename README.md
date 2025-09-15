@@ -29,7 +29,7 @@ cd avatar_tcg
 
 ### 🚀 Executando a Aplicação
 
-O projeto é composto por três componentes principais: o banco de dados PostgreSQL, o servidor backend e o cliente frontend. Siga os passos abaixo para configurar e executar cada um.
+O projeto é composto por três componentes principais: o banco de dados PostgreSQL, o servidor backend e o cliente frontend. Siga os passos abaixo para configurar e executar cada um deles para se comunicarem em uma mesma rede local em diferentes host.
 
 **1. Banco de Dados PostgreSQL**
 
