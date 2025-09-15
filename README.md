@@ -20,10 +20,6 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 - Git
 - Python 3.8+ (para testes de carga)
 
-### 📝 Detalhes
-
-Lorem
-
 ### 📥 Clonando o Repositório
 
 ```bash
