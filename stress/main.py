@@ -24,6 +24,7 @@ RAMP_UP = 4             # Intervalo em segundos entre lotes; 0 = desativado
 BATCH_SIZE = 50         # Quantas threads iniciar por lote
 PING_INTERVAL = 1       # Intervalo de ping do WS em segundos
 
+
 created_users = []  # IDs para limpar depois
 
 # ================= FUNÇÕES AUXILIARES =================
