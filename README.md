@@ -121,8 +121,9 @@ pip install requests websocket-client
 python main.py
 ```
 
-> _**Atenção**: Certifique-se de que o IP do servidor esteja corretamente configurado no arquivo `main.py` antes de executar os testes._ 6. Para sair do ambiente venv execute:
+> _**Atenção**: Certifique-se de que o IP do servidor esteja corretamente configurado no arquivo `main.py` antes de executar os testes._
 
+6. Para sair do ambiente venv execute:
 ```bash
 deactivate
 ```
